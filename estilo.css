@@ -1,0 +1,449 @@
+/* seinp.github.io — "Ficha lateral" (Propuesta 7 de Claude Design, paleta cobalto).
+   Ficha de personaje fija a la izquierda; a la derecha desfilan los proyectos.
+   Mundo unico oscuro: negro neutro, luz hueso, cobalto como unico color. */
+
+:root{
+  --sala:    #08090A;   /* fondo de la pagina */
+  --muro:    #101114;   /* paneles */
+  --obra:    #17191D;   /* tarjetas */
+  --linea:   #262B33;
+  --linea-2: #333A45;
+  --luz:     #F3F0EA;   /* texto */
+  --tenue:   #8B9098;
+  --cobalto: #3B6FEA;
+  --cobalto-claro: #7DA3FF;
+  --cobalto-tinta: #0A0C10;
+
+  --display: "Big Shoulders Display", "Archivo Narrow", Impact, sans-serif;
+  --datos:   "Chakra Petch", "IBM Plex Mono", ui-monospace, monospace;
+  --cuerpo:  "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  --ficha-ancho: 400px;
+  --gut: clamp(18px, 3vw, 44px);
+  color-scheme: dark;
+}
+
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; background:var(--sala); }
+body{ margin:0; background:var(--sala); color:var(--luz); font-family:var(--cuerpo); font-size:15px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+img{ max-width:100%; display:block; }
+a{ color:var(--cobalto-claro); text-decoration:none; }
+a:hover{ color:#fff; }
+:focus-visible{ outline:2px solid var(--cobalto-claro); outline-offset:3px; }
+button{ font-family:inherit; }
+
+.pagina{ display:grid; grid-template-columns: var(--ficha-ancho) minmax(0,1fr); min-height:100vh; }
+
+/* ================= FICHA ================= */
+/* La ficha entera tiene que caber en la pantalla SIN scroll: todo lo que mide alto va en vh. */
+.ficha{
+  position:sticky; top:0; height:100vh; overflow-y:auto; overscroll-behavior:contain;
+  background:var(--muro); border-right:1px solid var(--linea);
+  padding: clamp(14px, 2vh, 22px) 26px clamp(14px, 2vh, 24px); display:flex; flex-direction:column; gap: clamp(7px, 1.3vh, 14px);
+  scrollbar-width:thin; scrollbar-color: var(--linea-2) transparent;
+}
+.ficha-cab{ display:flex; align-items:center; justify-content:space-between; }
+/* En escritorio los envoltorios no existen para el layout: la ficha sigue siendo una columna. */
+.quien, .ficha-detalle, .ficha-detalle-in{ display:contents; }
+.ficha-toggle{ display:none; }
+.logo{ font-family:var(--display); font-weight:900; font-size:24px; letter-spacing:.14em; color:var(--luz); }
+.idioma{ display:flex; border:1px solid var(--linea-2); background:var(--sala); padding:0; cursor:pointer; border-radius:3px; overflow:hidden; }
+.idioma span{ font-family:var(--datos); font-size:11px; font-weight:600; letter-spacing:.1em; padding:5px 9px; color:var(--tenue); }
+.idioma span.on{ background:var(--cobalto); color:var(--cobalto-tinta); }
+
+.retrato{ margin:0; position:relative; background:#000; border:1px solid var(--linea-2); }
+.retrato img{ width:100%; height: clamp(130px, 26vh, 300px); object-fit:cover; object-position: center 22%; filter:grayscale(1) contrast(1.08); }
+.nivel{ position:absolute; left:12px; bottom:12px; background:var(--cobalto); color:var(--cobalto-tinta); font-family:var(--display); font-weight:900; font-size:19px; letter-spacing:.06em; padding:3px 11px 2px; }
+
+.nombre{ margin:0; font-family:var(--display); font-weight:900; font-size: clamp(28px, 4.4vh, 40px); line-height:.92; text-transform:uppercase; letter-spacing:.005em; }
+.cargo{ margin:0; font-size:12.5px; color:var(--tenue); line-height:1.35; }
+.lugar{ margin: calc(-1 * clamp(4px, 1vh, 8px)) 0 0; font-size:12px; color:var(--tenue); }
+
+.atributos{ border:1px solid var(--linea-2); background:var(--sala); padding: clamp(8px, 1.2vh, 12px) 14px clamp(9px, 1.4vh, 14px); }
+.atr-cab{ display:flex; justify-content:space-between; font-family:var(--datos); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--tenue); margin-bottom: clamp(6px, 1vh, 10px); }
+.atr-lista{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap: clamp(4px, .9vh, 9px); }
+.atr{ display:grid; grid-template-columns: 1fr auto auto; grid-template-areas: "nom rar val" "bar bar bar"; column-gap:9px; row-gap:3px; align-items:baseline; }
+.atr .nom{ grid-area:nom; font-family:var(--datos); font-weight:700; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; }
+.atr .rar{ grid-area:rar; font-family:var(--datos); font-size:9px; letter-spacing:.14em; color:var(--cobalto-claro); text-transform:uppercase; }
+.atr .rar i{ font-style:normal; letter-spacing:0; margin-right:5px; }
+.atr .val{ grid-area:val; font-family:var(--display); font-weight:800; font-size:18px; line-height:1; color:var(--luz); font-variant-numeric:tabular-nums; }
+.atr .bar{ grid-area:bar; height:6px; background:var(--muro); border:1px solid var(--linea); position:relative; overflow:hidden; }
+.atr .bar i{ position:absolute; inset:0 auto 0 0; background: repeating-linear-gradient(90deg, var(--cobalto) 0 5px, transparent 5px 7px); }
+
+.cta{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--cobalto); color:var(--cobalto-tinta); font-family:var(--display); font-weight:800; font-size:19px; letter-spacing:.05em; text-transform:uppercase; padding: clamp(9px, 1.4vh, 14px) 18px clamp(8px, 1.2vh, 12px); border:1px solid var(--cobalto); }
+.cta:hover{ background:var(--cobalto-claro); color:var(--cobalto-tinta); }
+.cta .flecha{ font-family:var(--cuerpo); font-size:20px; }
+.ficha-botones{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.ficha-botones a{ text-align:center; border:1px solid var(--linea-2); color:var(--luz); font-size:13px; padding: clamp(6px, 1vh, 9px) 8px; }
+.ficha-botones a:hover{ border-color:var(--luz); }
+
+/* ================= CONTENIDO ================= */
+.contenido{ min-width:0; }
+.menu{ position:sticky; top:0; z-index:20; display:flex; gap:26px; padding:16px var(--gut); background:var(--sala); border-bottom:1px solid var(--linea); overflow-x:auto; scrollbar-width:none; }
+.menu::-webkit-scrollbar{ display:none; }
+.menu a{ font-family:var(--display); font-weight:700; font-size:16px; letter-spacing:.1em; color:var(--tenue); white-space:nowrap; padding-bottom:2px; border-bottom:2px solid transparent; }
+.menu a:hover, .menu a.activo{ color:var(--luz); border-bottom-color:var(--cobalto); }
+.menu a b{ color:var(--cobalto-claro); font-weight:700; }
+
+.hero{ padding: clamp(40px,7vw,84px) var(--gut) clamp(30px,5vw,56px); border-bottom:1px solid var(--linea); }
+.ojo{ margin:0 0 14px; font-family:var(--datos); font-size:10.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--cobalto-claro); }
+.titulo{ margin:0; font-family:var(--display); font-weight:900; font-size: clamp(38px, 6.2vw, 78px); line-height:.94; text-transform:uppercase; max-width:18ch; text-wrap:balance; }
+.bajada{ margin:18px 0 0; max-width:58ch; color:var(--tenue); font-size:16px; }
+.numeros{ list-style:none; margin:34px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:26px 48px; }
+.numeros li{ display:flex; flex-direction:column; }
+.numeros b{ font-family:var(--display); font-weight:900; font-size:48px; line-height:1; font-variant-numeric:tabular-nums; }
+.numeros span{ font-size:12px; color:var(--tenue); margin-top:4px; }
+
+/* ---------- desfile ---------- */
+.proyecto{ display:grid; grid-template-columns: 1fr 1fr; gap: clamp(20px,3vw,40px); align-items:center; padding: clamp(24px,3.6vw,44px) var(--gut); border-bottom:1px solid var(--linea); }
+.proyecto.der .texto{ order:2; }
+.proyecto .texto, .proyecto .imagen{ min-width:0; }
+.proyecto .link span{ overflow-wrap:anywhere; }
+/* ---------- la fila destacada: Monito, FaenApp y Stab juntos, con logo, resaltados ---------- */
+.destacados{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap:18px; padding: clamp(24px,3.6vw,44px) var(--gut); border-bottom:1px solid var(--linea); }
+/* ---------- la carta destacada: dos caras, flota sola (B2), se inclina con el mouse y gira al clic (A3) ---------- */
+.proyecto.destacado{ position:relative; display:block; padding:0; border:0; background:none; box-shadow:none; perspective:1500px; }
+.destacado .flotante{ animation: flota-carta 4s ease-in-out infinite; will-change:transform; }
+@keyframes flota-carta{ 0%,100%{ transform:translateY(0) rotate(-.3deg); } 50%{ transform:translateY(-9px) rotate(.3deg); } }
+.destacado .carta{ display:grid; transform-style:preserve-3d; will-change:transform; cursor:pointer; transition:transform .16s ease-out; outline:none; }
+.destacado .carta:focus-visible .frente{ outline:2px solid var(--luz); outline-offset:4px; }
+.destacado .cara{ grid-area:1 / 1; position:relative; backface-visibility:hidden; -webkit-backface-visibility:hidden; overflow:hidden;
+  display:flex; flex-direction:column; align-items:stretch; gap:16px; padding:30px 26px 28px; border:1px solid var(--cobalto);
+  background: linear-gradient(180deg, rgba(59,111,234,.12), rgba(59,111,234,0) 38%), var(--muro);
+  box-shadow: 0 0 0 1px rgba(59,111,234,.22), 0 24px 60px rgba(59,111,234,.14); }
+.destacado .dorso{ transform:rotateY(180deg); }
+/* brillo que sigue al mouse (se apaga mientras gira) */
+.destacado .cara::after{ content:""; position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity .25s;
+  background: radial-gradient(460px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.07), transparent 60%); }
+@media (hover:hover){ .proyecto.destacado:hover .cara::after{ opacity:1; } .proyecto.destacado.girando .cara::after{ opacity:0; } }
+
+/* STAB: borde "corriente" con los colores de YOUR FRIENDS y de los personajes, fluyendo a lo largo del marco */
+@property --pos{ syntax:"<percentage>"; inherits:false; initial-value:0%; }
+.proyecto.destacado.arcoiris .cara{ border:2px solid transparent; box-shadow: 0 0 0 1px rgba(255,255,255,.06), 0 24px 60px rgba(59,111,234,.14);
+  background:
+    linear-gradient(180deg, rgba(59,111,234,.12), rgba(59,111,234,0) 38%) padding-box,
+    linear-gradient(var(--muro), var(--muro)) padding-box,
+    linear-gradient(90deg, #FF4D4D, #FFA23A, #FFE94D, #5CE07A, #4DA6FF, #B36BFF, #FF5CB8, #FF4D4D) border-box;
+  background-size: 100% 100%, 100% 100%, 300% 100%; background-position: 0 0, 0 0, var(--pos) 0;
+  animation: fluye-borde 4s linear infinite; }
+@keyframes fluye-borde{ to{ --pos:-300%; } }
+/* MONITO: el mismo borde corriente pero dorado, con los amarillos del logo */
+.proyecto.destacado.dorado .cara{ border:2px solid transparent; box-shadow: 0 0 0 1px rgba(255,255,255,.06), 0 24px 60px rgba(245,196,8,.12);
+  background:
+    linear-gradient(180deg, rgba(245,196,8,.10), rgba(245,196,8,0) 38%) padding-box,
+    linear-gradient(var(--muro), var(--muro)) padding-box,
+    linear-gradient(90deg, #794100, #B87F00, #F5C408, #FFEBA3, #F5C408, #B87F00, #794100) border-box;
+  background-size: 100% 100%, 100% 100%, 300% 100%; background-position: 0 0, 0 0, var(--pos) 0;
+  animation: fluye-borde 4s linear infinite; }
+@media (prefers-reduced-motion: reduce){ .proyecto.destacado.arcoiris .cara, .proyecto.destacado.dorado .cara{ animation:none; } }
+
+/* frente, linea 1: el logo centrado en los dos primeros tercios, el sello centrado en el tercio derecho */
+.destacado .cab-d{ display:grid; grid-template-columns: 1.25fr 1fr; align-items:center; height:136px; padding-left:4px; }
+.destacado .cab-d .logo{ justify-self:center; height:96px; width:auto; max-width:92%; object-fit:contain; object-position:center; }
+.destacado .cab-d .logo.pixel{ image-rendering:pixelated; height:136px; }
+.destacado .cab-d .sello{ justify-self:center; background:transparent; color:var(--cobalto-claro); border:1px solid var(--cobalto); font-family:var(--datos); font-size:10px; font-weight:600; letter-spacing:.22em; text-transform:uppercase; padding:6px 12px; white-space:nowrap; }
+@media (max-width: 1180px){ .destacado .cab-d{ height:104px; } .destacado .cab-d .logo{ height:72px; } .destacado .cab-d .logo.pixel{ height:102px; } }
+.destacado .linea2{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 8px; font-family:var(--datos); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--tenue); }
+.destacado .linea2 .anio{ color:var(--luz); font-weight:600; }
+.destacado .linea2 .tipo, .destacado .linea2 .rar{ border:1px solid var(--linea-2); padding:2px 8px; }
+.destacado .linea2 .rar{ font-size:9.5px; }
+.destacado .linea2 .rar i{ font-style:normal; color:var(--cobalto-claro); margin-right:6px; letter-spacing:0; }
+.destacado .linea2 .n{ color:var(--cobalto-claro); font-weight:600; }
+.destacado .linea2 .sep{ width:1px; height:18px; background:var(--linea-2); margin:0 4px; }
+.destacado .linea2 .tec{ margin:0; }
+.destacado .linea2 .tec li{ background:transparent; }
+.destacado .linea2 .rol{ margin:0; text-transform:none; letter-spacing:0; font-family:var(--cuerpo); font-size:12.5px; }
+.destacado .imagen{ margin-top:2px; }
+.destacado .pista{ text-align:center; font-family:var(--datos); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--tenue); margin-top:auto; padding-top:6px; }
+/* el boton siempre abajo del todo, en las dos caras */
+.proyecto.destacado .frente .link{ margin-top:0; }
+
+/* dorso: mas informacion */
+.destacado .dorso .k{ font-family:var(--datos); font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--cobalto-claro); }
+.destacado .dorso h3{ margin:0; font-size: clamp(34px,3.6vw,52px); }
+.proyecto.destacado .dorso .desc{ display:block; max-width:none; font-size:16px; line-height:1.65; text-align:left; }
+.proyecto .desc b{ color:var(--cobalto-claro); font-weight:700; }
+.destacado .dorso .tec{ margin:0; }
+.destacado .dorso .rol{ margin:0; }
+.proyecto.destacado .dorso .link{ margin-top:auto; }
+
+/* el boton de la carta: todo el ancho; al pasar el mouse por la carta, barrido blanco y palpitado (B2) */
+.proyecto.destacado .link{ position:relative; overflow:hidden; align-self:stretch; justify-content:space-between; margin-top:4px; padding:17px 18px 17px 24px; font-size:21px; letter-spacing:.01em; box-shadow: 0 10px 28px rgba(59,111,234,.38); animation:none; }
+.proyecto.destacado .link i{ width:38px; height:38px; font-size:20px; background:rgba(10,12,16,.22); animation:none; }
+.proyecto.destacado .link::before{ content:""; position:absolute; top:-20%; bottom:-20%; left:0; width:55%; pointer-events:none;
+  background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,.55) 50%, transparent 80%); transform:translateX(-140%) skewX(-12deg); }
+@media (hover:hover){
+  .proyecto.destacado:hover .link::before{ animation: barrer 1.8s cubic-bezier(.4,0,.2,1) infinite; }
+  .proyecto.destacado:hover .link{ animation: palpitar 1.4s ease-in-out infinite; }
+}
+@keyframes barrer{ 0%{ transform:translateX(-140%) skewX(-12deg); } 60%,100%{ transform:translateX(260%) skewX(-12deg); } }
+@keyframes palpitar{ 0%,100%{ transform:scale(1); box-shadow:0 10px 28px rgba(59,111,234,.38); } 50%{ transform:scale(1.03); box-shadow:0 14px 36px rgba(59,111,234,.55); } }
+.proyecto.destacado .link:hover{ transform:none; }
+/* STAB (solo la carta grande): boton ambar como el logo, borde y letras con el mismo arcoiris corriente del marco */
+.proyecto.destacado.arcoiris .link{ color:#2A1A1F; border:2px solid transparent;
+  background: linear-gradient(180deg, #FFC800, #DE9607) padding-box, linear-gradient(90deg, #FF4D4D, #FFA23A, #FFE94D, #5CE07A, #4DA6FF, #B36BFF, #FF5CB8, #FF4D4D) border-box;
+  background-size: 100% 100%, 300% 100%; background-position: 0 0, var(--pos) 0;
+  box-shadow: 0 10px 28px rgba(222,150,7,.42); animation: fluye-borde 4s linear infinite; }
+.proyecto.destacado.arcoiris .link span{ background: linear-gradient(90deg, #FF4D4D, #FFA23A, #FFE94D, #5CE07A, #4DA6FF, #B36BFF, #FF5CB8, #FF4D4D); background-size:300% 100%; background-position: var(--pos) 0;
+  -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent;
+  filter: drop-shadow(0 0 1px #5C3841) drop-shadow(1px 1px 0 rgba(92,56,65,.95)); animation: fluye-borde 4s linear infinite; }
+.proyecto.destacado.arcoiris .link i{ background:rgba(92,56,65,.9); color:#FFF6D6; }
+@media (hover:hover){ .proyecto.destacado.arcoiris:hover .link{ animation: fluye-borde 4s linear infinite, palpitar-ambar 1.4s ease-in-out infinite; } }
+@keyframes palpitar-ambar{ 0%,100%{ transform:scale(1); box-shadow:0 10px 28px rgba(222,150,7,.42); } 50%{ transform:scale(1.03); box-shadow:0 14px 36px rgba(255,200,0,.6); } }
+@media (prefers-reduced-motion: reduce){ .destacado .flotante, .proyecto.destacado .link, .proyecto.destacado .link::before{ animation:none !important; } }
+@media (max-width: 1400px){ .destacados, html.paginado .destacados > .diapo-in{ gap:14px; } .destacado .cara{ padding:22px 18px 20px; } }
+@media (max-width: 860px){ .destacados{ grid-template-columns:1fr; } .destacado .cab-d{ height:auto; min-height:72px; } .destacado .cab-d .logo{ height:56px; } .destacado .cab-d .logo.pixel{ height:68px; } .destacado .cara{ padding:22px 18px 20px; } }
+
+/* Orden dentro de cada proyecto: titulo → etiquetas → descripcion → boton → tecnica → rol */
+.proyecto h3{ margin:0 0 10px; font-family:var(--display); font-weight:900; font-size: clamp(34px,4.8vw,62px); line-height:.94; text-transform:uppercase; text-wrap:balance; }
+.proyecto .meta{ display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:14px; font-family:var(--datos); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--tenue); }
+.proyecto .meta .anio{ color:var(--luz); font-weight:600; }
+.proyecto .meta .tipo{ border:1px solid var(--linea-2); padding:2px 8px; }
+.proyecto .meta .rar{ border:1px solid var(--linea-2); padding:2px 8px; font-size:9.5px; }
+.proyecto .meta .rar i{ font-style:normal; color:var(--cobalto-claro); margin-right:6px; letter-spacing:0; }
+.proyecto .meta .n{ margin-left:auto; color:var(--cobalto-claro); font-weight:600; }
+.proyecto .desc{ margin:0; color:var(--luz); font-size:15px; max-width:52ch; }
+.proyecto .tec{ list-style:none; margin:18px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:6px; }
+.proyecto .tec li{ font-family:var(--datos); font-size:11.5px; letter-spacing:.04em; border:1px solid var(--linea-2); background:var(--muro); padding:4px 9px; }
+.proyecto .rol{ margin:10px 0 0; font-size:12.5px; color:var(--tenue); }
+.proyecto .rol span{ font-family:var(--datos); font-size:10px; letter-spacing:.16em; text-transform:uppercase; margin-right:6px; }
+/* El boton de cada proyecto dice que hace, no muestra la direccion. Tiene que verse cliqueable. */
+.proyecto .link{ display:inline-flex; align-items:center; gap:10px; margin-top:16px; background:var(--cobalto); color:var(--cobalto-tinta); padding:11px 12px 11px 16px; font-family:var(--cuerpo); font-size:14px; font-weight:700; letter-spacing:.01em; border:1px solid var(--cobalto); box-shadow: 0 6px 18px rgba(59,111,234,.28); cursor:pointer; transition: transform .15s ease, box-shadow .15s ease, background .15s ease; }
+.proyecto .link i{ font-style:normal; display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; background:rgba(10,12,16,.18); font-size:14px; line-height:1; }
+.proyecto .link:hover{ background:var(--cobalto-claro); border-color:var(--cobalto-claro); color:var(--cobalto-tinta); transform:translateY(-2px); box-shadow: 0 10px 24px rgba(59,111,234,.4); }
+.proyecto .link:active{ transform:translateY(0); box-shadow: 0 3px 10px rgba(59,111,234,.3); }
+.proyecto .link:focus-visible{ outline:2px solid var(--luz); outline-offset:3px; }
+/* Idle: el boton flota despacio y la flecha respira, para que se note que esta vivo. */
+.proyecto .link{ animation: flotar 3.2s ease-in-out infinite; }
+.proyecto .link i{ animation: respirar 3.2s ease-in-out infinite; }
+.proyecto .link:hover{ animation-play-state:paused; }
+@keyframes flotar{ 0%,100%{ transform:translateY(0); box-shadow:0 6px 18px rgba(59,111,234,.28); } 50%{ transform:translateY(-4px); box-shadow:0 12px 26px rgba(59,111,234,.42); } }
+@keyframes respirar{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(2px,-2px); } }
+@media (prefers-reduced-motion: reduce){ .proyecto .link, .proyecto .link i{ animation:none; } }
+/* La imagen de cada proyecto se muestra ENTERA, a su proporcion, y SIN recuadro de fondo. */
+.proyecto .imagen{ overflow:hidden; display:flex; align-items:center; justify-content:center; position:relative; min-height:120px; }
+.proyecto .imagen img{ width:100%; height:auto; max-height:520px; object-fit:contain; }
+.proyecto .imagen.vertical img{ max-height:460px; }
+.proyecto .imagen.logo img{ width:min(100%, 440px); }
+.proyecto .imagen.pixel img{ image-rendering:pixelated; image-rendering:crisp-edges; width:100%; max-height:440px; }
+.proyecto .imagen.video video{ width:100%; height:auto; display:block; background:#000; }
+.proyecto .imagen.vacia{ aspect-ratio:16/10; border:1px solid var(--linea); background: repeating-linear-gradient(135deg, var(--obra) 0 14px, #1B1E24 14px 16px); }
+.sin-ia{ border:1px solid var(--luz); color:var(--luz); padding:2px 8px; font-size:9.5px; letter-spacing:.14em; }
+.proyecto .imagen .etq{ position:absolute; left:12px; bottom:10px; font-family:var(--datos); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--tenue); }
+
+/* ---------- carrusel ---------- */
+.carrusel{ display:block; }
+.carrusel .riel{ display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+.carrusel .riel::-webkit-scrollbar{ display:none; }
+.carrusel .slide{ flex:0 0 100%; width:100%; scroll-snap-align:start; display:flex; justify-content:center; align-items:center; gap:14px; }
+.carrusel .slide img{ width:100%; object-fit:contain; max-height:520px; }
+.carrusel.vertical .slide img{ width:calc(50% - 7px); max-height:460px; }
+/* dupla: dos imagenes lado a lado, sin carrusel */
+.proyecto .imagen.dupla{ display:flex; justify-content:center; gap:14px; }
+.proyecto .imagen.dupla img{ width:calc(50% - 7px); object-fit:contain; }
+.carrusel .ant, .carrusel .sig{ position:absolute; top:50%; transform:translateY(-50%); width:38px; height:38px; border:1px solid var(--linea-2); background:rgba(8,9,10,.78); color:var(--luz); font-size:22px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.carrusel .ant{ left:10px; } .carrusel .sig{ right:10px; }
+.carrusel .ant:hover, .carrusel .sig:hover{ border-color:var(--cobalto-claro); color:var(--cobalto-claro); }
+.carrusel .puntos{ position:absolute; left:0; right:0; bottom:10px; display:flex; justify-content:center; gap:6px; pointer-events:none; }
+.carrusel .puntos i{ width:6px; height:6px; border-radius:50%; background:rgba(243,240,234,.35); }
+.carrusel .puntos i.on{ background:var(--cobalto-claro); }
+.carrusel .cuenta{ position:absolute; right:12px; top:10px; font-family:var(--datos); font-size:10.5px; letter-spacing:.1em; color:var(--tenue); background:rgba(8,9,10,.7); padding:2px 7px; }
+.carrusel .cuenta b{ color:var(--luz); font-weight:600; }
+.vivo{ margin-top:14px; border:1px solid var(--linea-2); background:var(--muro); padding:10px 12px; font-family:var(--datos); font-size:12px; }
+.vivo b{ display:block; font-size:9.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--cobalto-claro); margin-bottom:6px; }
+.vivo ol{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:3px; }
+.vivo li{ display:flex; gap:10px; }
+.vivo li span:last-child{ margin-left:auto; color:var(--tenue); font-variant-numeric:tabular-nums; }
+.vivo[hidden]{ display:none; }
+
+/* ---------- secciones ---------- */
+.seccion{ padding: clamp(36px,5.5vw,68px) var(--gut); border-bottom:1px solid var(--linea); }
+.sec-cab{ display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:10px 20px; }
+.sec-titulo{ margin:0 0 26px; font-family:var(--display); font-weight:900; font-size: clamp(38px,5.6vw,68px); line-height:.94; text-transform:uppercase; }
+.sec-bajada{ margin:-14px 0 24px; color:var(--tenue); max-width:60ch; }
+.usd{ font-family:var(--datos); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--tenue); margin-bottom:26px; }
+
+.atr-grid{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:1px; background:var(--linea); border:1px solid var(--linea); }
+.atr-card{ background:var(--sala); padding:22px 22px 24px; }
+.atr-card .fila{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
+.atr-card .nom{ font-family:var(--display); font-weight:800; font-size:26px; text-transform:uppercase; letter-spacing:.02em; }
+.atr-card .val{ font-family:var(--display); font-weight:900; font-size:38px; color:var(--cobalto-claro); line-height:1; font-variant-numeric:tabular-nums; }
+.atr-card .bar{ height:3px; background:var(--linea); margin:10px 0 12px; position:relative; }
+.atr-card .bar i{ position:absolute; inset:0 auto 0 0; background:var(--cobalto); }
+.atr-card p{ margin:0; font-size:12.5px; color:var(--tenue); }
+.formacion{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:26px; margin-top:34px; }
+.formacion b{ display:block; font-family:var(--datos); font-size:10.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--cobalto-claro); margin-bottom:6px; }
+.formacion p{ margin:0; font-size:14px; }
+
+.cronica{ list-style:none; margin:0; padding:0; }
+.cronica li{ display:grid; grid-template-columns: 150px 1fr; gap:20px; padding:18px 0; border-bottom:1px solid var(--linea); }
+.cronica .anio{ font-family:var(--display); font-weight:900; font-size:52px; line-height:.9; color:var(--linea-2); }
+.cronica .items{ display:grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap:14px 22px; align-self:center; }
+.cronica .items b{ display:block; font-size:14px; }
+.cronica .items span{ font-size:12.5px; color:var(--tenue); }
+
+.servicio{ display:grid; grid-template-columns: 1fr auto; gap:16px 30px; align-items:center; padding:20px 0; border-bottom:1px solid var(--linea); }
+.servicio h3{ margin:0; font-family:var(--display); font-weight:800; font-size:26px; text-transform:uppercase; line-height:1; }
+.servicio .desc{ margin:5px 0 0; font-size:13px; color:var(--tenue); }
+.servicio .prueba{ margin:4px 0 0; font-size:12px; }
+.servicio .prueba span{ color:var(--tenue); }
+.servicio .precio{ font-family:var(--display); font-weight:900; font-size: clamp(28px,3.4vw,44px); color:var(--cobalto-claro); line-height:1; white-space:nowrap; text-align:right; font-variant-numeric:tabular-nums; }
+.servicio .precio small{ display:block; font-family:var(--datos); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--tenue); margin-top:4px; }
+
+.galeria{ display:grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap:10px; }
+.galeria figure{ margin:0; background:var(--obra); border:1px solid var(--linea); aspect-ratio:1; display:flex; align-items:center; justify-content:center; padding:10px; overflow:hidden; transition: border-color .18s ease, transform .18s ease; }
+.galeria figure:hover{ border-color:var(--cobalto); transform: translateY(-3px); }
+.galeria img{ max-height:100%; width:auto; object-fit:contain; }
+
+.contacto{ background:var(--muro); }
+.contacto-titulo{ margin:0; font-family:var(--display); font-weight:900; font-size: clamp(42px,7vw,96px); line-height:.9; text-transform:uppercase; }
+.contacto-texto{ margin:18px 0 26px; color:var(--tenue); max-width:52ch; font-size:16px; }
+.correo{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
+.correo code{ font-family:var(--datos); font-size:16px; background:var(--sala); border:1px solid var(--linea-2); padding:11px 14px; user-select:all; }
+.correo button{ background:transparent; border:1px solid var(--linea-2); color:var(--luz); padding:11px 14px; cursor:pointer; font-size:13px; }
+.correo button:hover{ border-color:var(--luz); }
+.correo .cta{ padding:11px 16px 9px; font-size:17px; }
+.redes{ list-style:none; margin:26px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:10px 24px; }
+.redes a{ font-family:var(--datos); font-size:13px; letter-spacing:.04em; }
+
+.pie{ display:flex; flex-wrap:wrap; gap:8px 26px; align-items:baseline; padding:22px var(--gut) 34px; font-family:var(--datos); font-size:11px; letter-spacing:.06em; color:var(--tenue); }
+.pie-version{ margin-left:auto; }
+.pie-version b{ color:var(--luz); font-weight:600; }
+
+/* ---------- aparecer al bajar (nunca deja nada invisible) ---------- */
+.aparece{ transition: transform .5s ease, opacity .5s ease; }
+.aparece.lejos{ transform: translateY(14px); opacity:.55; }
+@media (prefers-reduced-motion: reduce){ .aparece, .aparece.lejos{ transition:none; transform:none; opacity:1; } html{ scroll-behavior:auto; } }
+
+/* ================= ESCRITORIO PAGINADO: cada apartado es una diapositiva que llena la pantalla ================= */
+html.paginado{ scroll-behavior:auto; }
+/* la transicion "digital": linea de barrido que cruza la columna y micro-glitch del apartado que entra */
+html.paginado .contenido::after{ content:""; position:fixed; left:var(--ficha-ancho); right:0; top:-4px; height:3px; z-index:45; pointer-events:none; opacity:0;
+  background: linear-gradient(90deg, transparent, var(--cobalto-claro) 25%, #fff 50%, var(--cobalto-claro) 75%, transparent); box-shadow: 0 0 18px rgba(125,163,255,.8), 0 0 40px rgba(59,111,234,.5); }
+html.paginado.viajando .contenido::after{ animation: barrido-digital .42s cubic-bezier(.1,.9,.2,1) both; }
+html.paginado.viajando.arriba .contenido::after{ animation-direction: reverse; }
+@keyframes barrido-digital{ 0%{ transform:translateY(0); opacity:0; } 8%{ opacity:1; } 92%{ opacity:1; } 100%{ transform:translateY(100vh); opacity:0; } }
+html.paginado.viajando .diapo-in{ animation: glitch-entrada .34s steps(4, end) both; }
+@keyframes glitch-entrada{ 0%{ transform:translateX(0); filter:brightness(1); } 25%{ transform:translateX(3px); filter:brightness(1.25) contrast(1.1); } 50%{ transform:translateX(-2px); filter:brightness(.95); } 75%{ transform:translateX(1px); filter:brightness(1.1); } 100%{ transform:translateX(0); filter:none; } }
+@media (prefers-reduced-motion: reduce){ html.paginado.viajando .contenido::after, html.paginado.viajando .diapo-in{ animation:none !important; } }
+/* el clon que entra deslizandose cuando la cinta da la vuelta (del ultimo al primero y al reves) */
+.capa-bucle{ position:fixed; z-index:25; overflow:hidden; background:var(--sala); }
+html.paginado .capa-bucle{ top:0; left:var(--ficha-ancho); right:0; height:100vh; }
+html.reel .capa-bucle{ top: calc(var(--ficha-alto, 124px) + var(--menu-alto, 50px)); left:0; right:0; height: calc(100dvh - var(--ficha-alto, 124px) - var(--menu-alto, 50px)); z-index:34; }
+.capa-bucle > .clon-bucle{ position:absolute; inset:0; height:100% !important; margin:0; will-change:transform; transition: transform .42s cubic-bezier(.1,.9,.2,1); }
+html.reel{ overscroll-behavior-y: contain; }
+/* en modo diapositivas no hay "aparecer al bajar": cada apartado ya entra entero y sin saltitos */
+html.paginado .aparece, html.paginado .aparece.lejos{ transform:none; opacity:1; transition:none; }
+html.paginado .contenido{ position:relative; }
+html.paginado .menu{ position:fixed; top:0; left:var(--ficha-ancho); right:0; z-index:30; }
+html.paginado .diapo{ box-sizing:border-box; height:100vh; overflow:hidden;
+  display:flex; flex-direction:column; justify-content:center; padding:72px var(--gut) 26px; border-bottom:0; }
+html.paginado .diapo-in{ zoom: 1; width:100%; }
+html.paginado .proyecto > .diapo-in{ display:grid; grid-template-columns:1fr 1fr; gap: clamp(20px,3vw,40px); align-items:center; }
+html.paginado .destacados > .diapo-in{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; }
+/* las tres cartas miden lo mismo: el sobrante queda entre los medios y el boton */
+html.paginado .destacados > .diapo-in{ align-items:stretch; }
+html.paginado .proyecto.destacado .flotante, html.paginado .proyecto.destacado .carta{ height:100%; }
+html.paginado .pie{ position:absolute; left:0; right:0; bottom:0; }
+/* las cartas destacadas mas bajas, para que la fila entre en la pantalla */
+html.paginado .destacado .cara{ gap:12px; padding:22px 24px 22px; }
+html.paginado .destacado .cab-d{ height:104px; }
+html.paginado .destacado .cab-d .logo{ height:76px; }
+html.paginado .destacado .cab-d .logo.pixel{ height:104px; }
+html.paginado .destacado .imagen img, html.paginado .destacado .imagen video, html.paginado .destacado .carrusel .slide img{ max-height:32vh; }
+html.paginado .proyecto.destacado .link{ padding:13px 16px 13px 22px; font-size:19px; }
+html.paginado .proyecto.destacado .link i{ width:34px; height:34px; }
+/* el resto de imagenes tampoco puede pasarse del alto */
+html.paginado .proyecto .imagen img, html.paginado .carrusel .slide img{ max-height:62vh; }
+html.paginado .carrusel.vertical .slide img{ max-height:60vh; }
+
+/* ================= TELEFONO EN MODO REEL: cada apartado llena la pantalla bajo el perfil y se desliza con enganche ================= */
+html.reel{ scroll-snap-type: y mandatory; scroll-padding-top: calc(var(--ficha-alto, 124px) + var(--menu-alto, 50px)); scroll-behavior:auto; }
+html.reel .aparece, html.reel .aparece.lejos{ transform:none; opacity:1; transition:none; }
+html.reel .contenido{ position:relative; }
+/* snap-stop normal: un deslizamiento fuerte pasa varios apartados y engancha al final (velocidad acumulada) */
+html.reel .diapo{ box-sizing:border-box; height: calc(100dvh - var(--ficha-alto, 124px) - var(--menu-alto, 50px)); scroll-snap-align:start; scroll-snap-stop:normal; overflow:hidden;
+  display:flex; flex-direction:column; justify-content:center; padding:14px 16px; border-bottom:0; }
+html.reel .diapo.desplaza{ overflow-y:auto; justify-content:flex-start; }
+html.reel .diapo-in{ width:100%; }
+html.reel .proyecto > .diapo-in{ display:flex; flex-direction:column; gap:12px; }
+html.reel .proyecto .imagen img, html.reel .carrusel .slide img, html.reel .proyecto .imagen video{ max-height:34dvh; }
+html.reel .carrusel.vertical .slide img{ max-height:32dvh; }
+html.reel .destacados{ display:block; padding:0; border:0; }
+html.reel .proyecto.destacado{ padding:0; }
+html.reel .destacado .cara{ gap:10px; padding:16px 16px 16px; }
+html.reel .destacado .cab-d{ height:auto; min-height:64px; }
+html.reel .destacado .imagen img, html.reel .destacado .imagen video, html.reel .destacado .carrusel .slide img{ max-height:26dvh; }
+/* la carta destacada conserva sus cinco lineas tambien en el telefono (el resto de proyectos pone la imagen primero) */
+html.reel .destacado .cara .imagen{ order:0; }
+/* el boton de la carta en el telefono: la URL entera en una linea */
+html.reel .proyecto.destacado .link{ font-size:17px; padding:14px 14px 14px 18px; }
+html.reel .proyecto.destacado .link i{ width:32px; height:32px; font-size:17px; }
+html.reel .proyecto h3{ font-size: clamp(28px, 8vw, 40px); }
+html.reel .sec-titulo{ font-size: clamp(30px, 8.5vw, 44px); margin-bottom:14px; }
+html.reel .seccion{ padding:14px 16px; }
+html.reel .pie{ position:absolute; left:0; right:0; bottom:0; padding:10px 16px; }
+
+/* ================= PANTALLA BAJA (laptops de 768/720 de alto): la ficha se aprieta ================= */
+@media (min-width: 861px) and (max-height: 820px){
+  .ficha{ padding: 10px 22px 10px; gap: 6px; }
+  .retrato img{ height: clamp(110px, 23vh, 300px); }
+  .nombre{ font-size: clamp(26px, 4vh, 40px); }
+  .cargo{ font-size:12px; line-height:1.3; }
+  .lugar{ display:none; }
+  .atr-cab{ display:none; }
+  .atributos{ padding: 7px 12px 8px; }
+  .atr-lista{ gap:4px; }
+  .atr{ row-gap:2px; }
+  .atr .bar{ height:5px; }
+  .atr .val{ font-size:16px; }
+  .cta{ font-size:17px; padding:8px 16px 7px; }
+  .ficha-botones a{ padding:5px 8px; font-size:12.5px; }
+}
+
+/* ================= ANGOSTO ================= */
+@media (max-width: 1080px){ :root{ --ficha-ancho: 340px; } .nombre{ font-size:34px; } }
+@media (max-width: 860px){
+  .pagina{ grid-template-columns: 1fr; }
+  /* ---- TELEFONO: la ficha queda FIJA ARRIBA, resumida; al tocarla se despliega hacia abajo ---- */
+  .ficha{ position:sticky; top:0; z-index:40; height:auto; max-height:100vh; overflow-y:auto; border-right:0; border-bottom:1px solid var(--linea);
+          display:flex; flex-direction:row; flex-wrap:wrap; align-items:center; gap:10px 14px; padding:14px 16px; box-shadow:0 10px 30px rgba(0,0,0,.45); }
+  /* la barra resumida tiene protagonismo: foto grande, nombre grande */
+  .ficha-cab{ order:3; gap:8px; flex-direction:column; align-items:flex-end; }
+  .ficha-cab .logo{ display:none; }
+  .ficha-toggle{ display:flex; align-items:center; justify-content:center; width:44px; height:34px; border:1px solid var(--linea-2); background:var(--sala); color:var(--luz); font-size:17px; cursor:pointer; border-radius:3px; transition:transform .3s ease; }
+  .ficha.abierta .ficha-toggle{ transform:rotate(180deg); }
+  .retrato{ order:1; width:96px; height:96px; flex:0 0 auto; cursor:pointer; }
+  .retrato img{ width:96px; height:96px; aspect-ratio:1; object-fit:cover; object-position:center 20%; }
+  .nivel{ left:-6px; bottom:-7px; font-size:12px; padding:2px 7px 1px; }
+  .quien{ order:2; display:flex; flex-direction:column; flex:1 1 110px; min-width:0; gap:4px; cursor:pointer; }
+  .ficha-cab{ flex:0 0 auto; width:70px; }
+  .nombre{ font-size:clamp(24px, 7.2vw, 30px); line-height:.92; }
+  .nombre br{ display:none; }
+  .cargo{ font-size:12.5px; line-height:1.3; }
+  .lugar{ display:none; margin:0; font-size:12px; }
+  .ficha.abierta .lugar{ display:block; }
+  /* el detalle se despliega animado hacia abajo (max-height 0 → 75vh) */
+  .ficha-detalle{ order:10; width:100%; display:block; max-height:0; overflow:hidden; transition:max-height .42s cubic-bezier(.2,.8,.2,1); }
+  .ficha-detalle-in{ display:flex; flex-direction:column; gap:10px; padding-top:8px; }
+  .ficha.abierta .ficha-detalle{ max-height:75vh; overflow:auto; }
+  /* la barra de secciones va PEGADA debajo del perfil: fija, y baja cuando la ficha se despliega */
+  /* los 6 botones repartidos a lo ancho de la pantalla, sin scroll lateral */
+  .menu{ position:sticky; top: var(--ficha-alto, 124px); z-index:35; background:var(--sala); display:flex; justify-content:space-between; gap:4px; padding:10px 10px; overflow:hidden; }
+  .menu a{ flex:1 1 0; min-width:0; text-align:center; font-size: clamp(10.5px, 3.2vw, 14px); letter-spacing:.05em; padding-bottom:3px; }
+  .menu .menu-n{ display:none; }
+  .proyecto{ grid-template-columns:1fr; }
+  .proyecto.der .texto{ order:0; }
+  .proyecto .imagen{ order:-1; }
+  .atr-grid, .formacion{ grid-template-columns: 1fr 1fr; }
+  .cronica li{ grid-template-columns: 90px 1fr; }
+  .cronica .anio{ font-size:36px; }
+  .servicio{ grid-template-columns:1fr; }
+  .servicio .precio{ text-align:left; }
+}
+@media (max-width: 520px){
+  .atr-grid, .formacion{ grid-template-columns:1fr; }
+  .numeros{ gap:18px 28px; }
+  .numeros b{ font-size:38px; }
+  .galeria{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
