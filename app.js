@@ -94,7 +94,7 @@
   }
 
   // ---------- las cartas: flotan (B2), se inclinan con el mouse y giran al clic (A3) ----------
-  // Las grandes que van solas en su fila no giran: solo flotan y se inclinan (menos, porque son anchas).
+  // La carta grande sola (Monito Amarillo) no gira: solo flota y se inclina (menos, porque es ancha).
   const R = (ang, y, s) => `rotateY(${ang}deg) translateY(${y}px) scale(${s})`;
   const GIRO_A3 = [
     { transform: R(0, 0, 1), easing: "cubic-bezier(.5,0,.75,.3)" },
@@ -170,9 +170,10 @@
   }
 
   // ---------- desfile ----------
-  // Todos los proyectos son CARTAS. Los que comparten "fila" en datos.js van de a dos en la misma
-  // linea (FaenApp + Stab, Earth Survivor + Space G, Ready + MARSICARE) y giran al clic; los demas
-  // van solos, en una carta grande de una sola cara. El borde de cada carta usa su "color".
+  // Los que comparten "fila" en datos.js van de a dos en la misma linea como CARTAS que giran al clic
+  // (FaenApp + Stab, Earth Survivor + Space G, Ready + MARSICARE); el borde usa su "color".
+  // Los que tienen "carta: true" van solos en una carta grande sin giro (Monito Amarillo).
+  // El resto va completo, sin carta: texto a un lado e imagen al otro, alternando.
   function pintarProyectos() {
     const total = D.proyectos.length;
     $("#menu-total").textContent = total;
@@ -196,9 +197,26 @@
       const tec = `<ul class="tec">${t(p.tecnica).split(" · ").map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
       const rol = `<p class="rol"><span>${esc(t("Rol"))}</span> ${esc(t(p.rol))}</p>`;
       const clases = "proyecto carta-p aparece" + (sola ? " sola" : "") + (lado ? " der" : "") + (p.borde ? " " + p.borde : "");
-      const color = p.color ? ` style="--borde:${esc(p.color)}"` : "";
+      const estilo = [p.color && `--borde:${p.color}`, p.boton && `--boton:${p.boton}`].filter(Boolean).join(";");
+      const color = estilo ? ` style="${esc(estilo)}"` : "";
 
-      // Carta grande sola: una cara, texto a un lado y la imagen al otro (alternando). No gira.
+      // Completo, sin carta: como era el desfile original.
+      if (!sola && !p.fila) {
+        return `
+      <article class="proyecto aparece${lado ? " der" : ""}" id="p-${n}">
+        <div class="texto">
+          <h3>${esc(p.nombre)}</h3>
+          <div class="meta">${etiquetas}</div>
+          <p class="desc">${resaltar(t(p.desc))}</p>
+          ${link}
+          ${tec}
+          ${rol}
+        </div>
+        ${img}
+      </article>`;
+      }
+
+      // Carta grande sola: una cara, texto a un lado y la imagen al otro. No gira y llena el alto.
       if (sola) {
         return `
       <article class="${clases}" id="p-${n}"${color}>
@@ -248,10 +266,12 @@
         </div></div>
       </article>`;
     };
-    let k = 0, solas = 0;
+    let k = 0, lados = 0;
     $("#proyectos").innerHTML = filas.map((f) => {
-      const dos = f.items.length > 1;
-      return `<div class="fila-cartas${dos ? " dos" : ""}">${f.items.map((p) => tarjeta(p, k++, !dos, !dos && solas++ % 2 === 1)).join("")}</div>`;
+      const dos = f.items.length > 1, p = f.items[0];
+      if (dos) return `<div class="fila-cartas dos">${f.items.map((x) => tarjeta(x, k++, false, false)).join("")}</div>`;
+      const lado = lados++ % 2 === 1;
+      return p.carta ? `<div class="fila-cartas una">${tarjeta(p, k++, true, lado)}</div>` : tarjeta(p, k++, false, lado);
     }).join("");
   }
 
@@ -306,9 +326,9 @@
   // ---------- escritorio: cada apartado es una DIAPOSITIVA que llena la pantalla ----------
   // Una rueda del mouse = un apartado, con desplazamiento animado. Si el contenido no cabe
   // en el alto de la ventana, se escala (zoom) para que siempre entre entero.
-  // En escritorio ("paginado") cada fila de cartas (de a una o de a dos) es una diapositiva; en
-  // telefono ("reel", estilo TikTok: se desliza con el dedo y engancha) cada carta es una diapositiva.
-  const DIAPOS_PC  = [".hero", ".fila-cartas", "#atributos-sec", "#cronica", "#servicios", "#arte", "#contacto"];
+  // En escritorio ("paginado") cada fila de cartas y cada proyecto completo es una diapositiva; en
+  // telefono ("reel", estilo TikTok: se desliza con el dedo y engancha) cada proyecto es una diapositiva.
+  const DIAPOS_PC  = [".hero", ".fila-cartas", ".proyecto:not(.carta-p)", "#atributos-sec", "#cronica", "#servicios", "#arte", "#contacto"];
   const DIAPOS_TEL = [".hero", ".proyecto", "#atributos-sec", "#cronica", "#servicios", "#arte", "#contacto"];
   const paginado = () => document.documentElement.classList.contains("paginado");
   const reel = () => document.documentElement.classList.contains("reel");

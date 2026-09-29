@@ -153,9 +153,19 @@ button{ font-family:inherit; }
 /* el boton siempre abajo del todo, en las dos caras */
 .proyecto.carta-p .frente .link{ margin-top:0; }
 
-/* ---------- la carta grande sola (Monito, Momi, Tyr, Mad King, La Castañuela): una cara, sin giro al clic ---------- */
+/* ---------- la carta grande sola (Monito Amarillo): una cara, sin giro al clic, sin marco de color ---------- */
+/* --boton: el color del boton del link (datos.js → boton); el marco queda neutro */
+.proyecto.carta-p.sola{ --boton: var(--cobalto); }
 .proyecto.carta-p.sola .carta{ cursor:default; }
-.proyecto.carta-p.sola .frente{ display:grid; grid-template-columns: 1fr 1fr; gap: clamp(20px,3vw,40px); align-items:center; padding: clamp(24px,3vw,36px); }
+.proyecto.carta-p.sola .cara{ border:1px solid var(--linea-2); background: linear-gradient(180deg, rgba(255,255,255,.035), transparent 40%), var(--muro); box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+.proyecto.carta-p.sola .frente{ display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1.15fr); gap: clamp(24px,4vw,64px); align-items:center; padding: clamp(24px,4vw,56px); }
+.proyecto.carta-p.sola h3{ font-size: clamp(40px,5.6vw,84px); }
+.proyecto.carta-p.sola .desc{ font-size: clamp(15px,1.2vw,17px); }
+.proyecto.carta-p.sola .imagen img{ max-height:none; }
+.proyecto.carta-p.sola .link{ background:var(--boton); border-color:var(--boton); box-shadow: 0 10px 28px color-mix(in srgb, var(--boton) 38%, transparent); }
+.proyecto.carta-p.sola .link:hover{ background: color-mix(in srgb, var(--boton) 78%, #fff); border-color: color-mix(in srgb, var(--boton) 78%, #fff); }
+@media (hover:hover){ .proyecto.carta-p.sola:hover .link{ animation: palpitar-sola 1.4s ease-in-out infinite; } }
+@keyframes palpitar-sola{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.03); } }
 .proyecto.carta-p.sola.der .texto{ order:2; }
 .proyecto.carta-p.sola .texto{ display:flex; flex-direction:column; align-items:flex-start; }
 .proyecto.carta-p.sola .frente .link{ align-self:flex-start; margin-top:16px; }
@@ -337,8 +347,13 @@ html.paginado .carta-p .cab-d{ height:104px; }
 html.paginado .carta-p .cab-d .logo{ height:76px; }
 html.paginado .carta-p .cab-d .logo.pixel{ height:104px; }
 html.paginado .carta-p .imagen img, html.paginado .carta-p .imagen video, html.paginado .carta-p .carrusel .slide img{ max-height:32vh; }
-html.paginado .carta-p.sola .imagen img, html.paginado .carta-p.sola .carrusel .slide img{ max-height:58vh; }
-html.paginado .carta-p.sola .carrusel.vertical .slide img{ max-height:56vh; }
+/* la carta sola llena el alto de la diapositiva y su imagen crece con ella */
+html.paginado .fila-cartas.una{ padding-top:92px; padding-bottom:34px; }
+html.paginado .fila-cartas.una > .diapo-in{ height:100%; display:flex; }
+html.paginado .fila-cartas.una .proyecto.carta-p{ flex:1; display:flex; }
+html.paginado .fila-cartas.una .flotante, html.paginado .fila-cartas.una .carta{ flex:1; height:100%; }
+html.paginado .fila-cartas.una .carta{ display:grid; }
+html.paginado .carta-p.sola .imagen img{ max-height: calc(100vh - 230px); }
 html.paginado .proyecto.carta-p .link{ padding:13px 16px 13px 22px; font-size:19px; }
 html.paginado .proyecto.carta-p .link i{ width:34px; height:34px; }
 /* el resto de imagenes tampoco puede pasarse del alto */
