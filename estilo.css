@@ -99,27 +99,30 @@ button{ font-family:inherit; }
 .proyecto.der .texto{ order:2; }
 .proyecto .texto, .proyecto .imagen{ min-width:0; }
 .proyecto .link span{ overflow-wrap:anywhere; }
-/* ---------- la fila destacada: Monito, FaenApp y Stab juntos, con logo, resaltados ---------- */
-.destacados{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap:18px; padding: clamp(24px,3.6vw,44px) var(--gut); border-bottom:1px solid var(--linea); }
-/* ---------- la carta destacada: dos caras, flota sola (B2), se inclina con el mouse y gira al clic (A3) ---------- */
-.proyecto.destacado{ position:relative; display:block; padding:0; border:0; background:none; box-shadow:none; perspective:1500px; }
-.destacado .flotante{ animation: flota-carta 4s ease-in-out infinite; will-change:transform; }
+/* ---------- las filas del desfile: de a dos cartas (FaenApp + Stab, Earth Survivor + Space G...) o una grande sola ---------- */
+.fila-cartas{ display:grid; grid-template-columns: 1fr; gap:22px; padding: clamp(24px,3.6vw,44px) var(--gut); border-bottom:1px solid var(--linea); }
+.fila-cartas.dos{ grid-template-columns: 1fr 1fr; }
+.fila-cartas.tres{ grid-template-columns: 1fr 1fr 1fr; gap:18px; }
+/* ---------- la carta: dos caras, flota sola (B2), se inclina con el mouse y gira al clic (A3) ---------- */
+/* --borde: el color de cada proyecto, sacado de sus capturas (datos.js → color) */
+.proyecto.carta-p{ --borde: var(--cobalto); position:relative; display:block; padding:0; border:0; background:none; box-shadow:none; perspective:1500px; }
+.carta-p .flotante{ animation: flota-carta 4s ease-in-out infinite; will-change:transform; }
 @keyframes flota-carta{ 0%,100%{ transform:translateY(0) rotate(-.3deg); } 50%{ transform:translateY(-9px) rotate(.3deg); } }
-.destacado .carta{ display:grid; transform-style:preserve-3d; will-change:transform; cursor:pointer; transition:transform .16s ease-out; outline:none; }
-.destacado .carta:focus-visible .frente{ outline:2px solid var(--luz); outline-offset:4px; }
-.destacado .cara{ grid-area:1 / 1; position:relative; backface-visibility:hidden; -webkit-backface-visibility:hidden; overflow:hidden;
-  display:flex; flex-direction:column; align-items:stretch; gap:16px; padding:30px 26px 28px; border:1px solid var(--cobalto);
-  background: linear-gradient(180deg, rgba(59,111,234,.12), rgba(59,111,234,0) 38%), var(--muro);
-  box-shadow: 0 0 0 1px rgba(59,111,234,.22), 0 24px 60px rgba(59,111,234,.14); }
-.destacado .dorso{ transform:rotateY(180deg); }
+.carta-p .carta{ display:grid; transform-style:preserve-3d; will-change:transform; cursor:pointer; transition:transform .16s ease-out; outline:none; }
+.carta-p .carta:focus-visible .frente{ outline:2px solid var(--luz); outline-offset:4px; }
+.carta-p .cara{ grid-area:1 / 1; position:relative; backface-visibility:hidden; -webkit-backface-visibility:hidden; overflow:hidden;
+  display:flex; flex-direction:column; align-items:stretch; gap:16px; padding:30px 26px 28px; border:1px solid var(--borde);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--borde) 12%, transparent), transparent 38%), var(--muro);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--borde) 22%, transparent), 0 24px 60px color-mix(in srgb, var(--borde) 14%, transparent); }
+.carta-p .dorso{ transform:rotateY(180deg); }
 /* brillo que sigue al mouse (se apaga mientras gira) */
-.destacado .cara::after{ content:""; position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity .25s;
+.carta-p .cara::after{ content:""; position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity .25s;
   background: radial-gradient(460px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.07), transparent 60%); }
-@media (hover:hover){ .proyecto.destacado:hover .cara::after{ opacity:1; } .proyecto.destacado.girando .cara::after{ opacity:0; } }
+@media (hover:hover){ .proyecto.carta-p:hover .cara::after{ opacity:1; } .proyecto.carta-p.girando .cara::after{ opacity:0; } }
 
 /* STAB: borde "corriente" con los colores de YOUR FRIENDS y de los personajes, fluyendo a lo largo del marco */
 @property --pos{ syntax:"<percentage>"; inherits:false; initial-value:0%; }
-.proyecto.destacado.arcoiris .cara{ border:2px solid transparent; box-shadow: 0 0 0 1px rgba(255,255,255,.06), 0 24px 60px rgba(59,111,234,.14);
+.proyecto.carta-p.arcoiris .cara{ border:2px solid transparent; box-shadow: 0 0 0 1px rgba(255,255,255,.06), 0 24px 60px rgba(59,111,234,.14);
   background:
     linear-gradient(180deg, rgba(59,111,234,.12), rgba(59,111,234,0) 38%) padding-box,
     linear-gradient(var(--muro), var(--muro)) padding-box,
@@ -128,71 +131,90 @@ button{ font-family:inherit; }
   animation: fluye-borde 4s linear infinite; }
 @keyframes fluye-borde{ to{ --pos:-300%; } }
 /* MONITO: el mismo borde corriente pero dorado, con los amarillos del logo */
-.proyecto.destacado.dorado .cara{ border:2px solid transparent; box-shadow: 0 0 0 1px rgba(255,255,255,.06), 0 24px 60px rgba(245,196,8,.12);
+.proyecto.carta-p.dorado .cara{ border:2px solid transparent; box-shadow: 0 0 0 1px rgba(255,255,255,.06), 0 24px 60px rgba(245,196,8,.12);
   background:
     linear-gradient(180deg, rgba(245,196,8,.10), rgba(245,196,8,0) 38%) padding-box,
     linear-gradient(var(--muro), var(--muro)) padding-box,
     linear-gradient(90deg, #794100, #B87F00, #F5C408, #FFEBA3, #F5C408, #B87F00, #794100) border-box;
   background-size: 100% 100%, 100% 100%, 300% 100%; background-position: 0 0, 0 0, var(--pos) 0;
   animation: fluye-borde 4s linear infinite; }
-@media (prefers-reduced-motion: reduce){ .proyecto.destacado.arcoiris .cara, .proyecto.destacado.dorado .cara{ animation:none; } }
+@media (prefers-reduced-motion: reduce){ .proyecto.carta-p.arcoiris .cara, .proyecto.carta-p.dorado .cara{ animation:none; } }
 
 /* frente, linea 1: el logo centrado en los dos primeros tercios, el sello centrado en el tercio derecho */
-.destacado .cab-d{ display:grid; grid-template-columns: 1.25fr 1fr; align-items:center; height:136px; padding-left:4px; }
-.destacado .cab-d .logo{ justify-self:center; height:96px; width:auto; max-width:92%; object-fit:contain; object-position:center; }
-.destacado .cab-d .logo.pixel{ image-rendering:pixelated; height:136px; }
-.destacado .cab-d .sello{ justify-self:center; background:transparent; color:var(--cobalto-claro); border:1px solid var(--cobalto); font-family:var(--datos); font-size:10px; font-weight:600; letter-spacing:.22em; text-transform:uppercase; padding:6px 12px; white-space:nowrap; }
-@media (max-width: 1180px){ .destacado .cab-d{ height:104px; } .destacado .cab-d .logo{ height:72px; } .destacado .cab-d .logo.pixel{ height:102px; } }
-.destacado .linea2{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 8px; font-family:var(--datos); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--tenue); }
-.destacado .linea2 .anio{ color:var(--luz); font-weight:600; }
-.destacado .linea2 .tipo, .destacado .linea2 .rar{ border:1px solid var(--linea-2); padding:2px 8px; }
-.destacado .linea2 .rar{ font-size:9.5px; }
-.destacado .linea2 .rar i{ font-style:normal; color:var(--cobalto-claro); margin-right:6px; letter-spacing:0; }
-.destacado .linea2 .n{ color:var(--cobalto-claro); font-weight:600; }
-.destacado .linea2 .sep{ width:1px; height:18px; background:var(--linea-2); margin:0 4px; }
-.destacado .linea2 .tec{ margin:0; }
-.destacado .linea2 .tec li{ background:transparent; }
-.destacado .linea2 .rol{ margin:0; text-transform:none; letter-spacing:0; font-family:var(--cuerpo); font-size:12.5px; }
-.destacado .imagen{ margin-top:2px; }
-.destacado .pista{ text-align:center; font-family:var(--datos); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--tenue); margin-top:auto; padding-top:6px; }
+.carta-p .cab-d{ display:grid; grid-template-columns: minmax(0,1.25fr) minmax(0,1fr); gap:10px; align-items:center; height:136px; padding-left:4px; }
+.carta-p .cab-d .logo{ justify-self:center; height:96px; width:auto; max-width:92%; object-fit:contain; object-position:center; }
+.carta-p .cab-d .logo.pixel{ image-rendering:pixelated; height:136px; }
+.carta-p .cab-d .nombre-c{ justify-self:center; min-width:0; max-width:100%; margin:0; font-family:var(--display); font-weight:900; font-size: clamp(26px,2.6vw,44px); line-height:.94; text-transform:uppercase; text-align:center; text-wrap:balance; }
+.carta-p .cab-d .sello{ justify-self:center; background:transparent; color:var(--cobalto-claro); border:1px solid var(--cobalto); font-family:var(--datos); font-size:10px; font-weight:600; letter-spacing:.22em; text-transform:uppercase; padding:6px 12px; text-align:center; max-width:100%; }
+@media (max-width: 1180px){ .carta-p .cab-d{ height:104px; } .carta-p .cab-d .logo{ height:72px; } .carta-p .cab-d .logo.pixel{ height:102px; } }
+.carta-p .linea2{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 8px; font-family:var(--datos); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--tenue); }
+.carta-p .linea2 .anio{ color:var(--luz); font-weight:600; }
+.carta-p .linea2 .tipo, .carta-p .linea2 .rar{ border:1px solid var(--linea-2); padding:2px 8px; }
+.carta-p .linea2 .rar{ font-size:9.5px; }
+.carta-p .linea2 .rar i{ font-style:normal; color:var(--cobalto-claro); margin-right:6px; letter-spacing:0; }
+.carta-p .linea2 .n{ color:var(--cobalto-claro); font-weight:600; }
+.carta-p .linea2 .sep{ width:1px; height:18px; background:var(--linea-2); margin:0 4px; }
+.carta-p .linea2 .tec{ margin:0; }
+.carta-p .linea2 .tec li{ background:transparent; }
+.carta-p .linea2 .rol{ margin:0; text-transform:none; letter-spacing:0; font-family:var(--cuerpo); font-size:12.5px; }
+.carta-p .imagen{ margin-top:2px; }
+.carta-p .pista{ text-align:center; font-family:var(--datos); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--tenue); margin-top:auto; padding-top:6px; }
 /* el boton siempre abajo del todo, en las dos caras */
-.proyecto.destacado .frente .link{ margin-top:0; }
+.proyecto.carta-p .frente .link{ margin-top:0; }
+
+/* ---------- la carta grande sola (Monito Amarillo): una cara, sin giro al clic, sin marco de color ---------- */
+/* --boton: el color del boton del link (datos.js → boton); el marco queda neutro */
+.proyecto.carta-p.sola{ --boton: var(--cobalto); }
+.proyecto.carta-p.sola .carta{ cursor:default; }
+.proyecto.carta-p.sola .cara{ border:1px solid var(--linea-2); background: linear-gradient(180deg, rgba(255,255,255,.035), transparent 40%), var(--muro); box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+.proyecto.carta-p.sola .frente{ display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1.15fr); gap: clamp(24px,4vw,64px); align-items:center; padding: clamp(24px,4vw,56px); }
+.proyecto.carta-p.sola h3{ font-size: clamp(40px,5.6vw,84px); }
+.proyecto.carta-p.sola .desc{ font-size: clamp(15px,1.2vw,17px); }
+.proyecto.carta-p.sola .imagen img{ max-height:none; }
+.proyecto.carta-p.sola .link{ background:var(--boton); border-color:var(--boton); box-shadow: 0 10px 28px color-mix(in srgb, var(--boton) 38%, transparent); }
+.proyecto.carta-p.sola .link:hover{ background: color-mix(in srgb, var(--boton) 78%, #fff); border-color: color-mix(in srgb, var(--boton) 78%, #fff); }
+@media (hover:hover){ .proyecto.carta-p.sola:hover .link{ animation: palpitar-sola 1.4s ease-in-out infinite; } }
+@keyframes palpitar-sola{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.03); } }
+.proyecto.carta-p.sola.der .texto{ order:2; }
+.proyecto.carta-p.sola .texto{ display:flex; flex-direction:column; align-items:flex-start; }
+.proyecto.carta-p.sola .frente .link{ align-self:flex-start; margin-top:16px; }
+@media (max-width: 860px){ .proyecto.carta-p.sola .frente{ grid-template-columns:1fr; } .proyecto.carta-p.sola .imagen{ order:-1; } .proyecto.carta-p.sola.der .texto{ order:0; } }
 
 /* dorso: mas informacion */
-.destacado .dorso .k{ font-family:var(--datos); font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--cobalto-claro); }
-.destacado .dorso h3{ margin:0; font-size: clamp(34px,3.6vw,52px); }
-.proyecto.destacado .dorso .desc{ display:block; max-width:none; font-size:16px; line-height:1.65; text-align:left; }
+.carta-p .dorso .k{ font-family:var(--datos); font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--cobalto-claro); }
+.carta-p .dorso h3{ margin:0; font-size: clamp(34px,3.6vw,52px); }
+.proyecto.carta-p .dorso .desc{ display:block; max-width:none; font-size:16px; line-height:1.65; text-align:left; }
 .proyecto .desc b{ color:var(--cobalto-claro); font-weight:700; }
-.destacado .dorso .tec{ margin:0; }
-.destacado .dorso .rol{ margin:0; }
-.proyecto.destacado .dorso .link{ margin-top:auto; }
+.carta-p .dorso .tec{ margin:0; }
+.carta-p .dorso .rol{ margin:0; }
+.proyecto.carta-p .dorso .link{ margin-top:auto; }
 
 /* el boton de la carta: todo el ancho; al pasar el mouse por la carta, barrido blanco y palpitado (B2) */
-.proyecto.destacado .link{ position:relative; overflow:hidden; align-self:stretch; justify-content:space-between; margin-top:4px; padding:17px 18px 17px 24px; font-size:21px; letter-spacing:.01em; box-shadow: 0 10px 28px rgba(59,111,234,.38); animation:none; }
-.proyecto.destacado .link i{ width:38px; height:38px; font-size:20px; background:rgba(10,12,16,.22); animation:none; }
-.proyecto.destacado .link::before{ content:""; position:absolute; top:-20%; bottom:-20%; left:0; width:55%; pointer-events:none;
+.proyecto.carta-p .link{ position:relative; overflow:hidden; align-self:stretch; justify-content:space-between; margin-top:4px; padding:17px 18px 17px 24px; font-size:21px; letter-spacing:.01em; box-shadow: 0 10px 28px rgba(59,111,234,.38); animation:none; }
+.proyecto.carta-p .link i{ width:38px; height:38px; font-size:20px; background:rgba(10,12,16,.22); animation:none; }
+.proyecto.carta-p .link::before{ content:""; position:absolute; top:-20%; bottom:-20%; left:0; width:55%; pointer-events:none;
   background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,.55) 50%, transparent 80%); transform:translateX(-140%) skewX(-12deg); }
 @media (hover:hover){
-  .proyecto.destacado:hover .link::before{ animation: barrer 1.8s cubic-bezier(.4,0,.2,1) infinite; }
-  .proyecto.destacado:hover .link{ animation: palpitar 1.4s ease-in-out infinite; }
+  .proyecto.carta-p:hover .link::before{ animation: barrer 1.8s cubic-bezier(.4,0,.2,1) infinite; }
+  .proyecto.carta-p:hover .link{ animation: palpitar 1.4s ease-in-out infinite; }
 }
 @keyframes barrer{ 0%{ transform:translateX(-140%) skewX(-12deg); } 60%,100%{ transform:translateX(260%) skewX(-12deg); } }
 @keyframes palpitar{ 0%,100%{ transform:scale(1); box-shadow:0 10px 28px rgba(59,111,234,.38); } 50%{ transform:scale(1.03); box-shadow:0 14px 36px rgba(59,111,234,.55); } }
-.proyecto.destacado .link:hover{ transform:none; }
+.proyecto.carta-p .link:hover{ transform:none; }
 /* STAB (solo la carta grande): boton ambar como el logo, borde y letras con el mismo arcoiris corriente del marco */
-.proyecto.destacado.arcoiris .link{ color:#2A1A1F; border:2px solid transparent;
+.proyecto.carta-p.arcoiris .link{ color:#2A1A1F; border:2px solid transparent;
   background: linear-gradient(180deg, #FFC800, #DE9607) padding-box, linear-gradient(90deg, #FF4D4D, #FFA23A, #FFE94D, #5CE07A, #4DA6FF, #B36BFF, #FF5CB8, #FF4D4D) border-box;
   background-size: 100% 100%, 300% 100%; background-position: 0 0, var(--pos) 0;
   box-shadow: 0 10px 28px rgba(222,150,7,.42); animation: fluye-borde 4s linear infinite; }
-.proyecto.destacado.arcoiris .link span{ background: linear-gradient(90deg, #FF4D4D, #FFA23A, #FFE94D, #5CE07A, #4DA6FF, #B36BFF, #FF5CB8, #FF4D4D); background-size:300% 100%; background-position: var(--pos) 0;
+.proyecto.carta-p.arcoiris .link span{ background: linear-gradient(90deg, #FF4D4D, #FFA23A, #FFE94D, #5CE07A, #4DA6FF, #B36BFF, #FF5CB8, #FF4D4D); background-size:300% 100%; background-position: var(--pos) 0;
   -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent;
   filter: drop-shadow(0 0 1px #5C3841) drop-shadow(1px 1px 0 rgba(92,56,65,.95)); animation: fluye-borde 4s linear infinite; }
-.proyecto.destacado.arcoiris .link i{ background:rgba(92,56,65,.9); color:#FFF6D6; }
-@media (hover:hover){ .proyecto.destacado.arcoiris:hover .link{ animation: fluye-borde 4s linear infinite, palpitar-ambar 1.4s ease-in-out infinite; } }
+.proyecto.carta-p.arcoiris .link i{ background:rgba(92,56,65,.9); color:#FFF6D6; }
+@media (hover:hover){ .proyecto.carta-p.arcoiris:hover .link{ animation: fluye-borde 4s linear infinite, palpitar-ambar 1.4s ease-in-out infinite; } }
 @keyframes palpitar-ambar{ 0%,100%{ transform:scale(1); box-shadow:0 10px 28px rgba(222,150,7,.42); } 50%{ transform:scale(1.03); box-shadow:0 14px 36px rgba(255,200,0,.6); } }
-@media (prefers-reduced-motion: reduce){ .destacado .flotante, .proyecto.destacado .link, .proyecto.destacado .link::before{ animation:none !important; } }
-@media (max-width: 1400px){ .destacados, html.paginado .destacados > .diapo-in{ gap:14px; } .destacado .cara{ padding:22px 18px 20px; } }
-@media (max-width: 860px){ .destacados{ grid-template-columns:1fr; } .destacado .cab-d{ height:auto; min-height:72px; } .destacado .cab-d .logo{ height:56px; } .destacado .cab-d .logo.pixel{ height:68px; } .destacado .cara{ padding:22px 18px 20px; } }
+@media (prefers-reduced-motion: reduce){ .carta-p .flotante, .proyecto.carta-p .link, .proyecto.carta-p .link::before{ animation:none !important; } }
+@media (max-width: 1400px){ .fila-cartas.tres, html.paginado .fila-cartas.tres > .diapo-in{ gap:14px; } .fila-cartas.tres .cara{ padding:22px 18px 20px; } }
+@media (max-width: 860px){ .fila-cartas{ grid-template-columns:1fr; } .carta-p .cab-d{ height:auto; min-height:72px; } .carta-p .cab-d .logo{ height:56px; } .carta-p .cab-d .logo.pixel{ height:68px; } .carta-p .cara{ padding:22px 18px 20px; } }
 
 /* Orden dentro de cada proyecto: titulo → etiquetas → descripcion → boton → tecnica → rol */
 .proyecto h3{ margin:0 0 10px; font-family:var(--display); font-weight:900; font-size: clamp(34px,4.8vw,62px); line-height:.94; text-transform:uppercase; text-wrap:balance; }
@@ -340,19 +362,29 @@ html.paginado .diapo{ box-sizing:border-box; height:100vh; overflow:hidden;
   display:flex; flex-direction:column; justify-content:center; padding:72px var(--gut) 26px; border-bottom:0; }
 html.paginado .diapo-in{ zoom: 1; width:100%; }
 html.paginado .proyecto > .diapo-in{ display:grid; grid-template-columns:1fr 1fr; gap: clamp(20px,3vw,40px); align-items:center; }
-html.paginado .destacados > .diapo-in{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; }
-/* las tres cartas miden lo mismo: el sobrante queda entre los medios y el boton */
-html.paginado .destacados > .diapo-in{ align-items:stretch; }
-html.paginado .proyecto.destacado .flotante, html.paginado .proyecto.destacado .carta{ height:100%; }
+html.paginado .fila-cartas > .diapo-in{ display:grid; grid-template-columns:1fr; gap:22px; }
+html.paginado .fila-cartas.dos > .diapo-in{ grid-template-columns:1fr 1fr; }
+html.paginado .fila-cartas.tres > .diapo-in{ grid-template-columns:1fr 1fr 1fr; gap:18px; }
+/* las cartas de una misma fila miden lo mismo: el sobrante queda entre los medios y el boton */
+html.paginado .fila-cartas.dos > .diapo-in, html.paginado .fila-cartas.tres > .diapo-in{ align-items:stretch; }
+html.paginado .fila-cartas.dos .proyecto.carta-p .flotante, html.paginado .fila-cartas.dos .proyecto.carta-p .carta,
+html.paginado .fila-cartas.tres .proyecto.carta-p .flotante, html.paginado .fila-cartas.tres .proyecto.carta-p .carta{ height:100%; }
 html.paginado .pie{ position:absolute; left:0; right:0; bottom:0; }
 /* las cartas destacadas mas bajas, para que la fila entre en la pantalla */
-html.paginado .destacado .cara{ gap:12px; padding:22px 24px 22px; }
-html.paginado .destacado .cab-d{ height:104px; }
-html.paginado .destacado .cab-d .logo{ height:76px; }
-html.paginado .destacado .cab-d .logo.pixel{ height:104px; }
-html.paginado .destacado .imagen img, html.paginado .destacado .imagen video, html.paginado .destacado .carrusel .slide img{ max-height:32vh; }
-html.paginado .proyecto.destacado .link{ padding:13px 16px 13px 22px; font-size:19px; }
-html.paginado .proyecto.destacado .link i{ width:34px; height:34px; }
+html.paginado .carta-p .cara{ gap:12px; padding:22px 24px 22px; }
+html.paginado .carta-p .cab-d{ height:104px; }
+html.paginado .carta-p .cab-d .logo{ height:76px; }
+html.paginado .carta-p .cab-d .logo.pixel{ height:104px; }
+html.paginado .carta-p .imagen img, html.paginado .carta-p .imagen video, html.paginado .carta-p .carrusel .slide img{ max-height:32vh; }
+/* la carta sola llena el alto de la diapositiva y su imagen crece con ella */
+html.paginado .fila-cartas.una{ padding-top:92px; padding-bottom:34px; }
+html.paginado .fila-cartas.una > .diapo-in{ height:100%; display:flex; }
+html.paginado .fila-cartas.una .proyecto.carta-p{ flex:1; display:flex; }
+html.paginado .fila-cartas.una .flotante, html.paginado .fila-cartas.una .carta{ flex:1; height:100%; }
+html.paginado .fila-cartas.una .carta{ display:grid; }
+html.paginado .carta-p.sola .imagen img{ max-height: calc(100vh - 230px); }
+html.paginado .proyecto.carta-p .link{ padding:13px 16px 13px 22px; font-size:19px; }
+html.paginado .proyecto.carta-p .link i{ width:34px; height:34px; }
 /* el resto de imagenes tampoco puede pasarse del alto */
 html.paginado .proyecto .imagen img, html.paginado .carrusel .slide img{ max-height:62vh; }
 html.paginado .carrusel.vertical .slide img{ max-height:60vh; }
@@ -369,16 +401,16 @@ html.reel .diapo-in{ width:100%; }
 html.reel .proyecto > .diapo-in{ display:flex; flex-direction:column; gap:12px; }
 html.reel .proyecto .imagen img, html.reel .carrusel .slide img, html.reel .proyecto .imagen video{ max-height:34dvh; }
 html.reel .carrusel.vertical .slide img{ max-height:32dvh; }
-html.reel .destacados{ display:block; padding:0; border:0; }
-html.reel .proyecto.destacado{ padding:0; }
-html.reel .destacado .cara{ gap:10px; padding:16px 16px 16px; }
-html.reel .destacado .cab-d{ height:auto; min-height:64px; }
-html.reel .destacado .imagen img, html.reel .destacado .imagen video, html.reel .destacado .carrusel .slide img{ max-height:26dvh; }
-/* la carta destacada conserva sus cinco lineas tambien en el telefono (el resto de proyectos pone la imagen primero) */
-html.reel .destacado .cara .imagen{ order:0; }
+html.reel .fila-cartas{ display:block; padding:0; border:0; }
+html.reel .proyecto.carta-p{ padding:0; }
+html.reel .carta-p .cara{ gap:10px; padding:16px 16px 16px; }
+html.reel .carta-p .cab-d{ height:auto; min-height:64px; }
+html.reel .carta-p .imagen img, html.reel .carta-p .imagen video, html.reel .carta-p .carrusel .slide img{ max-height:26dvh; }
+/* la carta conserva sus cinco lineas tambien en el telefono (los proyectos completos ponen la imagen primero) */
+html.reel .carta-p:not(.sola) .cara .imagen{ order:0; }
 /* el boton de la carta en el telefono: la URL entera en una linea */
-html.reel .proyecto.destacado .link{ font-size:17px; padding:14px 14px 14px 18px; }
-html.reel .proyecto.destacado .link i{ width:32px; height:32px; font-size:17px; }
+html.reel .proyecto.carta-p .link{ font-size:17px; padding:14px 14px 14px 18px; }
+html.reel .proyecto.carta-p .link i{ width:32px; height:32px; font-size:17px; }
 html.reel .proyecto h3{ font-size: clamp(28px, 8vw, 40px); }
 html.reel .sec-titulo{ font-size: clamp(30px, 8.5vw, 44px); margin-bottom:14px; }
 html.reel .seccion{ padding:14px 16px; }

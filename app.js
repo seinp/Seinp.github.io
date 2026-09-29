@@ -97,7 +97,8 @@
     </div>`;
   }
 
-  // ---------- las cartas destacadas: flotan (B2), se inclinan con el mouse y giran al clic (A3) ----------
+  // ---------- las cartas: flotan (B2), se inclinan con el mouse y giran al clic (A3) ----------
+  // La carta grande sola (Monito Amarillo) no gira: solo flota y se inclina (menos, porque es ancha).
   const R = (ang, y, s) => `rotateY(${ang}deg) translateY(${y}px) scale(${s})`;
   const GIRO_A3 = [
     { transform: R(0, 0, 1), easing: "cubic-bezier(.5,0,.75,.3)" },
@@ -107,10 +108,11 @@
     { transform: R(180, 2, 1), offset: .95, easing: "ease-out" },
     { transform: R(180, 0, 1) }
   ];
-  const INCLINA = 10;   // grados maximos de B2
-  function armarDestacadas() {
-    document.querySelectorAll(".proyecto.destacado").forEach((art) => {
+  const INCLINA = 10, INCLINA_SOLA = 3;   // grados maximos de B2
+  function armarCartas() {
+    document.querySelectorAll(".proyecto.carta-p").forEach((art) => {
       const carta = art.querySelector(".carta"), caras = [...art.querySelectorAll(".cara")];
+      const sola = art.classList.contains("sola"), inclina = sola ? INCLINA_SOLA : INCLINA;
       let abierta = false, girando = false, anim = null;
       const base = () => (abierta ? "rotateY(180deg) " : "");
       const conMouse = () => matchMedia("(hover: hover) and (min-width: 861px)").matches;
@@ -122,9 +124,10 @@
         const dx = px - .5, dy = py - .5;
         caras.forEach((c) => { c.style.setProperty("--mx", (px * 100) + "%"); c.style.setProperty("--my", (py * 100) + "%"); });
         // en el dorso el eje Y esta espejado: se invierte para que siga al mouse igual
-        carta.style.transform = `${base()}rotateX(${-dy * INCLINA * 2}deg) rotateY(${(abierta ? -dx : dx) * INCLINA * 2}deg)`;
+        carta.style.transform = `${base()}rotateX(${-dy * inclina * 2}deg) rotateY(${(abierta ? -dx : dx) * inclina * 2}deg)`;
       });
       art.addEventListener("mouseleave", () => { if (!girando) carta.style.transform = base(); });
+      if (sola) return;
 
       function girar() {
         if (girando) return;
@@ -171,13 +174,20 @@
   }
 
   // ---------- desfile ----------
+  // Los que comparten "fila" en datos.js van de a dos en la misma linea como CARTAS que giran al clic
+  // (Monito + FaenApp + Stab de a tres, Earth Survivor + Space G, Ready + MARSICARE); el borde usa su "color".
+  // Los que tienen "carta: true" van solos en una carta grande sin giro (Monito Amarillo).
+  // El resto va completo, sin carta: texto a un lado e imagen al otro, alternando.
   function pintarProyectos() {
     const total = D.proyectos.length;
     $("#menu-total").textContent = total;
-    // FaenApp y Stab van juntos en una fila destacada arriba; el resto desfila alternando lados.
-    const destacados = D.proyectos.filter((p) => p.destacado);
-    const resto = D.proyectos.filter((p) => !p.destacado);
-    const tarjeta = (p, i, lado) => {
+    const filas = [];
+    D.proyectos.forEach((p) => {
+      const ultima = filas[filas.length - 1];
+      if (p.fila && ultima && ultima.fila === p.fila) ultima.items.push(p);
+      else filas.push({ fila: p.fila, items: [p] });
+    });
+    const tarjeta = (p, i, sola, lado) => {
       const n = String(i + 1).padStart(2, "0");
       const img = media(p);
       // El boton muestra el link tal cual (sin https:// ni barra final), por pedido de Esteban.
@@ -190,19 +200,59 @@
             <span class="n">${n} / ${total}</span>`;
       const tec = `<ul class="tec">${t(p.tecnica).split(" · ").map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
       const rol = `<p class="rol"><span>${esc(t("Rol"))}</span> ${esc(t(p.rol))}</p>`;
+      const clases = "proyecto carta-p aparece" + (sola ? " sola" : "") + (lado ? " der" : "") + (p.borde ? " " + p.borde : "");
+      const estilo = [p.color && `--borde:${p.color}`, p.boton && `--boton:${p.boton}`].filter(Boolean).join(";");
+      const color = estilo ? ` style="${esc(estilo)}"` : "";
 
-      // Tarjeta destacada, en cinco lineas (vision de Esteban):
-      // 1 titulo + logo + sello · 2 etiquetas + tecnica + rol · 3 video/carrusel · 4 descripcion · 5 boton
-      // Es una CARTA con dos caras: el frente (logo, etiquetas, medios, boton) y el dorso (la
-      // descripcion y el resto). Flota sola (B2), se inclina con el mouse y gira al hacer clic (A3).
-      if (p.destacado) {
+      // Completo, sin carta: como era el desfile original.
+      if (!sola && !p.fila) {
         return `
-      <article class="proyecto destacado aparece${p.borde ? " " + p.borde : ""}" id="p-${n}">
+      <article class="proyecto aparece${lado ? " der" : ""}" id="p-${n}">
+        <div class="texto">
+          <h3>${esc(p.nombre)}</h3>
+          <div class="meta">${etiquetas}</div>
+          <p class="desc">${resaltar(t(p.desc))}</p>
+          ${link}
+          ${tec}
+          ${rol}
+        </div>
+        ${img}
+      </article>`;
+      }
+
+      // Carta grande sola: una cara, texto a un lado y la imagen al otro. No gira y llena el alto.
+      if (sola) {
+        return `
+      <article class="${clases}" id="p-${n}"${color}>
+        <div class="flotante"><div class="carta">
+          <div class="cara frente">
+            <div class="texto">
+              <h3>${esc(p.nombre)}</h3>
+              <div class="meta">${etiquetas}</div>
+              <p class="desc">${resaltar(t(p.desc))}</p>
+              ${link}
+              ${tec}
+              ${rol}
+            </div>
+            ${img}
+          </div>
+        </div></div>
+      </article>`;
+      }
+
+      // Carta de a dos, en cinco lineas (vision de Esteban):
+      // 1 logo (o nombre) + sello · 2 etiquetas + tecnica + rol · 3 video/carrusel · 4 pista · 5 boton
+      // Dos caras: el frente y el dorso (la descripcion). Flota (B2), se inclina con el mouse y gira al clic (A3).
+      const cabeza = p.logo
+        ? `<img class="logo${p.logoPixel ? " pixel" : ""}" src="${esc(p.logo)}" alt="${esc(p.nombre)}">`
+        : `<h3 class="nombre-c">${esc(p.nombre)}</h3>`;
+      return `
+      <article class="${clases}" id="p-${n}"${color}>
         <div class="flotante"><div class="carta" tabindex="0" role="button" aria-pressed="false" aria-label="${esc(p.nombre)}">
           <div class="cara frente">
             <div class="cab-d">
-              ${p.logo ? `<img class="logo${p.logoPixel ? " pixel" : ""}" src="${esc(p.logo)}" alt="${esc(p.nombre)}">` : ""}
-              <span class="sello">${esc(t("Destacado"))}</span>
+              ${cabeza}
+              <span class="sello">${esc(t(p.destacado ? "Destacado" : p.etiqueta))}</span>
             </div>
             <div class="linea2">${etiquetas}<span class="sep" aria-hidden="true"></span>${tec}${rol}</div>
             ${img}
@@ -219,24 +269,14 @@
           </div>
         </div></div>
       </article>`;
-      }
-
-      return `
-      <article class="proyecto aparece${lado ? " der" : ""}" id="p-${n}">
-        <div class="texto">
-          <h3>${esc(p.nombre)}</h3>
-          <div class="meta">${etiquetas}</div>
-          <p class="desc">${resaltar(t(p.desc))}</p>
-          ${link}
-          ${tec}
-          ${rol}
-        </div>
-        ${img}
-      </article>`;
     };
-    $("#proyectos").innerHTML =
-      `<div class="destacados">${destacados.map((p, i) => tarjeta(p, i, false)).join("")}</div>` +
-      resto.map((p, i) => tarjeta(p, i + destacados.length, i % 2 === 1)).join("");
+    let k = 0, lados = 0;
+    $("#proyectos").innerHTML = filas.map((f) => {
+      const dos = f.items.length > 1, p = f.items[0];
+      if (dos) return `<div class="fila-cartas ${f.items.length > 2 ? "tres" : "dos"}">${f.items.map((x) => tarjeta(x, k++, false, false)).join("")}</div>`;
+      const lado = lados++ % 2 === 1;
+      return p.carta ? `<div class="fila-cartas una">${tarjeta(p, k++, true, lado)}</div>` : tarjeta(p, k++, false, lado);
+    }).join("");
   }
 
   // ---------- cronica ----------
@@ -273,7 +313,7 @@
   function pintarTodo() {
     pintarAtributos(); pintarNumeros(); pintarProyectos(); pintarCronica(); pintarServicios(); pintarArte(); pintarRedes();
     armarCarruseles();
-    armarDestacadas();
+    armarCartas();
     traducirEstaticos();
     armarPaginado();
     observarAparecer();
@@ -290,9 +330,9 @@
   // ---------- escritorio: cada apartado es una DIAPOSITIVA que llena la pantalla ----------
   // Una rueda del mouse = un apartado, con desplazamiento animado. Si el contenido no cabe
   // en el alto de la ventana, se escala (zoom) para que siempre entre entero.
-  // En escritorio ("paginado") la fila de destacadas es una diapositiva; en telefono ("reel",
-  // estilo TikTok: se desliza con el dedo y engancha) cada carta destacada es una diapositiva.
-  const DIAPOS_PC  = [".hero", ".destacados", ".proyecto:not(.destacado)", "#atributos-sec", "#cronica", "#servicios", "#arte", "#contacto"];
+  // En escritorio ("paginado") cada fila de cartas y cada proyecto completo es una diapositiva; en
+  // telefono ("reel", estilo TikTok: se desliza con el dedo y engancha) cada proyecto es una diapositiva.
+  const DIAPOS_PC  = [".hero", ".fila-cartas", ".proyecto:not(.carta-p)", "#atributos-sec", "#cronica", "#servicios", "#arte", "#contacto"];
   const DIAPOS_TEL = [".hero", ".proyecto", "#atributos-sec", "#cronica", "#servicios", "#arte", "#contacto"];
   const paginado = () => document.documentElement.classList.contains("paginado");
   const reel = () => document.documentElement.classList.contains("reel");

@@ -47,21 +47,24 @@ window.DATOS = {
     { titulo: "Equipo",    texto: "Dirige a un desarrollador de interfaz en FaenApp, con procedimiento de aprobación." }
   ],
 
-  // El desfile: los 13 proyectos, en este orden. rareza: legendario | epico | raro | comun
+  // El desfile: los proyectos, en este orden. rareza: legendario | epico | raro | comun
+  // fila: los que la comparten (y van seguidos) salen de a dos en la misma linea, como cartas que giran.
+  // carta: true → va solo en una carta grande sin giro y sin marco de color. El resto va completo, sin carta.
+  // color: el borde de la carta, sacado de las capturas del proyecto. boton: el color del boton del link.
   proyectos: [
-    { nombre: "Monito Amarillo", anio: "2026", rareza: "legendario", etiqueta: "Estudio", destacado: true, logo: "assets/img/capturas/monito.png", borde: "dorado",
+    { nombre: "Monito Amarillo", anio: "2026", rareza: "legendario", etiqueta: "Estudio", fila: "destacados", destacado: true, logo: "assets/img/capturas/monito.png", borde: "dorado",
       desc: "Estudio de videojuegos que fundé con un amigo de **más de 17 años**, separados por la frontera entre Colombia y Venezuela. Hacemos juegos **divertidos** para jugar **con amigos**, en local u online, **sin motor y sin plantillas**. Yo llevo **todo lo técnico**: web, marca, cuentas, pagos y servidor.",
       tipo: "Estudio de videojuegos", tecnica: "HTML · JS · PHP · Wompi · VPS", rol: "Cofundador y todo lo técnico",
       imgs: ["assets/img/capturas/monito-teba.png", "assets/img/capturas/monito-leiyo.png"], dupla: true, alt: "Los dos fundadores de Monito Amarillo en pixel art",
       link: "https://monitoamarillo.com/", linkTexto: "Visitar el estudio" },
 
-    { nombre: "FaenApp", anio: "2025–26", rareza: "legendario", etiqueta: "Producto propio", destacado: true, logo: "assets/logos/faenapp.png",
+    { nombre: "FaenApp", anio: "2025–26", rareza: "legendario", fila: "destacados", destacado: true, color: "#3A8FD6", etiqueta: "Producto propio", logo: "assets/logos/faenapp.png",
       desc: "SaaS de gestión para negocios de servicios con **clientes pagando**: **dos apps Flutter**, **webapp Vue**, landing, documentación y un mapa de **369 pantallas**. Construido y operado **en solitario**.",
       tipo: "SaaS", tecnica: "Flutter · Vue · Node · Firestore · PHP", rol: "Diseño, desarrollo y operación",
       imgs: ["assets/img/capturas/faenapp.webp", "assets/img/capturas/faenapp-agenda.png"], alt: "Panel de funciones de FaenApp",
       link: "https://faenapp.com/", linkTexto: "Ver FaenApp" },
 
-    { nombre: "Stab Your Friends", anio: "2026", rareza: "legendario", etiqueta: "Videojuego en línea", destacado: true, logo: "assets/logos/stab.png", logoPixel: true, borde: "arcoiris",
+    { nombre: "Stab Your Friends", anio: "2026", rareza: "legendario", fila: "destacados", destacado: true, etiqueta: "Videojuego en línea", logo: "assets/logos/stab.png", logoPixel: true, borde: "arcoiris",
       desc: "Multijugador comercial escrito en **C# sobre raylib, sin motor**. **Servidor dedicado propio**, cola de emparejamiento real, **ranking** y seis modos. En **beta abierta**.",
       tipo: "Videojuego", tecnica: "C# · .NET 9 · raylib · PHP · VPS", rol: "Programación, arte y servidor",
       video: "assets/video/stab-1.mp4", poster: "assets/video/stab-1.jpg", img: "assets/img/capturas/stab.png", alt: "Partida de Stab Your Friends",
@@ -72,10 +75,16 @@ window.DATOS = {
       tipo: "Apps Android", tecnica: "Android Studio · Firebase", rol: "Desarrollador del sistema completo",
       imgs: ["assets/img/MOMI/MOMI1.jpeg", "assets/img/MOMI/MOMI 2.jpeg", "assets/img/MOMI/MOMI 3.jpeg", "assets/img/MOMI/MOMI 4.jpeg", "assets/img/MOMI/MOMI 5.jpeg", "assets/img/MOMI/MOMI 6.jpeg"], vertical: true, sinIA: true, alt: "Pantalla de Momi Medic" },
 
-    { nombre: "Earth Survivor", anio: "2024", rareza: "raro", etiqueta: "Videojuego",
+    { nombre: "Earth Survivor", anio: "2024", rareza: "raro", fila: "juegos", color: "#E0224A", etiqueta: "Videojuego",
       desc: "Roguelike frenético de supervivencia por oleadas: defender la Tierra de una invasión con una nave indestructible. Demo publicada.",
       tipo: "Videojuego", tecnica: "Unity · C#", rol: "Programación y arte",
       img: "assets/img/juegos/miniatura.png", pixel: true, alt: "Portada de Earth Survivor",
+      link: "https://seinp.itch.io/", linkTexto: "Ver en itch.io" },
+
+    { nombre: "Space G", anio: "2021", rareza: "comun", fila: "juegos", color: "#6A5CE8", etiqueta: "Videojuego",
+      desc: "Arcade shoot'em up: sobrevivir a oleadas de enemigos y acumular puntos mientras mejorás tu nave.",
+      tipo: "Videojuego", tecnica: "Unity · C#", rol: "Programación y arte",
+      img: "assets/img/juegos/space G.png", pixel: true, alt: "Portada de Space G",
       link: "https://seinp.itch.io/", linkTexto: "Ver en itch.io" },
 
     { nombre: "Idle of Tyr", anio: "2021", rareza: "comun", etiqueta: "Videojuego",
@@ -84,33 +93,27 @@ window.DATOS = {
       img: "assets/img/juegos/tyr.png", pixel: true, alt: "Portada de Idle of Tyr",
       link: "https://seinp.itch.io/", linkTexto: "Ver en itch.io" },
 
-    { nombre: "Space G", anio: "2021", rareza: "comun", etiqueta: "Videojuego",
-      desc: "Arcade shoot'em up: sobrevivir a oleadas de enemigos y acumular puntos mientras mejorás tu nave.",
-      tipo: "Videojuego", tecnica: "Unity · C#", rol: "Programación y arte",
-      img: "assets/img/juegos/space G.png", pixel: true, alt: "Portada de Space G",
-      link: "https://seinp.itch.io/", linkTexto: "Ver en itch.io" },
-
     { nombre: "Mad King", anio: "2020", rareza: "comun", etiqueta: "Videojuego",
       desc: "El primer juego publicado: plataformas con oleadas infinitas donde sobrevivir el mayor tiempo posible es la clave.",
       tipo: "Videojuego · PC", tecnica: "Unity · C#", rol: "Programación y arte",
       img: "assets/img/juegos/mad king.png", pixel: true, alt: "Portada de Mad King",
       link: "https://seinp.itch.io/", linkTexto: "Ver en itch.io" },
 
-    { nombre: "Ready", anio: "2020", rareza: "raro", etiqueta: "Plataforma web",
+    { nombre: "Ready", anio: "2020", rareza: "raro", fila: "webs", color: "#3CC24A", etiqueta: "Plataforma web",
       desc: "Comida a domicilio para Valera, Trujillo (Venezuela): una plataforma de pedidos hecha a medida para una ciudad sin cobertura de las grandes apps.",
       tipo: "Plataforma web", tecnica: "PHP · MySQL · JS", rol: "Desarrollador del proyecto completo",
       imgs: ["assets/img/ready_1.png", "assets/img/ready_2.png"], alt: "Pantalla de Ready" },
 
-    { nombre: "La Castañuela", anio: "2018", rareza: "raro", etiqueta: "Sistema de restaurante",
-      desc: "Administración de un restaurante y bar con pedidos por código QR en cada mesa, para depender menos de los meseros. El primer sistema en producción.",
-      tipo: "Sistema web", tecnica: "PHP · MySQL · JS · wireframes propios", rol: "Desarrollador del proyecto completo",
-      imgs: ["assets/img/la_castanuela_6.png", "assets/img/la_castanuela_7.png", "assets/img/la_castanuela_8.png", "assets/img/la_castanuela_9.png", "assets/img/la_castanuela_1.jpg", "assets/img/la_castanuela_2.jpg", "assets/img/la_castanuela_3.jpg", "assets/img/la_castanuela_4.jpg", "assets/img/la_castanuela_5.jpg", "assets/img/casta wireframes.jpg"], alt: "Pantalla de La Castañuela" },
-
-    { nombre: "MARSICARE", anio: "2026", rareza: "raro", etiqueta: "Web de cliente",
+    { nombre: "MARSICARE", anio: "2026", rareza: "raro", fila: "webs", color: "#3A9E97", etiqueta: "Web de cliente",
       desc: "Web educativa sobre lesiones por adhesivos médicos, para una enfermera de la Universidad del Valle. Publicada.",
       tipo: "Web educativa", tecnica: "HTML · CSS · JS · GitHub Pages", rol: "Diseño y desarrollo",
       img: "assets/img/capturas/marsicare.jpg", alt: "Portada de MARSICARE",
-      link: "https://katerineramirez1305.github.io/", linkTexto: "Ver la web" }
+      link: "https://katerineramirez1305.github.io/", linkTexto: "Ver la web" },
+
+    { nombre: "La Castañuela", anio: "2018", rareza: "raro", etiqueta: "Sistema de restaurante",
+      desc: "Administración de un restaurante y bar con pedidos por código QR en cada mesa, para depender menos de los meseros. El primer sistema en producción.",
+      tipo: "Sistema web", tecnica: "PHP · MySQL · JS · wireframes propios", rol: "Desarrollador del proyecto completo",
+      imgs: ["assets/img/la_castanuela_6.png", "assets/img/la_castanuela_7.png", "assets/img/la_castanuela_8.png", "assets/img/la_castanuela_9.png", "assets/img/la_castanuela_1.jpg", "assets/img/la_castanuela_2.jpg", "assets/img/la_castanuela_3.jpg", "assets/img/la_castanuela_4.jpg", "assets/img/la_castanuela_5.jpg", "assets/img/casta wireframes.jpg"], alt: "Pantalla de La Castañuela" }
   ],
 
   cronica: [
