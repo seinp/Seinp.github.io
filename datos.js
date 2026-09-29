@@ -52,17 +52,17 @@ window.DATOS = {
   // carta: true → va solo en una carta grande sin giro, con marco del color indicado (cobalto). El resto va completo, sin carta.
   // color: el borde de la carta, sacado de las capturas del proyecto. boton: el color del boton del link.
   proyectos: [
-    { nombre: "Monito Amarillo", anio: "2026", rareza: "legendario", etiqueta: "Estudio", fila: "destacados", destacado: true, logo: "assets/img/capturas/monito.png", borde: "dorado",
-      desc: "Estudio de videojuegos que fundé con un amigo de **más de 17 años**, separados por la frontera entre Colombia y Venezuela. Hacemos juegos **divertidos** para jugar **con amigos**, en local u online, **sin motor y sin plantillas**. Yo llevo **todo lo técnico**: web, marca, cuentas, pagos y servidor.",
-      tipo: "Estudio de videojuegos", tecnica: "HTML · JS · PHP · Wompi · VPS", rol: "Cofundador y todo lo técnico",
-      imgs: ["assets/img/capturas/monito-teba.png", "assets/img/capturas/monito-leiyo.png"], dupla: true, alt: "Los dos fundadores de Monito Amarillo en pixel art",
-      link: "https://monitoamarillo.com/", linkTexto: "Visitar el estudio" },
-
     { nombre: "FaenApp", anio: "2025–26", rareza: "legendario", fila: "destacados", destacado: true, color: "#3A8FD6", etiqueta: "Producto propio", logo: "assets/logos/faenapp.png",
       desc: "SaaS de gestión para negocios de servicios con **clientes pagando**: **dos apps Flutter**, **webapp Vue**, landing, documentación y un mapa de **369 pantallas**. Construido y operado **en solitario**.",
       tipo: "SaaS", tecnica: "Flutter · Vue · Node · Firestore · PHP", rol: "Diseño, desarrollo y operación",
       imgs: ["assets/img/capturas/faenapp.webp", "assets/img/capturas/faenapp-agenda.png"], alt: "Panel de funciones de FaenApp",
       link: "https://faenapp.com/", linkTexto: "Ver FaenApp" },
+
+    { nombre: "Monito Amarillo", anio: "2026", rareza: "legendario", etiqueta: "Estudio", fila: "destacados", destacado: true, logo: "assets/logos/monito-letras.png", borde: "dorado",
+      desc: "Estudio de videojuegos que fundé con un amigo de **más de 17 años**, separados por la frontera entre Colombia y Venezuela. Hacemos juegos **divertidos** para jugar **con amigos**, en local u online, **sin motor y sin plantillas**. Yo llevo **todo lo técnico**: web, marca, cuentas, pagos y servidor.",
+      tipo: "Estudio de videojuegos", tecnica: "HTML · JS · PHP · Wompi · VPS", rol: "Cofundador y todo lo técnico",
+      img: "assets/img/capturas/monito.png", imgLogo: true, alt: "Logo de Monito Amarillo",
+      link: "https://monitoamarillo.com/", linkTexto: "Visitar el estudio" },
 
     { nombre: "Stab Your Friends", anio: "2026", rareza: "legendario", carta: true, destacado: true, etiqueta: "Videojuego en línea", logo: "assets/logos/stab.png", logoPixel: true, borde: "arcoiris",
       desc: "Multijugador comercial escrito en **C# sobre raylib, sin motor**. **Servidor dedicado propio**, cola de emparejamiento real, **ranking** y seis modos. En **beta abierta**.",

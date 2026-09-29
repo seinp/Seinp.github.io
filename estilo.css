@@ -252,6 +252,9 @@ button{ font-family:inherit; }
 .proyecto .imagen img{ width:100%; height:auto; max-height:520px; object-fit:contain; }
 .proyecto .imagen.vertical img{ max-height:460px; }
 .proyecto .imagen.logo img{ width:min(100%, 440px); }
+/* dentro de una carta, el logo va centrado y manda el alto (no el ancho) */
+.carta-p .imagen.logo{ display:flex; justify-content:center; align-items:center; }
+.carta-p .imagen.logo img{ width:auto; max-width:100%; max-height:300px; }
 .proyecto .imagen.pixel img{ image-rendering:pixelated; image-rendering:crisp-edges; width:100%; max-height:440px; }
 .proyecto .imagen.video video{ width:100%; height:auto; display:block; background:#000; }
 .proyecto .imagen.vacia{ aspect-ratio:16/10; border:1px solid var(--linea); background: repeating-linear-gradient(135deg, var(--obra) 0 14px, #1B1E24 14px 16px); }

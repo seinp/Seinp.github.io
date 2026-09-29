@@ -59,7 +59,7 @@ window.TEXTOS = {
   "Miles, sala de mando multiagente": "Miles, multi-agent command room",
   "Estudio de videojuegos que fundé con un amigo de **más de 17 años**, separados por la frontera entre Colombia y Venezuela. Hacemos juegos **divertidos** para jugar **con amigos**, en local u online, **sin motor y sin plantillas**. Yo llevo **todo lo técnico**: web, marca, cuentas, pagos y servidor.": "Game studio I founded with a friend of **more than 17 years**, separated by the border between Colombia and Venezuela. We make **fun** games to play **with friends**, locally or online, **with no engine and no templates**. I handle **everything technical**: website, brand, accounts, payments and server.",
   "Estudio de videojuegos": "Game studio", "HTML · JS · PHP · Wompi · VPS": "HTML · JS · PHP · Wompi · VPS", "Cofundador y todo lo técnico": "Co-founder and everything technical",
-  "Logo de Monito Amarillo": "Monito Amarillo logo", "Los dos fundadores de Monito Amarillo en pixel art": "The two founders of Monito Amarillo in pixel art",
+  "Logo de Monito Amarillo": "Monito Amarillo logo",
   "Consultas médicas a domicilio con solicitud en vivo, tipo Uber: el paciente pide, el médico acepta. Recetas, historiales e incapacidades, con una app por cada lado.": "House-call medical consultations with live requests, Uber-style: the patient asks, the doctor accepts. Prescriptions, records and sick notes, with one app per side.",
   "Apps Android": "Android apps", "Desarrollador del sistema completo": "Developer of the whole system",
   "Pantalla de Momi Medic": "A Momi Medic screen",
