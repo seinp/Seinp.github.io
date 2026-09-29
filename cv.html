@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CV · José Esteban Da Rocha</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Archivo:wght@400;500;600;700&display=swap">
+<style>
+  :root{ --tinta:#141517; --tenue:#5F6570; --linea:#D9DBDF; --cobalto:#2F5FD6; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:#ECEDEF; color:var(--tinta); font-family:"Archivo", Helvetica, Arial, sans-serif; font-size:12.5px; line-height:1.5; }
+  .barra{ display:flex; justify-content:space-between; align-items:center; gap:12px; max-width:820px; margin:0 auto; padding:14px 18px; }
+  .barra a, .barra button{ font:inherit; font-size:13px; color:var(--tinta); background:#fff; border:1px solid var(--linea); padding:8px 14px; cursor:pointer; text-decoration:none; }
+  .barra button{ background:var(--cobalto); color:#fff; border-color:var(--cobalto); }
+  .hoja{ background:#fff; max-width:820px; margin:0 auto 40px; padding:44px 48px; box-shadow:0 10px 30px rgba(0,0,0,.08); }
+  header{ display:grid; grid-template-columns:1fr 96px; gap:20px; align-items:start; border-bottom:2px solid var(--tinta); padding-bottom:16px; }
+  h1{ margin:0; font-family:"Big Shoulders Display", Impact, sans-serif; font-weight:900; font-size:40px; line-height:.92; text-transform:uppercase; }
+  .cargo{ margin:6px 0 0; font-weight:600; font-size:14px; }
+  .datos{ margin:8px 0 0; color:var(--tenue); font-size:12px; }
+  header img{ width:96px; height:96px; object-fit:cover; filter:grayscale(1); border:1px solid var(--linea); }
+  h2{ margin:22px 0 8px; font-family:"Big Shoulders Display", Impact, sans-serif; font-weight:800; font-size:18px; letter-spacing:.06em; text-transform:uppercase; color:var(--cobalto); }
+  p{ margin:0 0 6px; }
+  .fila{ display:grid; grid-template-columns: 64px 1fr; gap:12px; padding:6px 0; border-bottom:1px solid var(--linea); }
+  .fila b{ display:block; }
+  .fila span{ color:var(--tenue); }
+  .fila .anio{ font-weight:600; color:var(--tenue); font-variant-numeric:tabular-nums; }
+  .dos{ display:grid; grid-template-columns:1fr 1fr; gap:0 28px; }
+  ul{ margin:0; padding-left:16px; }
+  li{ margin-bottom:3px; }
+  @media print{ body{ background:#fff; } .barra{ display:none; } .hoja{ box-shadow:none; margin:0; max-width:none; padding:0; } @page{ margin:14mm; } }
+  @media (max-width:600px){ .hoja{ padding:24px 20px; } header{ grid-template-columns:1fr; } .dos{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="barra">
+  <a href="./">← Volver al portafolio</a>
+  <button type="button" onclick="window.print()">Guardar como PDF</button>
+</div>
+
+<article class="hoja">
+  <header>
+    <div>
+      <h1>José Esteban Da Rocha</h1>
+      <p class="cargo">Programador Full Stack / Arquitecto de software · 8 años</p>
+      <p class="datos">Venezolano, radicado en Colombia · Trabajo remoto · estebandarocha7@gmail.com · seinp.github.io · seinp.itch.io</p>
+    </div>
+    <img src="assets/img/fotoPerfil.jpg" alt="">
+  </header>
+
+  <h2>Perfil</h2>
+  <p>Construyo el producto completo y lo pongo en producción: del arte y el concepto hasta el backend, el servidor y el cliente que paga. Dueño y único responsable técnico de <b>FaenApp</b> (SaaS con clientes pagando) y cofundador de <b>Monito Amarillo</b>, estudio de videojuegos. Cinco juegos publicados, tres aplicaciones en producción y ocho años entregando sistemas para negocios reales.</p>
+
+  <h2>Experiencia</h2>
+  <div class="fila"><span class="anio">2025–26</span><div><b>FaenApp — fundador y responsable técnico</b><span>SaaS de gestión para negocios de servicios: dos apps Flutter, webapp Vue, landing, documentación y mapa de 369 pantallas. Backend Firestore + PHP propio, distribución de APKs y actualización forzada propia, núcleo de IA. Clientes pagando. Dirige a un desarrollador de interfaz.</span></div></div>
+  <div class="fila"><span class="anio">2026</span><div><b>Monito Amarillo — cofundador, programador y arquitecto</b><span>Estudio de videojuegos. <b>Stab Your Friends</b>: multijugador comercial en C# sobre raylib (sin motor), servidor dedicado propio, emparejamiento, ranking, cuentas y licencias en PHP; en beta abierta. Web del estudio y del juego, campaña con publishers.</span></div></div>
+  <div class="fila"><span class="anio">2026</span><div><b>Webs para clientes</b><span>MARSICARE (web educativa, Universidad del Valle) y otros encargos.</span></div></div>
+  <div class="fila"><span class="anio">2024</span><div><b>Earth Survivor</b><span>Roguelike de supervivencia por oleadas (Unity). Demo publicada.</span></div></div>
+  <div class="fila"><span class="anio">2022</span><div><b>Momi / Momi Medic</b><span>Consultas médicas a domicilio tipo Uber: recetas, historiales e incapacidades. Android + Firebase.</span></div></div>
+  <div class="fila"><span class="anio">2020–21</span><div><b>Ready · Mad King · Space G · Idle of Tyr</b><span>Plataforma de comida a domicilio para Valera (Venezuela) y tres juegos publicados.</span></div></div>
+  <div class="fila"><span class="anio">2018</span><div><b>La Castañuela App</b><span>Administración de restaurante con pedidos por código QR en cada mesa. Primer sistema en producción.</span></div></div>
+
+  <div class="dos">
+    <div>
+      <h2>Stack</h2>
+      <ul>
+        <li><b>Lenguajes:</b> JavaScript, Dart, C#, Java, PHP, C</li>
+        <li><b>Web:</b> Vue, React, Angular, Node.js</li>
+        <li><b>Móvil:</b> Flutter, Android Studio</li>
+        <li><b>Datos:</b> Firebase, Firestore, MySQL</li>
+        <li><b>Juegos:</b> Unity, raylib, redes multijugador</li>
+        <li><b>Arte y 3D:</b> Spine 2D, Blender, ZBrush, Inkscape, Photoshop</li>
+        <li><b>Infraestructura:</b> VPS, hosting, Git, servidores MCP</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Formación</h2>
+      <ul>
+        <li><b>Ingeniería en Sistemas</b> — carrera completa, tesis pendiente.</li>
+        <li><b>Docencia:</b> clases privadas de programación, estructura de datos y análisis de datos durante una carrera entera.</li>
+      </ul>
+      <h2>Idiomas</h2>
+      <ul>
+        <li>Español nativo · Inglés técnico</li>
+      </ul>
+    </div>
+  </div>
+</article>
+</body>
+</html>
