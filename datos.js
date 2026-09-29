@@ -49,7 +49,7 @@ window.DATOS = {
 
   // El desfile: los proyectos, en este orden. rareza: legendario | epico | raro | comun
   // fila: los que la comparten (y van seguidos) salen de a dos en la misma linea, como cartas que giran.
-  // carta: true → va solo en una carta grande sin giro y sin marco de color. El resto va completo, sin carta.
+  // carta: true → va solo en una carta grande sin giro, con marco del color indicado (cobalto). El resto va completo, sin carta.
   // color: el borde de la carta, sacado de las capturas del proyecto. boton: el color del boton del link.
   proyectos: [
     { nombre: "Monito Amarillo", anio: "2026", rareza: "legendario", etiqueta: "Estudio", fila: "destacados", destacado: true, logo: "assets/img/capturas/monito.png", borde: "dorado",
@@ -70,7 +70,7 @@ window.DATOS = {
       video: "assets/video/stab-1.mp4", poster: "assets/video/stab-1.jpg", img: "assets/img/capturas/stab.png", alt: "Partida de Stab Your Friends",
       link: "https://monitoamarillo.com/stab", linkTexto: "Ver la web del juego" },
 
-    { nombre: "Momi Medic", anio: "2022", rareza: "epico", etiqueta: "Salud",
+    { nombre: "Momi Medic", anio: "2022", rareza: "epico", carta: true, color: "#3B6FEA", etiqueta: "Salud",
       desc: "Consultas médicas a domicilio con solicitud en vivo, tipo Uber: el paciente pide, el médico acepta. Recetas, historiales e incapacidades, con una app por cada lado.",
       tipo: "Apps Android", tecnica: "Android Studio · Firebase", rol: "Desarrollador del sistema completo",
       imgs: ["assets/img/MOMI/MOMI1.jpeg", "assets/img/MOMI/MOMI 2.jpeg", "assets/img/MOMI/MOMI 3.jpeg", "assets/img/MOMI/MOMI 4.jpeg", "assets/img/MOMI/MOMI 5.jpeg", "assets/img/MOMI/MOMI 6.jpeg"], vertical: true, sinIA: true, alt: "Pantalla de Momi Medic" },
@@ -87,30 +87,30 @@ window.DATOS = {
       img: "assets/img/juegos/space G.png", pixel: true, alt: "Portada de Space G",
       link: "https://seinp.itch.io/", linkTexto: "Ver en itch.io" },
 
-    { nombre: "Idle of Tyr", anio: "2021", rareza: "comun", etiqueta: "Videojuego",
+    { nombre: "Idle of Tyr", anio: "2021", rareza: "comun", carta: true, color: "#3B6FEA", etiqueta: "Videojuego",
       desc: "AFK farming infinito con misiones, ambientado en los nórdicos vikingos.",
       tipo: "Videojuego", tecnica: "Unity · C#", rol: "Programación y arte",
       img: "assets/img/juegos/tyr.png", pixel: true, alt: "Portada de Idle of Tyr",
       link: "https://seinp.itch.io/", linkTexto: "Ver en itch.io" },
 
-    { nombre: "Mad King", anio: "2020", rareza: "comun", etiqueta: "Videojuego",
+    { nombre: "Mad King", anio: "2020", rareza: "comun", carta: true, color: "#3B6FEA", etiqueta: "Videojuego",
       desc: "El primer juego publicado: plataformas con oleadas infinitas donde sobrevivir el mayor tiempo posible es la clave.",
       tipo: "Videojuego · PC", tecnica: "Unity · C#", rol: "Programación y arte",
       img: "assets/img/juegos/mad king.png", pixel: true, alt: "Portada de Mad King",
       link: "https://seinp.itch.io/", linkTexto: "Ver en itch.io" },
 
-    { nombre: "Ready", anio: "2020", rareza: "raro", fila: "webs", color: "#3CC24A", etiqueta: "Plataforma web",
+    { nombre: "Ready", anio: "2020", rareza: "raro", fila: "webs", color: "#3B6FEA", etiqueta: "Plataforma web",
       desc: "Comida a domicilio para Valera, Trujillo (Venezuela): una plataforma de pedidos hecha a medida para una ciudad sin cobertura de las grandes apps.",
       tipo: "Plataforma web", tecnica: "PHP · MySQL · JS", rol: "Desarrollador del proyecto completo",
       imgs: ["assets/img/ready_1.png", "assets/img/ready_2.png"], alt: "Pantalla de Ready" },
 
-    { nombre: "MARSICARE", anio: "2026", rareza: "raro", fila: "webs", color: "#3A9E97", etiqueta: "Web de cliente",
+    { nombre: "MARSICARE", anio: "2026", rareza: "raro", fila: "webs", color: "#3B6FEA", etiqueta: "Web de cliente",
       desc: "Web educativa sobre lesiones por adhesivos médicos, para una enfermera de la Universidad del Valle. Publicada.",
       tipo: "Web educativa", tecnica: "HTML · CSS · JS · GitHub Pages", rol: "Diseño y desarrollo",
       img: "assets/img/capturas/marsicare.jpg", alt: "Portada de MARSICARE",
       link: "https://katerineramirez1305.github.io/", linkTexto: "Ver la web" },
 
-    { nombre: "La Castañuela", anio: "2018", rareza: "raro", etiqueta: "Sistema de restaurante",
+    { nombre: "La Castañuela", anio: "2018", rareza: "raro", carta: true, color: "#3B6FEA", etiqueta: "Sistema de restaurante",
       desc: "Administración de un restaurante y bar con pedidos por código QR en cada mesa, para depender menos de los meseros. El primer sistema en producción.",
       tipo: "Sistema web", tecnica: "PHP · MySQL · JS · wireframes propios", rol: "Desarrollador del proyecto completo",
       imgs: ["assets/img/la_castanuela_6.png", "assets/img/la_castanuela_7.png", "assets/img/la_castanuela_8.png", "assets/img/la_castanuela_9.png", "assets/img/la_castanuela_1.jpg", "assets/img/la_castanuela_2.jpg", "assets/img/la_castanuela_3.jpg", "assets/img/la_castanuela_4.jpg", "assets/img/la_castanuela_5.jpg", "assets/img/casta wireframes.jpg"], alt: "Pantalla de La Castañuela" }

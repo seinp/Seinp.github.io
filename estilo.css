@@ -162,11 +162,11 @@ button{ font-family:inherit; }
 /* el boton siempre abajo del todo, en las dos caras */
 .proyecto.carta-p .frente .link{ margin-top:0; }
 
-/* ---------- la carta grande sola (Monito Amarillo): una cara, sin giro al clic, sin marco de color ---------- */
+/* ---------- la carta grande sola (Momi, Tyr, Mad King, La Castañuela): una cara, sin giro al clic, marco cobalto ---------- */
 /* --boton: el color del boton del link (datos.js → boton); el marco queda neutro */
 .proyecto.carta-p.sola{ --boton: var(--cobalto); }
 .proyecto.carta-p.sola .carta{ cursor:default; }
-.proyecto.carta-p.sola .cara{ border:1px solid var(--linea-2); background: linear-gradient(180deg, rgba(255,255,255,.035), transparent 40%), var(--muro); box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+/* el marco de la carta sola es el mismo de las demas cartas (var(--borde) → cobalto por datos.js) */
 .proyecto.carta-p.sola .frente{ display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1.15fr); gap: clamp(24px,4vw,64px); align-items:center; padding: clamp(24px,4vw,56px); }
 .proyecto.carta-p.sola h3{ font-size: clamp(40px,5.6vw,84px); }
 .proyecto.carta-p.sola .desc{ font-size: clamp(15px,1.2vw,17px); }
