@@ -227,7 +227,7 @@
         <div class="flotante"><div class="carta">
           <div class="cara frente">
             <div class="texto">
-              <h3>${esc(p.nombre)}</h3>
+              ${p.logo ? `<img class="logo-s${p.logoPixel ? " pixel" : ""}" src="${esc(p.logo)}" alt=""><h3 class="sr">${esc(p.nombre)}</h3>` : `<h3>${esc(p.nombre)}</h3>`}
               <div class="meta">${etiquetas}</div>
               <p class="desc">${resaltar(t(p.desc))}</p>
               ${link}

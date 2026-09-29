@@ -170,7 +170,10 @@ button{ font-family:inherit; }
 .proyecto.carta-p.sola .frente{ display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1.15fr); gap: clamp(24px,4vw,64px); align-items:center; padding: clamp(24px,4vw,56px); }
 .proyecto.carta-p.sola h3{ font-size: clamp(40px,5.6vw,84px); }
 .proyecto.carta-p.sola .desc{ font-size: clamp(15px,1.2vw,17px); }
-.proyecto.carta-p.sola .imagen img{ max-height:none; }
+.proyecto.carta-p.sola .imagen img, .proyecto.carta-p.sola .imagen video{ max-height:none; width:100%; }
+.proyecto.carta-p.sola .logo-s{ height: clamp(90px, 9vw, 150px); width:auto; max-width:100%; object-fit:contain; object-position:left; margin-bottom:18px; }
+.proyecto.carta-p.sola .logo-s.pixel{ image-rendering:pixelated; }
+.sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
 .proyecto.carta-p.sola .link{ background:var(--boton); border-color:var(--boton); box-shadow: 0 10px 28px color-mix(in srgb, var(--boton) 38%, transparent); }
 .proyecto.carta-p.sola .link:hover{ background: color-mix(in srgb, var(--boton) 78%, #fff); border-color: color-mix(in srgb, var(--boton) 78%, #fff); }
 @media (hover:hover){ .proyecto.carta-p.sola:hover .link{ animation: palpitar-sola 1.4s ease-in-out infinite; } }
@@ -211,6 +214,8 @@ button{ font-family:inherit; }
   filter: drop-shadow(0 0 1px #5C3841) drop-shadow(1px 1px 0 rgba(92,56,65,.95)); animation: fluye-borde 4s linear infinite; }
 .proyecto.carta-p.arcoiris .link i{ background:rgba(92,56,65,.9); color:#FFF6D6; }
 @media (hover:hover){ .proyecto.carta-p.arcoiris:hover .link{ animation: fluye-borde 4s linear infinite, palpitar-ambar 1.4s ease-in-out infinite; } }
+/* en la carta sola, el hover no le cambia el ambar */
+.proyecto.carta-p.sola.arcoiris .link:hover{ background: linear-gradient(180deg, #FFC800, #DE9607) padding-box, linear-gradient(90deg, #FF4D4D, #FFA23A, #FFE94D, #5CE07A, #4DA6FF, #B36BFF, #FF5CB8, #FF4D4D) border-box; background-size: 100% 100%, 300% 100%; background-position: 0 0, var(--pos) 0; border-color:transparent; }
 @keyframes palpitar-ambar{ 0%,100%{ transform:scale(1); box-shadow:0 10px 28px rgba(222,150,7,.42); } 50%{ transform:scale(1.03); box-shadow:0 14px 36px rgba(255,200,0,.6); } }
 @media (prefers-reduced-motion: reduce){ .carta-p .flotante, .proyecto.carta-p .link, .proyecto.carta-p .link::before{ animation:none !important; } }
 @media (max-width: 1400px){ .fila-cartas.tres, html.paginado .fila-cartas.tres > .diapo-in{ gap:14px; } .fila-cartas.tres .cara{ padding:22px 18px 20px; } }
@@ -382,7 +387,7 @@ html.paginado .fila-cartas.una > .diapo-in{ height:100%; display:flex; }
 html.paginado .fila-cartas.una .proyecto.carta-p{ flex:1; display:flex; }
 html.paginado .fila-cartas.una .flotante, html.paginado .fila-cartas.una .carta{ flex:1; height:100%; }
 html.paginado .fila-cartas.una .carta{ display:grid; }
-html.paginado .carta-p.sola .imagen img{ max-height: calc(100vh - 230px); }
+html.paginado .carta-p.sola .imagen img, html.paginado .carta-p.sola .imagen video{ max-height: calc(100vh - 230px); }
 html.paginado .proyecto.carta-p .link{ padding:13px 16px 13px 22px; font-size:19px; }
 html.paginado .proyecto.carta-p .link i{ width:34px; height:34px; }
 /* el resto de imagenes tampoco puede pasarse del alto */

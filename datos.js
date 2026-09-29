@@ -64,7 +64,7 @@ window.DATOS = {
       imgs: ["assets/img/capturas/faenapp.webp", "assets/img/capturas/faenapp-agenda.png"], alt: "Panel de funciones de FaenApp",
       link: "https://faenapp.com/", linkTexto: "Ver FaenApp" },
 
-    { nombre: "Stab Your Friends", anio: "2026", rareza: "legendario", fila: "destacados", destacado: true, etiqueta: "Videojuego en línea", logo: "assets/logos/stab.png", logoPixel: true, borde: "arcoiris",
+    { nombre: "Stab Your Friends", anio: "2026", rareza: "legendario", carta: true, destacado: true, etiqueta: "Videojuego en línea", logo: "assets/logos/stab.png", logoPixel: true, borde: "arcoiris",
       desc: "Multijugador comercial escrito en **C# sobre raylib, sin motor**. **Servidor dedicado propio**, cola de emparejamiento real, **ranking** y seis modos. En **beta abierta**.",
       tipo: "Videojuego", tecnica: "C# · .NET 9 · raylib · PHP · VPS", rol: "Programación, arte y servidor",
       video: "assets/video/stab-1.mp4", poster: "assets/video/stab-1.jpg", img: "assets/img/capturas/stab.png", alt: "Partida de Stab Your Friends",
