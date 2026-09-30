@@ -426,9 +426,13 @@ button{ font-family:inherit; }
 .contacto-titulo{ margin:0; font-family:var(--display); font-weight:900; font-size: clamp(48px,7.4vw,112px); line-height:.88; text-transform:uppercase; }
 .contacto-titulo em{ display:block; font-style:normal; color:var(--cobalto-claro); }
 .contacto-texto{ margin:18px auto 26px; color:rgba(243,240,234,.82); max-width:54ch; font-size:17px; }
-.contacto-cta{ position:relative; overflow:visible; display:inline-flex; padding:20px 30px 18px; font-size:26px; box-shadow: 0 0 0 6px rgba(59,111,234,.16), 0 16px 44px rgba(59,111,234,.5); }
-.contacto.animar .contacto-cta{ animation: flota-cta 3.4s ease-in-out infinite; }
-.contacto-cta::after{ content:""; position:absolute; inset:-6px; border:2px solid var(--cobalto-claro); opacity:0; pointer-events:none; animation: anillo 2.6s ease-out infinite; }
+/* el boton recorta su brillo (overflow:hidden); el anillo que late vive en el envoltorio, por fuera */
+.cta-anillo{ position:relative; display:inline-block; }
+.contacto.animar .cta-anillo{ animation: flota-cta 3.4s ease-in-out infinite; }
+.cta-anillo::after{ content:""; position:absolute; inset:-6px; border:2px solid var(--cobalto-claro); opacity:0; pointer-events:none; animation: anillo 2.6s ease-out infinite; }
+.contacto-cta{ position:relative; overflow:hidden; display:inline-flex; padding:20px 30px 18px; font-size:26px; color:var(--luz); box-shadow: 0 0 0 6px rgba(59,111,234,.16), 0 16px 44px rgba(59,111,234,.5); }
+.contacto-cta:hover{ color:#fff; }
+.contacto-cta > *{ position:relative; z-index:1; }
 @keyframes anillo{ 0%{ transform:scale(.96); opacity:.75; } 100%{ transform:scale(1.22); opacity:0; } }
 .contacto-cta .flecha{ font-size:26px; }
 .correo{ display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:10px; margin-top:24px; }
@@ -582,6 +586,7 @@ html.reel .galeria figure::after{ display:none; }
 html.reel .galeria figure{ padding:6px; }
 /* contacto en telefono */
 html.reel .contacto-titulo{ font-size: clamp(40px, 11.5vw, 52px); }
+html.reel .cta-anillo{ display:block; width:100%; }
 html.reel .contacto-cta{ display:flex; width:100%; justify-content:center; gap:14px; font-size:21px; padding:16px 18px 14px; }
 html.reel .contacto-texto{ font-size:14.5px; margin:12px 0 18px; }
 html.reel .correo{ margin-top:16px; }
