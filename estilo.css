@@ -72,6 +72,7 @@ button{ font-family:inherit; }
 
 .cta{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--cobalto); color:var(--cobalto-tinta); font-family:var(--display); font-weight:800; font-size:19px; letter-spacing:.05em; text-transform:uppercase; padding: clamp(9px, 1.4vh, 14px) 18px clamp(8px, 1.2vh, 12px); border:1px solid var(--cobalto); }
 .cta:hover{ background:var(--cobalto-claro); color:var(--cobalto-tinta); }
+.ficha .cta, .ficha .cta:hover{ color:var(--luz); }   /* letra blanca en el CTA de la ficha, pedido de Esteban */
 .cta .flecha{ font-family:var(--cuerpo); font-size:20px; }
 .ficha-botones{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
 .ficha-botones a{ text-align:center; border:1px solid var(--linea-2); color:var(--luz); font-size:13px; padding: clamp(6px, 1vh, 9px) 8px; }
