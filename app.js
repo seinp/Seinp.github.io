@@ -94,6 +94,15 @@
     </div>`;
   }
 
+  // La caja de la imagen guarda su propia imagen en --fondo: en telefono se pinta desenfocada detras
+  // (la imagen entera, sin recortar, y el hueco que sobra se llena con su propio color).
+  function armarAmbiente() {
+    document.querySelectorAll(".carta-p .frente .imagen:not(.logo):not(.video)").forEach((caja) => {
+      const img = caja.querySelector("img");
+      if (img) caja.style.setProperty("--fondo", `url("${img.getAttribute("src")}")`);
+    });
+  }
+
   // ---------- las cartas: flotan (B2), se inclinan con el mouse y giran al clic (A3) ----------
   // La carta grande sola (Monito Amarillo) no gira: solo flota y se inclina (menos, porque es ancha).
   const R = (ang, y, s) => `rotateY(${ang}deg) translateY(${y}px) scale(${s})`;
@@ -313,6 +322,7 @@
   function pintarTodo() {
     pintarAtributos(); pintarNumeros(); pintarProyectos(); pintarCronica(); pintarServicios(); pintarArte(); pintarRedes();
     armarCarruseles();
+    armarAmbiente();
     armarCartas();
     traducirEstaticos();
     armarPaginado();
@@ -384,9 +394,16 @@
       }
       // Busqueda binaria de la escala mas grande que entra (el alto visual crece con la escala, porque el
       // ancho se queda en 100% y el texto se reacomoda; iterar "a ojo" oscilaba y no convergia).
-      const carta = d.classList.contains("proyecto") || d.classList.contains("hero");
-      const minimo = carta ? .5 : .8, maximo = carta ? 1.45 : 1;
-      const cabe = (z) => { dentro.style.zoom = z.toFixed(3); return dentro.getBoundingClientRect().height <= disponible + .5; };
+      // Cartas: la carta ya llena el alto (la imagen crece), asi que no se agranda (max 1) y solo se achica
+      // si alguna de sus dos caras no entra. Portada: puede crecer hasta 145%. Secciones: hasta 80% y scroll.
+      const carta = d.classList.contains("proyecto"), portada = d.classList.contains("hero");
+      const minimo = carta || portada ? .5 : .8, maximo = portada ? 1.45 : 1;
+      const caras = carta ? [...d.querySelectorAll(".cara")] : [];
+      const cabe = (z) => {
+        dentro.style.zoom = z.toFixed(3);
+        if (dentro.getBoundingClientRect().height > disponible + .5) return false;
+        return caras.every((c) => c.scrollHeight <= c.clientHeight + 1);
+      };
       let z;
       if (cabe(maximo)) z = maximo;
       else if (!cabe(minimo)) { z = minimo; d.classList.add("desplaza"); }

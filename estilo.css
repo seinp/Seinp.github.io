@@ -472,11 +472,52 @@ html.reel .hero-carta{ padding: 22px 18px calc(24vw + 14px); }
 html.reel .hero-carta::after{ left:0; right:0; bottom:-.12em; text-align:center; font-size: 27vw; letter-spacing:.01em; }
 html.reel .numeros{ display:grid; grid-template-columns:1fr 1fr; gap:14px 18px; margin-top:24px; }
 html.reel .hero-cta{ display:flex; width:100%; justify-content:space-between; margin-top:22px; font-size:17px; padding:16px 18px 16px 22px; }
-/* en telefono todas las cartas son iguales (formato de a dos); la descripcion (dorso) un poco mas grande */
-html.reel .carta-p .imagen.logo img{ max-height:22dvh; }
-html.reel .proyecto.carta-p .dorso .desc{ font-size:17px; line-height:1.55; }
-html.reel .carta-p .cab-d.sin-logo{ min-height:0; }
-html.reel .carta-p .cab-d.sin-logo .nombre-c{ font-size: clamp(34px, 10vw, 44px); }
+/* ---- cartas en telefono: todas iguales. La carta llena el alto y la IMAGEN crece para ocupar lo que sobra;
+   el texto NO se agranda. Lo que manda: el titulo, la imagen y la pista de "toca la carta". ---- */
+html.reel .proyecto.carta-p > .diapo-in{ height:100%; display:flex; }
+html.reel .proyecto.carta-p .flotante{ flex:1; display:flex; min-height:0; }
+html.reel .proyecto.carta-p .carta{ flex:1; min-height:0; }
+html.reel .carta-p .cara{ min-height:0; gap:8px; padding:14px; }
+html.reel .carta-p .frente .imagen{ flex:1 1 auto; min-height:18dvh; }
+html.reel .carta-p .frente .imagen:not(.carrusel) img, html.reel .carta-p .frente .imagen video{ max-height:100%; height:auto; width:auto; max-width:100%; object-fit:contain; }
+html.reel .carta-p .frente .imagen video{ height:100%; }
+/* pixel art chico (Tyr, Mad King...): se agranda a lo ancho, nitido, sin pasarse del alto */
+html.reel .carta-p .frente .imagen.pixel img{ width:100%; height:auto; max-height:100%; object-fit:contain; image-rendering:pixelated; }
+html.reel .carta-p .carrusel .riel{ flex:1 1 auto; min-height:0; }
+html.reel .carta-p .carrusel .slide{ height:100%; }
+html.reel .carta-p .carrusel .slide img{ max-height:100%; width:auto; max-width:100%; }
+html.reel .carta-p .carrusel.vertical .slide img{ max-width:calc(50% - 7px); }
+/* cabecera: el titulo manda; el logo, chico */
+html.reel .carta-p .cab-d{ min-height:0; }
+html.reel .carta-p .cab-d .logo{ height:48px; }
+html.reel .carta-p .cab-d .logo.pixel{ height:60px; }
+html.reel .carta-p .cab-d.sin-logo{ min-height:0; gap:6px; }
+html.reel .carta-p .cab-d.sin-logo .nombre-c{ font-size: clamp(30px, 8.6vw, 38px); }
+html.reel .carta-p .cab-d .sello{ font-size:9px; letter-spacing:.18em; padding:4px 8px; }
+/* etiquetas, chips y rol: discretos */
+html.reel .carta-p .linea2{ font-size:9.5px; letter-spacing:.1em; gap:5px 6px; }
+html.reel .carta-p .linea2 .tipo, html.reel .carta-p .linea2 .rar{ padding:1px 6px; }
+html.reel .carta-p .linea2 .rar{ font-size:9px; }
+html.reel .carta-p .linea2 .sep{ height:14px; }
+html.reel .carta-p .linea2 .tec li{ font-size:9.5px; padding:2px 6px; }
+html.reel .carta-p .linea2 .rol{ font-size:11px; }
+/* la pista de "toca la carta" si resalta: cobalto claro, en negrita y latiendo */
+html.reel .carta-p .pista{ font-size:11.5px; font-weight:700; letter-spacing:.2em; color:var(--cobalto-claro); padding:6px 0 2px; animation: late-pista 1.7s ease-in-out infinite; }
+html.reel .carta-p .pista::before{ content:"↻ "; }
+@keyframes late-pista{ 0%,100%{ opacity:1; } 50%{ opacity:.5; } }
+/* boton normal (ni chico ni gigante) y dorso legible */
+html.reel .proyecto.carta-p .link{ font-size:15px; padding:12px 14px 12px 18px; }
+html.reel .proyecto.carta-p .link i{ width:28px; height:28px; font-size:15px; }
+html.reel .carta-p .dorso h3{ font-size: clamp(26px, 7.5vw, 34px); }
+/* la imagen entera (sin recortar) y, detras, ella misma desenfocada llenando el hueco: nada queda vacio */
+html.reel .carta-p .frente .imagen:not(.logo):not(.video){ position:relative; isolation:isolate; overflow:hidden; }
+html.reel .carta-p .frente .imagen:not(.logo):not(.video)::before{ content:""; position:absolute; inset:-8%; z-index:0; pointer-events:none;
+  background: var(--fondo) center / cover no-repeat; filter: blur(22px) saturate(1.15) brightness(.5); opacity:.75; }
+html.reel .carta-p .frente .imagen > *{ position:relative; z-index:1; }
+/* dorso: el texto centrado y el boton abajo */
+html.reel .carta-p .dorso .k{ margin-top:auto; }
+html.reel .carta-p .dorso .rol{ margin-bottom:auto; }
+html.reel .proyecto.carta-p .dorso .desc{ font-size:15.5px; line-height:1.55; }
 html.reel .pie{ position:absolute; left:0; right:0; bottom:0; padding:10px 16px; }
 
 /* ================= PANTALLA BAJA (laptops de 768/720 de alto): la ficha se aprieta ================= */
