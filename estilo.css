@@ -418,6 +418,7 @@ html.con-intro{ overflow:hidden; }
 .servicios-cta{ position:relative; overflow:hidden; margin-top:16px; padding:18px 24px; font-size:17px; letter-spacing:.02em; text-transform:none; font-family:var(--cuerpo); font-weight:600; box-shadow: 0 0 0 4px rgba(59,111,234,.16), 0 14px 36px rgba(59,111,234,.45); animation: flota-cta 3.4s ease-in-out infinite; }
 .servicios-cta b{ font-family:var(--display); font-weight:800; font-size:24px; text-transform:uppercase; margin-right:10px; }
 .servicios-cta .flecha{ font-size:24px; }
+.servicios-cta, .servicios-cta:hover{ color:var(--luz); }   /* letra blanca, pedido de Esteban */
 /* el brillo que barre el boton cada tanto (el mismo de las cartas al hover, pero solo) */
 .servicios-cta::before, .contacto-cta::before, .hero-cta::before{ content:""; position:absolute; top:-20%; bottom:-20%; left:0; width:55%; pointer-events:none; background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,.55) 50%, transparent 80%); transform:translateX(-140%) skewX(-12deg); animation: barrer-cada-tanto 4.6s cubic-bezier(.4,0,.2,1) infinite; }
 .contacto-cta::before{ animation-delay:1.3s; }
