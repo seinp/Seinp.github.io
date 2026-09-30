@@ -47,10 +47,11 @@
         <span class="val">${a.valor}</span>
         <span class="bar"><i style="width:${a.valor}%"></i></span>
       </li>`).join("");
-    $("#atr-grid").innerHTML = D.atributos.map((a) => `
-      <div class="atr-card">
-        <div class="fila"><span class="nom">${esc(t(a.nombre))}</span><span class="val">${a.valor}</span></div>
-        <div class="bar"><i style="width:${a.valor}%"></i></div>
+    $("#atr-grid").innerHTML = D.atributos.map((a, i) => `
+      <div class="atr-card" style="--w:${a.valor}%; --d:${(i * .09).toFixed(2)}s">
+        <div class="fila"><span class="nom">${esc(t(a.nombre))}</span><span class="rar">${rareza(rarezaDeValor(a.valor))}</span></div>
+        <div class="val" data-val="${a.valor}">0</div>
+        <div class="bar"><i></i></div>
         <p>${esc(t(a.prueba))}</p>
       </div>`).join("");
     $("#formacion").innerHTML = D.formacion.map((f) => `<div><b>${esc(t(f.titulo))}</b><p>${esc(t(f.texto))}</p></div>`).join("");
@@ -291,7 +292,7 @@
   // ---------- cronica ----------
   function pintarCronica() {
     $("#cronica-lista").innerHTML = D.cronica.map((c) => `
-      <li><span class="anio">${esc(c.anio)}</span>
+      <li><span class="anio">${esc(c.anio)}</span><i class="punto" aria-hidden="true"></i>
         <div class="items">${c.items.map((it) => `<div><b>${esc(it.t)}</b><span>${esc(t(it.d))}</span></div>`).join("")}</div>
       </li>`).join("");
   }
@@ -300,19 +301,44 @@
   function pintarServicios() {
     $("#servicios-lista").innerHTML = D.servicios.map((s) => `
       <div class="servicio">
-        <div>
-          <h3>${esc(t(s.nombre))}</h3>
-          ${s.desc ? `<p class="desc">${esc(t(s.desc))}</p>` : ""}
-          ${s.prueba ? `<p class="prueba"><span>${esc(t("Prueba"))}:</span> ${esc(t(s.prueba))}</p>` : ""}
-        </div>
-        <div class="precio">${esc(t(s.precio))}${s.nota ? `<small>${esc(t(s.nota))}</small>` : ""}</div>
+        <h3>${esc(t(s.nombre))}</h3>
+        ${s.desc ? `<p class="desc">${esc(t(s.desc))}</p>` : ""}
+        ${s.prueba ? `<p class="prueba"><span>${esc(t("Prueba"))}:</span> ${esc(t(s.prueba))}</p>` : ""}
       </div>`).join("");
   }
 
   // ---------- arte ----------
   function pintarArte() {
-    $("#galeria").innerHTML = D.arte.map((src, i) => `<figure><img src="${esc(src)}" alt="${esc(t("Pieza de arte"))} ${i + 1}" loading="lazy"></figure>`).join("");
+    $("#galeria").innerHTML = D.arte.map((src, i) => `<figure role="button" tabindex="0" aria-label="${esc(t("Ver pieza"))} ${i + 1}"><img src="${esc(src)}" alt="${esc(t("Pieza de arte"))} ${i + 1}" loading="lazy"></figure>`).join("");
   }
+  // el visor: se toca una pieza y se ve grande; se cierra tocando, con la X o con Escape
+  const visor = $("#visor");
+  if (visor) {
+    const abrirVisor = (src) => { visor.querySelector("img").src = src; visor.hidden = false; document.documentElement.classList.add("con-visor"); };
+    const cerrarVisor = () => { visor.hidden = true; visor.querySelector("img").src = ""; document.documentElement.classList.remove("con-visor"); };
+    document.addEventListener("click", (e) => { const fig = e.target.closest("#galeria figure"); if (fig) abrirVisor(fig.querySelector("img").src); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") cerrarVisor(); const fig = e.target.closest && e.target.closest("#galeria figure"); if (fig && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); abrirVisor(fig.querySelector("img").src); } });
+    visor.addEventListener("click", cerrarVisor);
+  }
+  // atributos: cada vez que la seccion entra en pantalla, las barras se llenan y los numeros suben desde 0
+  (function animarAtributos() {
+    const sec = $("#atributos-sec");
+    if (!sec || !("IntersectionObserver" in window)) return;
+    let cuadros = [];
+    const contar = () => {
+      cuadros.forEach(cancelAnimationFrame); cuadros = [];
+      sec.querySelectorAll(".atr-card .val").forEach((v, i) => {
+        const fin = +v.dataset.val, t0 = performance.now() + i * 90, dur = 1000;
+        const paso = (t) => { const p = Math.min(1, Math.max(0, (t - t0) / dur)); v.textContent = Math.round(fin * (1 - Math.pow(1 - p, 3))); if (p < 1) cuadros.push(requestAnimationFrame(paso)); };
+        cuadros.push(requestAnimationFrame(paso));
+      });
+    };
+    const entrar = () => { if (sec.classList.contains("animar")) return; sec.classList.add("animar"); contar(); };
+    const salir = () => { if (!sec.classList.contains("animar")) return; sec.classList.remove("animar"); cuadros.forEach(cancelAnimationFrame); sec.querySelectorAll(".atr-card .val").forEach((v) => (v.textContent = "0")); };
+    // dos disparadores: el IntersectionObserver (scroll libre) y el aviso de la pagina al cambiar de apartado (diapositivas / reel)
+    new IntersectionObserver((es) => es.forEach((e) => (e.isIntersecting ? entrar() : salir())), { threshold: .35 }).observe(sec);
+    document.addEventListener("diapo-al-frente", (e) => (e.detail === sec ? entrar() : salir()));
+  })();
 
   // ---------- contacto ----------
   function pintarRedes() {
@@ -418,6 +444,8 @@
     if (!ds.length) return;
     const i = indiceActual();
     ds.forEach((d, k) => d.classList.toggle("al-frente", k === i));
+    // aviso para lo que se anima al llegar a un apartado (los atributos), sin depender del IntersectionObserver
+    document.dispatchEvent(new CustomEvent("diapo-al-frente", { detail: ds[i] }));
   }
   // El desplazamiento entre diapositivas lo anima la pagina (curva suave propia), no el navegador:
   // asi no lo pelea el snap y siempre dura lo mismo.
@@ -568,7 +596,7 @@
   // si se arrastra la barra de scroll, al soltar se acomoda a la diapositiva mas cercana
   addEventListener("scrollend", () => { if (paginado() && !animando) { const d = diapos()[indiceActual()]; if (d && Math.abs(d.getBoundingClientRect().top) > 2) animarScroll(scrollY + d.getBoundingClientRect().top); } });
   // los enlaces del menu tambien viajan con la animacion propia
-  document.querySelectorAll('.menu a[href^="#"], .hero-cta[href^="#"]').forEach((a) => a.addEventListener("click", (e) => {
+  document.querySelectorAll('.menu a[href^="#"], .hero-cta[href^="#"], .servicios-cta[href^="#"]').forEach((a) => a.addEventListener("click", (e) => {
     if (!paginado() && !reel()) return;
     const sec = document.querySelector(a.getAttribute("href"));
     if (!sec) return;

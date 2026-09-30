@@ -84,7 +84,10 @@
     </section>
 
     <section class="seccion" id="atributos-sec">
-      <h2 class="sec-titulo" data-t>Atributos</h2>
+      <div class="sec-cab">
+        <h2 class="sec-titulo" data-t>Atributos</h2>
+        <span class="sec-nota"><span data-t>Hoja de personaje</span> · NV 8 · <span data-t>máx</span> 100</span>
+      </div>
       <div class="atr-grid" id="atr-grid"></div>
       <div class="formacion" id="formacion"></div>
     </section>
@@ -97,27 +100,32 @@
     <section class="seccion" id="servicios">
       <div class="sec-cab">
         <h2 class="sec-titulo" data-t>Servicios freelance</h2>
-        <span class="usd">USD · <span data-t>piso y techo</span></span>
+        <span class="sec-nota disponible"><i aria-hidden="true"></i><span data-t>Disponible para nuevos proyectos</span></span>
       </div>
       <div class="servicios" id="servicios-lista"></div>
+      <a class="cta servicios-cta" href="#contacto"><span><b data-t>¿Tenés un proyecto?</b> <span data-t>Contame y te digo si puedo con eso.</span></span><span class="flecha" aria-hidden="true">→</span></a>
     </section>
 
     <section class="seccion" id="arte">
       <h2 class="sec-titulo" data-t>Arte</h2>
       <p class="sec-bajada" data-t>Pixel art, logotipos y mascotas. Sin explicaciones: solo las piezas.</p>
       <div class="galeria" id="galeria"></div>
+      <div class="visor" id="visor" hidden><img alt=""><button type="button" class="visor-cerrar" aria-label="Cerrar">×</button></div>
     </section>
 
     <section class="seccion contacto" id="contacto">
-      <p class="ojo" data-t>CONTACTO</p>
-      <h2 class="contacto-titulo" data-t>Hablemos de tu proyecto</h2>
-      <p class="contacto-texto" data-t>Contame qué necesitás y te digo si puedo con eso. Respondo el mismo día.</p>
-      <div class="correo">
-        <code id="correo-texto">estebandarocha7@gmail.com</code>
-        <button type="button" id="copiar" data-t>Copiar</button>
-        <a class="cta" id="escribime" href="mailto:estebandarocha7@gmail.com?subject=Hablemos%20de%20mi%20proyecto"><span data-t>Escribime</span><span class="flecha" aria-hidden="true">→</span></a>
+      <div class="contacto-carta">
+        <p class="ojo"><span data-t>CONTACTO</span> · <span data-t>respondo el mismo día</span></p>
+        <h2 class="contacto-titulo" data-t>Hablemos de tu proyecto</h2>
+        <p class="contacto-texto" data-t>Contame qué necesitás y te digo si puedo con eso. Web, app, backend, videojuego o automatización con IA: si está en el desfile, lo hago.</p>
+        <a class="cta contacto-cta" id="escribime" href="mailto:estebandarocha7@gmail.com?subject=Hablemos%20de%20mi%20proyecto"><span data-t>Escribime</span><span class="flecha" aria-hidden="true">→</span></a>
+        <div class="correo">
+          <span class="correo-k" data-t>o copiá el correo</span>
+          <code id="correo-texto">estebandarocha7@gmail.com</code>
+          <button type="button" id="copiar" data-t>Copiar</button>
+        </div>
+        <ul class="redes" id="redes"></ul>
       </div>
-      <ul class="redes" id="redes"></ul>
     </section>
 
     <footer class="pie">
