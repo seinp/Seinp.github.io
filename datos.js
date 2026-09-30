@@ -24,12 +24,12 @@ window.DATOS = {
 
   // Los seis atributos de la ficha. La rareza sale del valor: 90+ legendario, 80+ épico, 70+ raro.
   atributos: [
-    { nombre: "Backend",  valor: 80, prueba: "Firestore + endpoints PHP propios · servidor VPS de STAB" },
     { nombre: "Frontend", valor: 95, prueba: "Webapp Vue de FaenApp · 4 webs en vivo" },
-    { nombre: "Móvil",    valor: 80, prueba: "Dos apps Flutter firmadas y distribuidas" },
     { nombre: "Juegos",   valor: 90, prueba: "5 juegos publicados · C# + raylib sin motor" },
-    { nombre: "Arte",     valor: 70, prueba: "Pixel art y marca · Spine 2D, Blender, ZBrush, Inkscape" },
-    { nombre: "IA",       valor: 78, prueba: "Servidor MCP propio · agentes que ejecutan · núcleo IA de FaenApp" }
+    { nombre: "Backend",  valor: 80, prueba: "Firestore + endpoints PHP propios · servidor VPS de STAB" },
+    { nombre: "Móvil",    valor: 80, prueba: "Dos apps Flutter firmadas y distribuidas" },
+    { nombre: "IA",       valor: 78, prueba: "Servidor MCP propio · agentes que ejecutan · núcleo IA de FaenApp" },
+    { nombre: "Arte",     valor: 70, prueba: "Pixel art y marca · Spine 2D, Blender, ZBrush, Inkscape" }
   ],
 
   // Los numeros grandes de la portada.
@@ -69,11 +69,6 @@ window.DATOS = {
       img: "assets/img/capturas/monito.png", imgLogo: true, alt: "Logo de Monito Amarillo",
       link: "https://monitoamarillo.com/", linkTexto: "Visitar el estudio" },
 
-    { nombre: "Momi Medic", anio: "2022", rareza: "epico", carta: true, color: "#3B6FEA", etiqueta: "Salud",
-      desc: "Consultas médicas a domicilio con solicitud en vivo, tipo Uber: el paciente pide, el médico acepta. Recetas, historiales e incapacidades, con una app por cada lado.",
-      tipo: "Apps Android", tecnica: "Android Studio · Firebase", rol: "Desarrollador del sistema completo",
-      imgs: ["assets/img/MOMI/MOMI1.jpeg", "assets/img/MOMI/MOMI 2.jpeg", "assets/img/MOMI/MOMI 3.jpeg", "assets/img/MOMI/MOMI 4.jpeg", "assets/img/MOMI/MOMI 5.jpeg", "assets/img/MOMI/MOMI 6.jpeg"], vertical: true, sinIA: true, alt: "Pantalla de Momi Medic" },
-
     { nombre: "Earth Survivor", anio: "2024", rareza: "raro", fila: "juegos", color: "#E0224A", etiqueta: "Videojuego",
       desc: "Roguelike frenético de supervivencia por oleadas: defender la Tierra de una invasión con una nave indestructible. Demo publicada.",
       tipo: "Videojuego", tecnica: "Unity · C#", rol: "Programación y arte",
@@ -85,6 +80,11 @@ window.DATOS = {
       tipo: "Videojuego", tecnica: "Unity · C#", rol: "Programación y arte",
       img: "assets/img/juegos/space G.png", pixel: true, alt: "Portada de Space G",
       link: "https://seinp.itch.io/", linkTexto: "Ver en itch.io" },
+
+    { nombre: "Momi Medic", anio: "2022", rareza: "epico", carta: true, color: "#3B6FEA", etiqueta: "Salud",
+      desc: "Consultas médicas a domicilio con solicitud en vivo, tipo Uber: el paciente pide, el médico acepta. Recetas, historiales e incapacidades, con una app por cada lado.",
+      tipo: "Apps Android", tecnica: "Android Studio · Firebase", rol: "Desarrollador del sistema completo",
+      imgs: ["assets/img/MOMI/MOMI1.jpeg", "assets/img/MOMI/MOMI 2.jpeg", "assets/img/MOMI/MOMI 3.jpeg", "assets/img/MOMI/MOMI 4.jpeg", "assets/img/MOMI/MOMI 5.jpeg", "assets/img/MOMI/MOMI 6.jpeg"], vertical: true, sinIA: true, alt: "Pantalla de Momi Medic" },
 
     { nombre: "Idle of Tyr", anio: "2021", rareza: "comun", carta: true, color: "#3B6FEA", etiqueta: "Videojuego",
       desc: "AFK farming infinito con misiones, ambientado en los nórdicos vikingos.",

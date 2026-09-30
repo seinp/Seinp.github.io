@@ -596,6 +596,23 @@
     setTimeout(() => { b.textContent = t("Copiar"); }, 1600);
   });
 
+  // ---------- la portada: en PC se inclina (poco) con el mouse y el brillo lo sigue, como las cartas ----------
+  (function armarPortada() {
+    const carta = $(".hero-carta");
+    if (!carta) return;
+    const INCLINA_PORTADA = 3;
+    const conMouse = () => matchMedia("(hover: hover) and (min-width: 861px)").matches;
+    carta.addEventListener("mousemove", (e) => {
+      if (!conMouse()) return;
+      const r = carta.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+      carta.style.setProperty("--mx", (px * 100).toFixed(1) + "%");
+      carta.style.setProperty("--my", (py * 100).toFixed(1) + "%");
+      carta.style.transform = `rotateX(${(-(py - .5) * INCLINA_PORTADA * 2).toFixed(2)}deg) rotateY(${((px - .5) * INCLINA_PORTADA * 2).toFixed(2)}deg)`;
+    });
+    carta.addEventListener("mouseleave", () => { carta.style.transform = ""; carta.style.removeProperty("--mx"); carta.style.removeProperty("--my"); });
+  })();
+
   // ---------- menu activo + aparecer ----------
   function observarAparecer() {
     if (!("IntersectionObserver" in window)) return;

@@ -91,8 +91,8 @@ button{ font-family:inherit; }
   background: linear-gradient(180deg, rgba(59,111,234,.18), rgba(59,111,234,0) 46%), var(--muro);
   box-shadow: 0 0 0 1px rgba(59,111,234,.22), 0 24px 70px rgba(59,111,234,.2); }
 /* brillo cobalto arriba a la derecha y "SEINP" gigante en trazo como marca de agua */
-.hero-carta::before{ content:""; position:absolute; right:-12%; top:-40%; width:62%; aspect-ratio:1; pointer-events:none;
-  background: radial-gradient(circle, rgba(59,111,234,.38), rgba(59,111,234,0) 62%); }
+.hero-carta::before{ content:""; position:absolute; inset:0; pointer-events:none;
+  background: radial-gradient(640px circle at var(--mx,86%) var(--my,10%), rgba(59,111,234,.4), rgba(59,111,234,0) 60%); }
 .hero-carta::after{ content:"SEINP"; position:absolute; right:-.04em; bottom:-.2em; pointer-events:none; font-family:var(--display); font-weight:900;
   font-size: clamp(120px, 21vw, 300px); line-height:1; letter-spacing:-.02em; color:transparent; -webkit-text-stroke:1.5px rgba(125,163,255,.26); }
 .hero-carta > *{ position:relative; z-index:1; }
@@ -402,6 +402,10 @@ html.paginado .fila-cartas.dos > .diapo-in, html.paginado .fila-cartas.tres > .d
 html.paginado .fila-cartas.dos .proyecto.carta-p .flotante, html.paginado .fila-cartas.dos .proyecto.carta-p .carta,
 html.paginado .fila-cartas.tres .proyecto.carta-p .flotante, html.paginado .fila-cartas.tres .proyecto.carta-p .carta{ height:100%; }
 html.paginado .pie{ position:absolute; left:0; right:0; bottom:0; }
+/* la portada tambien vive: flota despacio y se inclina (poco) con el mouse */
+html.paginado .hero{ perspective:1500px; }
+html.paginado .hero > .diapo-in{ animation: flota-carta 5s ease-in-out infinite; will-change:transform; }
+html.paginado .hero-carta{ transition: transform .16s ease-out; will-change:transform; }
 /* las cartas destacadas mas bajas, para que la fila entre en la pantalla */
 html.paginado .carta-p .cara{ gap:12px; padding:22px 24px 22px; }
 html.paginado .carta-p .cab-d{ height:104px; }
@@ -452,6 +456,15 @@ html.reel .proyecto.carta-p .link i{ width:32px; height:32px; font-size:17px; }
 html.reel .proyecto h3{ font-size: clamp(28px, 8vw, 40px); }
 html.reel .sec-titulo{ font-size: clamp(30px, 8.5vw, 44px); margin-bottom:14px; }
 html.reel .seccion{ padding:20px; }
+/* portada en telefono: el SEINP entero como banda abajo (nada lo tapa) y el boton a todo el ancho */
+html.reel .hero-carta{ padding: 22px 18px calc(24vw + 14px); }
+html.reel .hero-carta::after{ left:0; right:0; bottom:-.12em; text-align:center; font-size: 27vw; letter-spacing:.01em; }
+html.reel .numeros{ display:grid; grid-template-columns:1fr 1fr; gap:14px 18px; margin-top:24px; }
+html.reel .hero-cta{ display:flex; width:100%; justify-content:space-between; margin-top:22px; font-size:17px; padding:16px 18px 16px 22px; }
+/* carta grande sola en telefono (Monito): logo mas chico, descripcion y boton mas grandes */
+html.reel .carta-p.sola .imagen.logo img{ max-height:20dvh; }
+html.reel .carta-p.sola .desc{ font-size:17px; line-height:1.55; }
+html.reel .proyecto.carta-p.sola .frente .link{ align-self:stretch; justify-content:space-between; font-size:19px; padding:16px 18px 16px 22px; margin-top:14px; }
 html.reel .pie{ position:absolute; left:0; right:0; bottom:0; padding:10px 16px; }
 
 /* ================= PANTALLA BAJA (laptops de 768/720 de alto): la ficha se aprieta ================= */
@@ -476,7 +489,7 @@ html.reel .pie{ position:absolute; left:0; right:0; bottom:0; padding:10px 16px;
 @media (max-width: 860px){
   .pagina{ grid-template-columns: 1fr; }
   /* ---- TELEFONO: la ficha queda FIJA ARRIBA, resumida; al tocarla se despliega hacia abajo ---- */
-  .ficha{ position:sticky; top:0; z-index:40; height:auto; max-height:100vh; overflow-y:auto; border-right:0; border-bottom:1px solid var(--linea);
+  .ficha{ position:sticky; top:0; z-index:40; height:auto; max-height:100vh; overflow:visible; border-right:0; border-bottom:1px solid var(--linea);
           display:flex; flex-direction:row; flex-wrap:wrap; align-items:center; gap:10px 14px; padding:14px 16px; box-shadow:0 10px 30px rgba(0,0,0,.45); }
   /* la barra resumida tiene protagonismo: foto grande, nombre grande */
   .ficha-cab{ order:3; gap:8px; flex-direction:column; align-items:flex-end; }
@@ -494,8 +507,9 @@ html.reel .pie{ position:absolute; left:0; right:0; bottom:0; padding:10px 16px;
   .lugar{ display:none; margin:0; font-size:12px; }
   .ficha.abierta .lugar{ display:block; }
   /* el detalle se despliega animado hacia abajo (max-height 0 → 75vh) */
-  .ficha-detalle{ order:10; width:100%; display:block; max-height:0; overflow:hidden; transition:max-height .42s cubic-bezier(.2,.8,.2,1); }
-  .ficha-detalle-in{ display:flex; flex-direction:column; gap:10px; padding-top:8px; }
+  /* el detalle es un panel que cae por ENCIMA del contenido: la ficha no crece, la pagina no se recalcula (sin lag) */
+  .ficha-detalle{ position:absolute; left:0; right:0; top:100%; z-index:45; display:block; max-height:0; overflow:hidden; background:var(--muro); border-bottom:1px solid var(--linea-2); box-shadow:0 30px 60px rgba(0,0,0,.65); contain:paint; transition:max-height .42s cubic-bezier(.2,.8,.2,1); }
+  .ficha-detalle-in{ display:flex; flex-direction:column; gap:10px; padding:8px 22px 16px; }
   .ficha.abierta .ficha-detalle{ max-height:75vh; overflow:auto; }
   /* la barra de secciones va PEGADA debajo del perfil: fija, y baja cuando la ficha se despliega */
   /* los 6 botones repartidos a lo ancho de la pantalla, sin scroll lateral */
