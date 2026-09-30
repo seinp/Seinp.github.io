@@ -13,7 +13,7 @@ window.TEXTOS = {
   "Foto de José Esteban Da Rocha": "Photo of José Esteban Da Rocha",
 
   // ---- menu ----
-  "DESFILE": "SHOWCASE",
+  "PROYECTOS": "PROJECTS",
   "CRÓNICA": "TIMELINE",
   "SERVICIOS": "SERVICES",
   "ARTE": "ART",
@@ -24,8 +24,8 @@ window.TEXTOS = {
   "Hoja de personaje": "Character sheet", "máx": "max", "Disponible para nuevos proyectos": "Available for new projects",
   "¿Empezamos tu proyecto?": "Ready to start your project?", "Cuéntame la idea y te digo cómo lo hacemos.": "Share your idea and I'll lay out how we'd build it.",
   "Hablemos de": "Let's talk about", "tu proyecto": "your project",
-  "respondo el mismo día": "I reply the same day", "o copia el correo": "or copy the address", "Cerrar": "Close", "Ver pieza": "View piece",
-  "Cuéntame qué necesitas y te digo sin rodeos si puedo hacerlo. Web, app, backend, videojuego o automatización con IA: si está en el desfile, lo hago.": "Tell me what you need and I'll give you a straight answer on whether I can take it on. Website, app, backend, game or AI automation: if it's in the showcase, I do it.",
+  "o copia el correo": "or copy the address", "Cerrar": "Close", "Ver pieza": "View piece",
+  "Cuéntame qué necesitas y te digo sin rodeos si puedo hacerlo. Web, app, backend, videojuego o automatización con IA: si está en mis proyectos, lo hago.": "Tell me what you need and I'll give you a straight answer on whether I can take it on. Website, app, backend, game or AI automation: if it's among my projects, I do it.",
   "Ecosistema de apps": "App ecosystem", "Web y videojuego": "Website and game",
   "Servidor MCP propio · agentes que ejecutan tareas · núcleo IA de FaenApp": "Custom MCP server · agents that run tasks · FaenApp's AI core",
   "Núcleo IA de FaenApp, servidores MCP propios": "FaenApp's AI core, custom MCP servers",
