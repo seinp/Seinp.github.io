@@ -1,12 +1,9 @@
 // seinp.github.io: dibuja la pagina desde datos.js, cambia de idioma con textos.js (la clave
 // es el texto en espanol) y trae los datos vivos de STAB (version y ranking) del servidor real.
-// En local, servir.js hace de puente con monitoamarillo.com; publicado, se le pide directo.
 (function () {
   "use strict";
   const D = window.DATOS, T = window.TEXTOS || {};
   const $ = (s, r) => (r || document).querySelector(s);
-  const local = /localhost|127\.0\.0\.1/.test(location.hostname);
-  const API = local ? "stab/" : "https://monitoamarillo.com/stab/";
 
   // ---------- idioma ----------
   let idioma = "es";
@@ -541,12 +538,6 @@
     catch { const r = document.createRange(); r.selectNodeContents($("#correo-texto")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
     setTimeout(() => { b.textContent = t("Copiar"); }, 1600);
   });
-
-  // ---------- dato vivo de STAB: la version (el ranking se quito por pedido de Esteban) ----------
-  fetch(API + "version.php", { cache: "no-store" }).then((r) => r.json()).then((v) => {
-    if (!v.version) return;
-    document.querySelectorAll("#version-stab, #version-pie").forEach((el) => (el.textContent = v.version));
-  }).catch(() => {});
 
   // ---------- menu activo + aparecer ----------
   function observarAparecer() {

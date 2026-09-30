@@ -85,14 +85,35 @@ button{ font-family:inherit; }
 .menu a:hover, .menu a.activo{ color:var(--luz); border-bottom-color:var(--cobalto); }
 .menu a b{ color:var(--cobalto-claro); font-weight:700; }
 
-.hero{ padding: clamp(40px,7vw,84px) var(--gut) clamp(30px,5vw,56px); border-bottom:1px solid var(--linea); }
-.ojo{ margin:0 0 14px; font-family:var(--datos); font-size:10.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--cobalto-claro); }
+/* ---------- la portada: una carta cobalto como las del desfile, con brillo, marca de agua y boton ---------- */
+.hero{ padding: clamp(24px,4vw,44px) var(--gut) clamp(24px,4vw,44px); }
+.hero-carta{ position:relative; overflow:hidden; padding: clamp(28px,4.4vw,64px) clamp(24px,4vw,60px); border:1px solid var(--cobalto);
+  background: linear-gradient(180deg, rgba(59,111,234,.18), rgba(59,111,234,0) 46%), var(--muro);
+  box-shadow: 0 0 0 1px rgba(59,111,234,.22), 0 24px 70px rgba(59,111,234,.2); }
+/* brillo cobalto arriba a la derecha y "SEINP" gigante en trazo como marca de agua */
+.hero-carta::before{ content:""; position:absolute; right:-12%; top:-40%; width:62%; aspect-ratio:1; pointer-events:none;
+  background: radial-gradient(circle, rgba(59,111,234,.38), rgba(59,111,234,0) 62%); }
+.hero-carta::after{ content:"SEINP"; position:absolute; right:-.04em; bottom:-.2em; pointer-events:none; font-family:var(--display); font-weight:900;
+  font-size: clamp(120px, 21vw, 300px); line-height:1; letter-spacing:-.02em; color:transparent; -webkit-text-stroke:1.5px rgba(125,163,255,.26); }
+.hero-carta > *{ position:relative; z-index:1; }
+.ojo{ margin:0 0 14px; font-family:var(--datos); font-size:10.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--cobalto-claro); display:flex; align-items:center; gap:10px; }
+.ojo::before{ content:""; width:10px; height:10px; background:var(--cobalto-claro); box-shadow:0 0 14px var(--cobalto); animation: late-ojo 1.6s ease-in-out infinite; }
+@keyframes late-ojo{ 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:.55; transform:scale(.8); } }
 .titulo{ margin:0; font-family:var(--display); font-weight:900; font-size: clamp(38px, 6.2vw, 78px); line-height:.94; text-transform:uppercase; max-width:18ch; text-wrap:balance; }
-.bajada{ margin:18px 0 0; max-width:58ch; color:var(--tenue); font-size:16px; }
-.numeros{ list-style:none; margin:34px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:26px 48px; }
-.numeros li{ display:flex; flex-direction:column; }
-.numeros b{ font-family:var(--display); font-weight:900; font-size:48px; line-height:1; font-variant-numeric:tabular-nums; }
-.numeros span{ font-size:12px; color:var(--tenue); margin-top:4px; }
+.titulo em{ font-style:normal; color:var(--cobalto-claro); }
+.bajada{ margin:18px 0 0; max-width:58ch; color:rgba(243,240,234,.8); font-size:16px; }
+.numeros{ list-style:none; margin:32px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:22px 40px; }
+.numeros li{ display:flex; flex-direction:column; padding-left:14px; border-left:3px solid var(--cobalto); }
+.numeros b{ font-family:var(--display); font-weight:900; font-size:52px; line-height:1; font-variant-numeric:tabular-nums; color:var(--cobalto-claro); }
+.numeros span{ font-family:var(--datos); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--tenue); margin-top:6px; }
+/* boton al desfile: cobalto, con barrido de luz al pasar el mouse (como el de las cartas) */
+.hero-cta{ position:relative; overflow:hidden; display:inline-flex; align-items:center; gap:14px; margin-top:30px; padding:15px 20px 15px 24px; background:var(--cobalto); color:var(--cobalto-tinta);
+  font-family:var(--cuerpo); font-weight:700; font-size:17px; letter-spacing:.01em; border:1px solid var(--cobalto); box-shadow: 0 10px 28px rgba(59,111,234,.38); animation: flota-cta 3.4s ease-in-out infinite; }
+.hero-cta i{ font-style:normal; display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:50%; background:rgba(10,12,16,.22); font-size:16px; }
+.hero-cta::before{ content:""; position:absolute; top:-20%; bottom:-20%; left:0; width:55%; pointer-events:none; background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,.55) 50%, transparent 80%); transform:translateX(-140%) skewX(-12deg); }
+@media (hover:hover){ .hero-cta:hover::before{ animation: barrer 1.8s cubic-bezier(.4,0,.2,1) infinite; } .hero-cta:hover{ background:var(--cobalto-claro); border-color:var(--cobalto-claro); } }
+@keyframes flota-cta{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-4px); } }
+@media (prefers-reduced-motion: reduce){ .hero-cta, .ojo::before{ animation:none !important; } }
 
 /* ---------- desfile ---------- */
 .proyecto{ display:grid; grid-template-columns: 1fr 1fr; gap: clamp(20px,3vw,40px); align-items:center; padding: clamp(24px,3.6vw,44px) var(--gut); border-bottom:1px solid var(--linea); }
@@ -404,8 +425,8 @@ html.paginado .carrusel.vertical .slide img{ max-height:60vh; }
 html.reel{ scroll-snap-type: y mandatory; scroll-padding-top: calc(var(--ficha-alto, 124px) + var(--menu-alto, 50px)); scroll-behavior:auto; }
 html.reel .aparece, html.reel .aparece.lejos{ transform:none; opacity:1; transition:none; }
 html.reel .contenido{ position:relative; }
-/* snap-stop normal: un deslizamiento fuerte pasa varios apartados y engancha al final (velocidad acumulada) */
-html.reel .diapo{ box-sizing:border-box; height: calc(100dvh - var(--ficha-alto, 124px) - var(--menu-alto, 50px)); scroll-snap-align:start; scroll-snap-stop:normal; overflow:hidden;
+/* snap-stop always: cada deslizamiento pasa UN apartado y engancha, como TikTok / Reels (pedido de Esteban) */
+html.reel .diapo{ box-sizing:border-box; height: calc(100dvh - var(--ficha-alto, 124px) - var(--menu-alto, 50px)); scroll-snap-align:start; scroll-snap-stop:always; overflow:hidden;
   display:flex; flex-direction:column; justify-content:center; padding:14px 16px; border-bottom:0; }
 html.reel .diapo.desplaza{ overflow-y:auto; justify-content:flex-start; }
 html.reel .diapo-in{ width:100%; }
@@ -486,7 +507,9 @@ html.reel .pie{ position:absolute; left:0; right:0; bottom:0; padding:10px 16px;
 }
 @media (max-width: 520px){
   .atr-grid, .formacion{ grid-template-columns:1fr; }
-  .numeros{ gap:18px 28px; }
-  .numeros b{ font-size:38px; }
+  .numeros{ gap:16px 22px; }
+  .numeros b{ font-size:36px; }
+  .hero-carta::after{ font-size: clamp(90px, 30vw, 140px); }
+  .hero-cta{ margin-top:22px; font-size:15px; padding:13px 16px 13px 20px; }
   .galeria{ grid-template-columns: repeat(3, minmax(0,1fr)); }
 }

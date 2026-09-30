@@ -1,7 +1,6 @@
 // Servidor local del portafolio (seinp.github.io): http://localhost:4940
 // Sirve esta carpeta tal cual la publica GitHub Pages. Sin dependencias.
-// Los datos vivos de STAB (version y ranking) se los pide a monitoamarillo.com y los reenvia,
-// porque en local el navegador no puede leerlos de otro dominio.
+// (Ya no hace de puente con monitoamarillo.com: la portada no muestra datos vivos de STAB.)
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
@@ -15,14 +14,6 @@ const TIPOS = { ".html": "text/html; charset=utf-8", ".css": "text/css; charset=
 http.createServer((req, res) => {
   let url = decodeURIComponent(req.url.split("?")[0]);
   if (url.endsWith("/")) url += "index.html";
-
-  if (url === "/stab/version.php" || url === "/stab/web-ranking.php") {
-    const consulta = req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
-    return fetch("https://monitoamarillo.com" + url + consulta, { signal: AbortSignal.timeout(8000) })
-      .then((r) => r.text())
-      .then((t) => { res.writeHead(200, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }); res.end(t); })
-      .catch(() => { res.writeHead(502); res.end("{}"); });
-  }
 
   const archivo = path.join(RAIZ, url);
   if (!archivo.startsWith(RAIZ)) { res.writeHead(403); return res.end(); }

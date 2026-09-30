@@ -32,12 +32,11 @@ window.DATOS = {
     { nombre: "IA",       valor: 78, prueba: "Servidor MCP propio · agentes que ejecutan · núcleo IA de FaenApp" }
   ],
 
-  // Los numeros grandes de la portada. "version" se actualiza sola desde el servidor de STAB.
+  // Los numeros grandes de la portada.
   numeros: [
     { valor: "8",      etiqueta: "años de experiencia" },
     { valor: "5",      etiqueta: "juegos publicados" },
     { valor: "3",      etiqueta: "apps en producción" },
-    { valor: "4.83.0", etiqueta: "versión de STAB", id: "version-stab" },
     { valor: "369",    etiqueta: "pantallas documentadas" }
   ],
 

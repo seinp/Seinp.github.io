@@ -20,12 +20,17 @@ window.TEXTOS = {
 
   // ---- portada ----
   "HOJA DE PERSONAJE": "CHARACTER SHEET",
+  "Servidor MCP propio · agentes que ejecutan · núcleo IA de FaenApp": "Own MCP server · agents that execute · FaenApp AI core",
+  "Núcleo IA de FaenApp, servidores MCP propios": "FaenApp AI core, own MCP servers",
+  "2025–26": "2025–26", "2026": "2026", "2024": "2024", "2022": "2022", "2021": "2021", "2020": "2020", "2018": "2018",
+  "$200 – $1.200": "$200 – $1,200", "$400 – $2.000": "$400 – $2,000", "$600 – $4.000": "$600 – $4,000", "$1.000 – $6.000": "$1,000 – $6,000",
+  "$1.200 – $5.000": "$1,200 – $5,000", "$1.200 – $7.000": "$1,200 – $7,000", "$3.000 – $15.000": "$3,000 – $15,000",
+  "Construyo el": "I build the", "producto completo": "complete product", "y lo pongo en producción.": "and put it into production.", "Ver los proyectos": "See the projects",
   "Construyo el producto completo y lo pongo en producción.": "I build the complete product and put it into production.",
   "Del arte y el concepto hasta el backend, el servidor y el cliente que paga. Dueño de FaenApp y cofundador de Monito Amarillo.": "From the art and the concept to the backend, the server and the paying customer. Owner of FaenApp and co-founder of Monito Amarillo.",
   "años de experiencia": "years of experience",
   "juegos publicados": "games published",
   "apps en producción": "apps in production",
-  "versión de STAB": "STAB version",
   "pantallas documentadas": "screens documented",
 
   // ---- atributos ----
