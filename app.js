@@ -683,9 +683,13 @@
     if (Math.abs(acumulado) >= 24) { const dir = acumulado > 0 ? 1 : -1; acumulado = 0; ultimoGiro = Date.now(); irA(dir); }
   }, { passive: false });
   // si se arrastra la barra de scroll, al soltar se acomoda a la diapositiva mas cercana
-  addEventListener("scrollend", () => { if (paginado() && !animando) { const d = diapos()[indiceActual()]; if (d && Math.abs(d.getBoundingClientRect().top) > 2) animarScroll(scrollY + d.getBoundingClientRect().top); } });
+  // red de seguridad: si algo salto por su cuenta (hash, historial), el apartado visible se marca igual
+  addEventListener("hashchange", () => setTimeout(marcarFrente, 60));
+  addEventListener("scrollend", () => { if (paginado() && !animando) { const d = diapos()[indiceActual()]; if (d && Math.abs(d.getBoundingClientRect().top) > 2) animarScroll(scrollY + d.getBoundingClientRect().top); else marcarFrente(); } });
   // los enlaces del menu tambien viajan con la animacion propia
-  document.querySelectorAll('.menu a[href^="#"], .hero-cta[href^="#"], .servicios-cta[href^="#"]').forEach((a) => a.addEventListener("click", (e) => {
+  // TODOS los enlaces internos (menu, portada, servicios, la ficha: "Hablemos de tu proyecto" y "Correo") viajan con la
+  // animacion propia; asi el apartado destino queda al frente y entra animado (un salto nativo lo dejaba sin pintar).
+  document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach((a) => a.addEventListener("click", (e) => {
     if (!paginado() && !reel()) return;
     const sec = document.querySelector(a.getAttribute("href"));
     if (!sec) return;
