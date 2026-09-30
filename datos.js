@@ -64,7 +64,7 @@ window.DATOS = {
       video: "assets/video/stab-1.mp4", poster: "assets/video/stab-1.jpg", img: "assets/img/capturas/stab.png", alt: "Partida de Stab Your Friends",
       link: "https://monitoamarillo.com/stab", linkTexto: "Ver la web del juego" },
 
-    { nombre: "Monito Amarillo", anio: "2026", rareza: "legendario", etiqueta: "Estudio", carta: true, boton: "#ECBA07", logo: "assets/logos/monito-letras.png", borde: "dorado",
+    { nombre: "Monito Amarillo", anio: "2026", rareza: "legendario", etiqueta: "Estudio", carta: true, boton: "#ECBA07", borde: "dorado",
       desc: "Estudio de videojuegos que fundé con un amigo de **más de 17 años**, separados por la frontera entre Colombia y Venezuela. Hacemos juegos **divertidos** para jugar **con amigos**, en local u online, **sin motor y sin plantillas**. Yo llevo **todo lo técnico**: web, marca, cuentas, pagos y servidor.",
       tipo: "Estudio de videojuegos", tecnica: "HTML · JS · PHP · Wompi · VPS", rol: "Cofundador y todo lo técnico",
       img: "assets/img/capturas/monito.png", imgLogo: true, alt: "Logo de Monito Amarillo",

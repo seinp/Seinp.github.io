@@ -138,6 +138,9 @@ button{ font-family:inherit; }
     linear-gradient(90deg, #794100, #B87F00, #F5C408, #FFEBA3, #F5C408, #B87F00, #794100) border-box;
   background-size: 100% 100%, 100% 100%, 300% 100%; background-position: 0 0, 0 0, var(--pos) 0;
   animation: fluye-borde 4s linear infinite; }
+/* Monito: el titulo en texto amarillo (mas o menos grande) y las palabras clave de la descripcion en ambar */
+.proyecto.carta-p.dorado h3{ color:#F5C408; font-size: clamp(36px, 4.2vw, 64px); }
+.proyecto.carta-p.dorado .desc b{ color:#F5A524; }
 @media (prefers-reduced-motion: reduce){ .proyecto.carta-p.arcoiris .cara, .proyecto.carta-p.dorado .cara{ animation:none; } }
 
 /* frente, linea 1: el logo centrado en los dos primeros tercios, el sello centrado en el tercio derecho */
@@ -204,19 +207,19 @@ button{ font-family:inherit; }
 @keyframes barrer{ 0%{ transform:translateX(-140%) skewX(-12deg); } 60%,100%{ transform:translateX(260%) skewX(-12deg); } }
 @keyframes palpitar{ 0%,100%{ transform:scale(1); box-shadow:0 10px 28px rgba(59,111,234,.38); } 50%{ transform:scale(1.03); box-shadow:0 14px 36px rgba(59,111,234,.55); } }
 .proyecto.carta-p .link:hover{ transform:none; }
-/* STAB (solo la carta grande): boton ambar como el logo, borde y letras con el mismo arcoiris corriente del marco */
-.proyecto.carta-p.arcoiris .link{ color:#2A1A1F; border:2px solid transparent;
-  background: linear-gradient(180deg, #FFC800, #DE9607) padding-box, linear-gradient(90deg, #FF4D4D, #FFA23A, #FFE94D, #5CE07A, #4DA6FF, #B36BFF, #FF5CB8, #FF4D4D) border-box;
+/* STAB: boton de fondo transparente (deja ver la carta), con borde y letras del mismo arcoiris corriente del marco */
+.proyecto.carta-p.arcoiris .link{ color:var(--luz); border:2px solid transparent;
+  background: linear-gradient(var(--muro), var(--muro)) padding-box, linear-gradient(90deg, #FF4D4D, #FFA23A, #FFE94D, #5CE07A, #4DA6FF, #B36BFF, #FF5CB8, #FF4D4D) border-box;
   background-size: 100% 100%, 300% 100%; background-position: 0 0, var(--pos) 0;
-  box-shadow: 0 10px 28px rgba(222,150,7,.42); animation: fluye-borde 4s linear infinite; }
+  box-shadow: 0 10px 28px rgba(0,0,0,.35); animation: fluye-borde 4s linear infinite; }
 .proyecto.carta-p.arcoiris .link span{ background: linear-gradient(90deg, #FF4D4D, #FFA23A, #FFE94D, #5CE07A, #4DA6FF, #B36BFF, #FF5CB8, #FF4D4D); background-size:300% 100%; background-position: var(--pos) 0;
   -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent;
-  filter: drop-shadow(0 0 1px #5C3841) drop-shadow(1px 1px 0 rgba(92,56,65,.95)); animation: fluye-borde 4s linear infinite; }
-.proyecto.carta-p.arcoiris .link i{ background:rgba(92,56,65,.9); color:#FFF6D6; }
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,.6)); animation: fluye-borde 4s linear infinite; }
+.proyecto.carta-p.arcoiris .link i{ background:rgba(255,255,255,.1); color:var(--luz); }
 @media (hover:hover){ .proyecto.carta-p.arcoiris:hover .link{ animation: fluye-borde 4s linear infinite, palpitar-ambar 1.4s ease-in-out infinite; } }
 /* en la carta sola, el hover no le cambia el ambar */
-.proyecto.carta-p.sola.arcoiris .link:hover{ background: linear-gradient(180deg, #FFC800, #DE9607) padding-box, linear-gradient(90deg, #FF4D4D, #FFA23A, #FFE94D, #5CE07A, #4DA6FF, #B36BFF, #FF5CB8, #FF4D4D) border-box; background-size: 100% 100%, 300% 100%; background-position: 0 0, var(--pos) 0; border-color:transparent; }
-@keyframes palpitar-ambar{ 0%,100%{ transform:scale(1); box-shadow:0 10px 28px rgba(222,150,7,.42); } 50%{ transform:scale(1.03); box-shadow:0 14px 36px rgba(255,200,0,.6); } }
+.proyecto.carta-p.sola.arcoiris .link:hover{ background: linear-gradient(var(--muro), var(--muro)) padding-box, linear-gradient(90deg, #FF4D4D, #FFA23A, #FFE94D, #5CE07A, #4DA6FF, #B36BFF, #FF5CB8, #FF4D4D) border-box; background-size: 100% 100%, 300% 100%; background-position: 0 0, var(--pos) 0; border-color:transparent; }
+@keyframes palpitar-ambar{ 0%,100%{ transform:scale(1); box-shadow:0 10px 28px rgba(0,0,0,.35); } 50%{ transform:scale(1.03); box-shadow:0 14px 36px rgba(255,255,255,.14); } }
 @media (prefers-reduced-motion: reduce){ .carta-p .flotante, .proyecto.carta-p .link, .proyecto.carta-p .link::before{ animation:none !important; } }
 @media (max-width: 1400px){ .fila-cartas.tres, html.paginado .fila-cartas.tres > .diapo-in{ gap:14px; } .fila-cartas.tres .cara{ padding:22px 18px 20px; } }
 @media (max-width: 860px){ .fila-cartas{ grid-template-columns:1fr; } .carta-p .cab-d{ height:auto; min-height:72px; } .carta-p .cab-d .logo{ height:56px; } .carta-p .cab-d .logo.pixel{ height:68px; } .carta-p .cara{ padding:22px 18px 20px; } }
@@ -410,7 +413,7 @@ html.reel .proyecto > .diapo-in{ display:flex; flex-direction:column; gap:12px; 
 html.reel .proyecto .imagen img, html.reel .carrusel .slide img, html.reel .proyecto .imagen video{ max-height:34dvh; }
 html.reel .carrusel.vertical .slide img{ max-height:32dvh; }
 html.reel .fila-cartas{ display:block; padding:0; border:0; }
-html.reel .proyecto.carta-p{ padding:0; }
+html.reel .proyecto.carta-p{ padding:0 10px; }   /* margen chico a los lados, pedido de Esteban */
 html.reel .carta-p .cara{ gap:10px; padding:16px 16px 16px; }
 html.reel .carta-p .cab-d{ height:auto; min-height:64px; }
 html.reel .carta-p .imagen img, html.reel .carta-p .imagen video, html.reel .carta-p .carrusel .slide img{ max-height:26dvh; }
