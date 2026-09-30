@@ -130,6 +130,7 @@ html.con-intro{ overflow:hidden; }
 @keyframes late-ojo{ 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:.55; transform:scale(.8); } }
 .titulo{ margin:0; font-family:var(--display); font-weight:900; font-size: clamp(38px, 6.2vw, 78px); line-height:.94; text-transform:uppercase; max-width:18ch; text-wrap:balance; }
 .titulo em{ font-style:normal; color:var(--cobalto-claro); }
+.bajada b{ color:var(--cobalto-claro); font-weight:700; }
 .bajada{ margin:18px 0 0; max-width:58ch; color:rgba(243,240,234,.8); font-size:16px; }
 .numeros{ list-style:none; margin:32px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:22px 40px; }
 .numeros li{ display:flex; flex-direction:column; padding-left:14px; border-left:3px solid var(--cobalto); }
