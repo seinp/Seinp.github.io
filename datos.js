@@ -58,17 +58,17 @@ window.DATOS = {
       imgs: ["assets/img/capturas/faenapp.webp", "assets/img/capturas/faenapp-agenda.png"], alt: "Panel de funciones de FaenApp",
       link: "https://faenapp.com/", linkTexto: "Ver FaenApp" },
 
-    { nombre: "Monito Amarillo", anio: "2026", rareza: "legendario", etiqueta: "Estudio", fila: "destacados", destacado: true, logo: "assets/logos/monito-letras.png", borde: "dorado",
-      desc: "Estudio de videojuegos que fundé con un amigo de **más de 17 años**, separados por la frontera entre Colombia y Venezuela. Hacemos juegos **divertidos** para jugar **con amigos**, en local u online, **sin motor y sin plantillas**. Yo llevo **todo lo técnico**: web, marca, cuentas, pagos y servidor.",
-      tipo: "Estudio de videojuegos", tecnica: "HTML · JS · PHP · Wompi · VPS", rol: "Cofundador y todo lo técnico",
-      img: "assets/img/capturas/monito.png", imgLogo: true, alt: "Logo de Monito Amarillo",
-      link: "https://monitoamarillo.com/", linkTexto: "Visitar el estudio" },
-
-    { nombre: "Stab Your Friends", anio: "2026", rareza: "legendario", carta: true, destacado: true, etiqueta: "Videojuego en línea", logo: "assets/logos/stab.png", logoPixel: true, borde: "arcoiris",
+    { nombre: "Stab Your Friends", anio: "2026", rareza: "legendario", fila: "destacados", destacado: true, etiqueta: "Videojuego en línea", logo: "assets/logos/stab.png", logoPixel: true, borde: "arcoiris",
       desc: "Multijugador comercial escrito en **C# sobre raylib, sin motor**. **Servidor dedicado propio**, cola de emparejamiento real, **ranking** y seis modos. En **beta abierta**.",
       tipo: "Videojuego", tecnica: "C# · .NET 9 · raylib · PHP · VPS", rol: "Programación, arte y servidor",
       video: "assets/video/stab-1.mp4", poster: "assets/video/stab-1.jpg", img: "assets/img/capturas/stab.png", alt: "Partida de Stab Your Friends",
       link: "https://monitoamarillo.com/stab", linkTexto: "Ver la web del juego" },
+
+    { nombre: "Monito Amarillo", anio: "2026", rareza: "legendario", etiqueta: "Estudio", carta: true, boton: "#ECBA07", logo: "assets/logos/monito-letras.png", borde: "dorado",
+      desc: "Estudio de videojuegos que fundé con un amigo de **más de 17 años**, separados por la frontera entre Colombia y Venezuela. Hacemos juegos **divertidos** para jugar **con amigos**, en local u online, **sin motor y sin plantillas**. Yo llevo **todo lo técnico**: web, marca, cuentas, pagos y servidor.",
+      tipo: "Estudio de videojuegos", tecnica: "HTML · JS · PHP · Wompi · VPS", rol: "Cofundador y todo lo técnico",
+      img: "assets/img/capturas/monito.png", imgLogo: true, alt: "Logo de Monito Amarillo",
+      link: "https://monitoamarillo.com/", linkTexto: "Visitar el estudio" },
 
     { nombre: "Momi Medic", anio: "2022", rareza: "epico", carta: true, color: "#3B6FEA", etiqueta: "Salud",
       desc: "Consultas médicas a domicilio con solicitud en vivo, tipo Uber: el paciente pide, el médico acepta. Recetas, historiales e incapacidades, con una app por cada lado.",
