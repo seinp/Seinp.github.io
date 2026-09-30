@@ -20,6 +20,7 @@ window.TEXTOS = {
 
   // ---- portada ----
   "HOJA DE PERSONAJE": "CHARACTER SHEET",
+  "Ecosistema de apps": "App ecosystem", "Web y videojuego": "Website and game",
   "Servidor MCP propio · agentes que ejecutan · núcleo IA de FaenApp": "Own MCP server · agents that execute · FaenApp AI core",
   "Núcleo IA de FaenApp, servidores MCP propios": "FaenApp AI core, own MCP servers",
   "2025–26": "2025–26", "2026": "2026", "2024": "2024", "2022": "2022", "2021": "2021", "2020": "2020", "2018": "2018",

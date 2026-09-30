@@ -177,6 +177,8 @@ button{ font-family:inherit; }
 .carta-p .cab-d.sin-logo .sello{ order:-1; align-self:flex-start; white-space:nowrap; line-height:1.2; }
 .carta-p .cab-d.sin-logo .nombre-c{ text-align:left; font-size: clamp(38px, 3.9vw, 62px); line-height:.9; letter-spacing:-.01em; color: color-mix(in srgb, var(--borde) 70%, #fff); }
 .proyecto.carta-p.dorado .cab-d .nombre-c{ color:#F5C408; }
+/* con logo: en PC manda el logo y el titulo queda solo para lectores de pantalla */
+.carta-p .cab-d.con-logo .nombre-c{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; margin:0; }
 /* la imagen ocupa el hueco que quede en la carta (asi Space G no queda con aire vacio) */
 .carta-p .frente .imagen{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; }
 .carta-p .frente .imagen:not(.carrusel) img{ object-fit:contain; width:auto; max-width:100%; align-self:center; }
@@ -296,7 +298,6 @@ button{ font-family:inherit; }
 .proyecto .imagen .etq{ position:absolute; left:12px; bottom:10px; font-family:var(--datos); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--tenue); }
 
 /* ---------- carrusel ---------- */
-.carrusel{ display:block; }
 .carrusel .riel{ display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
 .carrusel .riel::-webkit-scrollbar{ display:none; }
 .carrusel .slide{ flex:0 0 100%; width:100%; scroll-snap-align:start; display:flex; justify-content:center; align-items:center; gap:14px; }
@@ -305,14 +306,18 @@ button{ font-family:inherit; }
 /* dupla: dos imagenes lado a lado, sin carrusel */
 .proyecto .imagen.dupla{ display:flex; justify-content:center; gap:14px; }
 .proyecto .imagen.dupla img{ width:calc(50% - 7px); object-fit:contain; }
-.carrusel .ant, .carrusel .sig{ position:absolute; top:50%; transform:translateY(-50%); width:38px; height:38px; border:1px solid var(--linea-2); background:rgba(8,9,10,.78); color:var(--luz); font-size:22px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-.carrusel .ant{ left:10px; } .carrusel .sig{ right:10px; }
-.carrusel .ant:hover, .carrusel .sig:hover{ border-color:var(--cobalto-claro); color:var(--cobalto-claro); }
-.carrusel .puntos{ position:absolute; left:0; right:0; bottom:10px; display:flex; justify-content:center; gap:6px; pointer-events:none; }
-.carrusel .puntos i{ width:6px; height:6px; border-radius:50%; background:rgba(243,240,234,.35); }
-.carrusel .puntos i.on{ background:var(--cobalto-claro); }
-.carrusel .cuenta{ position:absolute; right:12px; top:10px; font-family:var(--datos); font-size:10.5px; letter-spacing:.1em; color:var(--tenue); background:rgba(8,9,10,.7); padding:2px 7px; }
-.carrusel .cuenta b{ color:var(--luz); font-weight:600; }
+/* controles del carrusel con el estilo de la ficha: barra bajo la imagen con segmentos, cuenta y flechas cuadradas */
+.carrusel{ display:flex; flex-direction:column; gap:10px; }
+.carrusel .barra{ display:flex; align-items:center; gap:12px; }
+.carrusel .puntos{ position:static; flex:1; display:flex; gap:4px; pointer-events:none; }
+.carrusel .puntos i{ flex:1; height:3px; border-radius:0; background:var(--linea-2); transition: background .25s, box-shadow .25s; }
+.carrusel .puntos i.on{ background:var(--cobalto-claro); box-shadow:0 0 10px rgba(59,111,234,.7); }
+.carrusel .cuenta{ position:static; font-family:var(--datos); font-size:10.5px; letter-spacing:.14em; color:var(--tenue); background:none; padding:0; white-space:nowrap; }
+.carrusel .cuenta b{ color:var(--cobalto-claro); font-weight:700; }
+.carrusel .cuenta i{ font-style:normal; margin:0 5px; }
+.carrusel .flechas{ display:flex; gap:6px; }
+.carrusel .ant, .carrusel .sig{ position:static; transform:none; width:30px; height:30px; border:1px solid var(--cobalto); background:transparent; color:var(--cobalto-claro); font-family:var(--cuerpo); font-size:20px; line-height:1; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition: background .15s, color .15s; }
+.carrusel .ant:hover, .carrusel .sig:hover{ background:var(--cobalto); color:var(--cobalto-tinta); border-color:var(--cobalto); }
 .vivo{ margin-top:14px; border:1px solid var(--linea-2); background:var(--muro); padding:10px 12px; font-family:var(--datos); font-size:12px; }
 .vivo b{ display:block; font-size:9.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--cobalto-claro); margin-bottom:6px; }
 .vivo ol{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:3px; }
@@ -493,6 +498,14 @@ html.reel .carta-p .cab-d .logo{ height:48px; }
 html.reel .carta-p .cab-d .logo.pixel{ height:60px; }
 html.reel .carta-p .cab-d.sin-logo{ min-height:0; gap:6px; }
 html.reel .carta-p .cab-d.sin-logo .nombre-c{ font-size: clamp(30px, 8.6vw, 38px); }
+/* telefono, con logo (FaenApp, Stab): misma cabecera que Monito, con el logo chico en la esquina derecha */
+html.reel .carta-p .cab-d.con-logo{ display:grid; grid-template-columns: minmax(0,1fr) auto; grid-template-areas: "sello logo" "titulo logo"; column-gap:12px; row-gap:6px; align-items:center; height:auto; min-height:0; padding-left:0; }
+html.reel .carta-p .cab-d.con-logo .sello{ grid-area:sello; justify-self:start; }
+html.reel .carta-p .cab-d.con-logo .nombre-c{ grid-area:titulo; position:static; width:auto; height:auto; overflow:visible; clip:auto; white-space:normal; text-align:left; justify-self:start; font-size: clamp(30px, 8.6vw, 38px); line-height:.9; letter-spacing:-.01em; color: color-mix(in srgb, var(--borde) 70%, #fff); }
+html.reel .carta-p .cab-d.con-logo .logo{ grid-area:logo; height:50px; max-width:36vw; justify-self:end; }
+html.reel .carta-p .cab-d.con-logo .logo.pixel{ height:68px; }
+/* en telefono el carrusel se maneja deslizando: sin flechas */
+html.reel .carrusel .flechas{ display:none; }
 html.reel .carta-p .cab-d .sello{ font-size:9px; letter-spacing:.18em; padding:4px 8px; }
 /* etiquetas, chips y rol: discretos */
 html.reel .carta-p .linea2{ font-size:9.5px; letter-spacing:.1em; gap:5px 6px; }
@@ -510,8 +523,8 @@ html.reel .proyecto.carta-p .link{ font-size:15px; padding:12px 14px 12px 18px; 
 html.reel .proyecto.carta-p .link i{ width:28px; height:28px; font-size:15px; }
 html.reel .carta-p .dorso h3{ font-size: clamp(26px, 7.5vw, 34px); }
 /* la imagen entera (sin recortar) y, detras, ella misma desenfocada llenando el hueco: nada queda vacio */
-html.reel .carta-p .frente .imagen:not(.logo):not(.video){ position:relative; isolation:isolate; overflow:hidden; }
-html.reel .carta-p .frente .imagen:not(.logo):not(.video)::before{ content:""; position:absolute; inset:-8%; z-index:0; pointer-events:none;
+html.reel .carta-p .frente .imagen:not(.logo){ position:relative; isolation:isolate; overflow:hidden; }
+html.reel .carta-p .frente .imagen:not(.logo)::before{ content:""; position:absolute; inset:-8%; z-index:0; pointer-events:none;
   background: var(--fondo) center / cover no-repeat; filter: blur(22px) saturate(1.15) brightness(.5); opacity:.75; }
 html.reel .carta-p .frente .imagen > *{ position:relative; z-index:1; }
 /* dorso: el texto centrado y el boton abajo */

@@ -87,19 +87,21 @@
     const riel = slides.map((g, k) => `<div class="slide">${g.map((s, j) => `<img src="${esc(s)}" alt="${alt} ${k * porSlide + j + 1}" loading="lazy">`).join("")}</div>`).join("");
     return `<div class="imagen carrusel${clases}">
       <div class="riel">${riel}</div>
-      <button type="button" class="ant" aria-label="${esc(t("Anterior"))}">‹</button>
-      <button type="button" class="sig" aria-label="${esc(t("Siguiente"))}">›</button>
-      <div class="puntos">${slides.map((_, i) => `<i${i === 0 ? ' class="on"' : ""}></i>`).join("")}</div>
-      <span class="cuenta"><b>1</b> / ${slides.length}</span>
+      <div class="barra">
+        <div class="puntos" aria-hidden="true">${slides.map((_, i) => `<i${i === 0 ? ' class="on"' : ""}></i>`).join("")}</div>
+        <span class="cuenta"><b>1</b><i>/</i>${slides.length}</span>
+        <div class="flechas"><button type="button" class="ant" aria-label="${esc(t("Anterior"))}">‹</button><button type="button" class="sig" aria-label="${esc(t("Siguiente"))}">›</button></div>
+      </div>
     </div>`;
   }
 
   // La caja de la imagen guarda su propia imagen en --fondo: en telefono se pinta desenfocada detras
   // (la imagen entera, sin recortar, y el hueco que sobra se llena con su propio color).
   function armarAmbiente() {
-    document.querySelectorAll(".carta-p .frente .imagen:not(.logo):not(.video)").forEach((caja) => {
-      const img = caja.querySelector("img");
-      if (img) caja.style.setProperty("--fondo", `url("${img.getAttribute("src")}")`);
+    document.querySelectorAll(".carta-p .frente .imagen:not(.logo)").forEach((caja) => {
+      const img = caja.querySelector("img"), video = caja.querySelector("video");
+      const src = img ? img.getAttribute("src") : video && video.getAttribute("poster");
+      if (src) caja.style.setProperty("--fondo", `url("${src}")`);
     });
   }
 
@@ -249,16 +251,14 @@
       // Carta de a dos, en cinco lineas (vision de Esteban):
       // 1 logo (o nombre) + sello · 2 etiquetas + tecnica + rol · 3 video/carrusel · 4 pista · 5 boton
       // Dos caras: el frente y el dorso (la descripcion). Flota (B2), se inclina con el mouse y gira al clic (A3).
-      const cabeza = p.logo
-        ? `<img class="logo${p.logoPixel ? " pixel" : ""}" src="${esc(p.logo)}" alt="${esc(p.nombre)}">`
-        : `<h3 class="nombre-c">${esc(p.nombre)}</h3>`;
+      const cabeza = (p.logo ? `<img class="logo${p.logoPixel ? " pixel" : ""}" src="${esc(p.logo)}" alt="">` : "") + `<h3 class="nombre-c">${esc(p.nombre)}</h3>`;
       return `
       <article class="${clases}" id="p-${n}"${color}>
         <div class="flotante"><div class="carta" tabindex="0" role="button" aria-pressed="false" aria-label="${esc(p.nombre)}">
           <div class="cara frente">
-            <div class="cab-d${p.logo ? "" : " sin-logo"}">
+            <div class="cab-d${p.logo ? " con-logo" : " sin-logo"}">
               ${cabeza}
-              <span class="sello">${esc(t(p.destacado ? "Destacado" : p.etiqueta))}</span>
+              <span class="sello">${esc(t(p.etiqueta))}</span>
             </div>
             <div class="linea2">${etiquetas}<span class="sep" aria-hidden="true"></span>${tec}${rol}</div>
             ${img}
