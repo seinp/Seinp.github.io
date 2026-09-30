@@ -184,7 +184,7 @@
       if (p.fila && ultima && ultima.fila === p.fila) ultima.items.push(p);
       else filas.push({ fila: p.fila, items: [p] });
     });
-    const tarjeta = (p, i, sola, lado) => {
+    const tarjeta = (p, i, sola, lado, forzarCarta) => {
       const n = String(i + 1).padStart(2, "0");
       const img = media(p);
       // El boton muestra el link tal cual (sin https:// ni barra final), por pedido de Esteban.
@@ -202,7 +202,7 @@
       const color = estilo ? ` style="${esc(estilo)}"` : "";
 
       // Completo, sin carta: como era el desfile original.
-      if (!sola && !p.fila) {
+      if (!sola && !p.fila && !forzarCarta) {
         return `
       <article class="proyecto aparece${lado ? " der" : ""}" id="p-${n}">
         <div class="texto">
@@ -247,7 +247,7 @@
       <article class="${clases}" id="p-${n}"${color}>
         <div class="flotante"><div class="carta" tabindex="0" role="button" aria-pressed="false" aria-label="${esc(p.nombre)}">
           <div class="cara frente">
-            <div class="cab-d">
+            <div class="cab-d${p.logo ? "" : " sin-logo"}">
               ${cabeza}
               <span class="sello">${esc(t(p.destacado ? "Destacado" : p.etiqueta))}</span>
             </div>
@@ -267,12 +267,15 @@
         </div></div>
       </article>`;
     };
+    // En telefono todas las cartas se ven iguales (formato de a dos): la carta grande sola es solo de PC.
+    const telefono = matchMedia("(max-width: 860px)").matches;
     let k = 0, lados = 0;
     $("#proyectos").innerHTML = filas.map((f) => {
       const dos = f.items.length > 1, p = f.items[0];
       if (dos) return `<div class="fila-cartas ${f.items.length > 2 ? "tres" : "dos"}">${f.items.map((x) => tarjeta(x, k++, false, false)).join("")}</div>`;
       const lado = lados++ % 2 === 1;
-      return p.carta ? `<div class="fila-cartas una">${tarjeta(p, k++, true, lado)}</div>` : tarjeta(p, k++, false, lado);
+      if (p.carta) return `<div class="fila-cartas una">${telefono ? tarjeta(p, k++, false, false, true) : tarjeta(p, k++, true, lado)}</div>`;
+      return tarjeta(p, k++, false, lado);
     }).join("");
   }
 
@@ -344,7 +347,7 @@
   }
   function armarPaginado() {
     const modo = matchMedia("(min-width: 861px)").matches ? "paginado" : "reel";
-    if (modoArmado && modoArmado !== modo) desarmarPaginado();
+    if (modoArmado && modoArmado !== modo) { desarmarPaginado(); pintarProyectos(); armarCarruseles(); armarCartas(); }
     modoArmado = modo;
     document.documentElement.classList.toggle("paginado", modo === "paginado");
     document.documentElement.classList.toggle("reel", modo === "reel");
