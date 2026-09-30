@@ -21,7 +21,7 @@ window.TEXTOS = {
 
   // ---- portada ----
   "HOJA DE PERSONAJE": "CHARACTER SHEET",
-  "Hoja de personaje": "Character sheet", "máx": "max", "Disponible para nuevos proyectos": "Available for new projects",
+  "Hoja de personaje": "Character sheet", "NV 8 = 8 años de experiencia": "LV 8 = 8 years of experience", "atributos sobre 100": "attributes out of 100", "Disponible para nuevos proyectos": "Available for new projects",
   "¿Empezamos tu proyecto?": "Ready to start your project?", "Cuéntame la idea y te digo cómo lo hacemos.": "Share your idea and I'll lay out how we'd build it.",
   "Hablemos de": "Let's talk about", "tu proyecto": "your project",
   "o copia el correo": "or copy the address", "Cerrar": "Close", "Ver pieza": "View piece",
