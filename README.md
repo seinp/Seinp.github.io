@@ -31,4 +31,4 @@ node servir.js
 node publicar.js "mensaje"
 ```
 
-Diseño y código: José Esteban Da Rocha · estebandarocha7@gmail.com
+Diseño y código: José Esteban Da Rocha · SeinpStudio@gmail.com

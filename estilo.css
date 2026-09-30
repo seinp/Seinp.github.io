@@ -501,15 +501,20 @@ html.paginado .diapo.animar > .diapo-in > *, html.reel .diapo.animar > .diapo-in
 .fila-cartas.animar [data-entrada="lados"]:nth-child(1) .carta, .proyecto.animar[data-entrada="lados"] .carta{ animation-name: entra-izq; }
 .fila-cartas.animar [data-entrada="lados"]:nth-child(2) .carta{ animation-name: entra-der; }
 .fila-cartas.animar [data-entrada="zoom"] .carta, .proyecto.animar[data-entrada="zoom"] .carta{ animation-name: entra-zoom; }
-.fila-cartas.animar [data-entrada="giro"] .carta, .proyecto.animar[data-entrada="giro"] .carta{ animation-name: entra-giro; }
+.fila-cartas.animar [data-entrada="caida"] .carta, .proyecto.animar[data-entrada="caida"] .carta{ animation-name: entra-caida; animation-timing-function: cubic-bezier(.34,1.5,.64,1); animation-duration:.95s; }
 .fila-cartas.animar [data-entrada="subida"] .carta, .proyecto.animar[data-entrada="subida"] .carta{ animation-name: entra-subida; }
-.fila-cartas.animar [data-entrada="barrido"] .carta, .proyecto.animar[data-entrada="barrido"] .carta{ animation-name: entra-barrido; }
+.fila-cartas.animar [data-entrada="reparto"]:nth-child(1) .carta, .proyecto.animar[data-entrada="reparto"] .carta{ animation-name: entra-reparto-a; animation-duration:.9s; }
+.fila-cartas.animar [data-entrada="reparto"]:nth-child(2) .carta{ animation-name: entra-reparto-b; animation-duration:.9s; }
 @keyframes entra-izq{ from{ opacity:0; transform: translateX(-90px) rotateY(24deg); } }
 @keyframes entra-der{ from{ opacity:0; transform: translateX(90px) rotateY(-24deg); } }
 @keyframes entra-zoom{ 0%{ opacity:0; transform: scale(.72); } 70%{ transform: scale(1.03); } 100%{ transform: scale(1); } }
-@keyframes entra-giro{ from{ opacity:0; transform: rotateY(-80deg) translateX(-40px); } }
-@keyframes entra-subida{ from{ opacity:0; transform: translateY(80px); filter: blur(8px); } to{ filter: blur(0); } }
-@keyframes entra-barrido{ from{ clip-path: inset(0 100% 0 0); transform: translateX(-24px); } to{ clip-path: inset(0 0 0 0); } }
+/* caida: la carta cae desde arriba y rebota (Momi + Tyr) */
+@keyframes entra-caida{ from{ opacity:0; transform: translateY(-150px) rotateX(26deg) scale(.96); } }
+/* subida: sube y se asienta (solo transform + opacity: 60 fps) */
+@keyframes entra-subida{ from{ opacity:0; transform: translateY(90px) scale(.96); } }
+/* reparto: las dos cartas salen del centro de abajo y se cruzan hasta su lugar, como al repartir (MARSICARE + Castañuela) */
+@keyframes entra-reparto-a{ from{ opacity:0; transform: translate(62%, 70px) rotate(-9deg) scale(.84); } }
+@keyframes entra-reparto-b{ from{ opacity:0; transform: translate(-62%, 70px) rotate(9deg) scale(.84); } }
 /* Monito: la tele se enciende (como en monitoamarillo.com) y los textos se escriben con cursor (app.js) */
 .proyecto.carta-p.dorado .imagen img{ opacity:0; }
 .animar .proyecto.carta-p.dorado .imagen img, .proyecto.carta-p.dorado.animar .imagen img{ animation: tele-enciende 1s cubic-bezier(.2,.8,.2,1) .25s both; }

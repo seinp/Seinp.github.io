@@ -11,7 +11,7 @@ window.DATOS = {
     lugar: "Venezuela → Colombia · remoto",
     frase: "Construyo el producto completo y lo pongo en producción.",
     bajada: "Del arte y el concepto hasta el backend, el servidor y el cliente que paga. Dueño de FaenApp y cofundador de Monito Amarillo.",
-    correo: "estebandarocha7@gmail.com",
+    correo: "SeinpStudio@gmail.com",
     foto: "assets/img/fotoPerfil.jpg",
     cv: "cv.html",
     redes: [

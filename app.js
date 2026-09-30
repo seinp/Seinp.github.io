@@ -152,6 +152,7 @@
           anim = carta.animate(GIRO_A3, { duration: 1000, fill: "forwards", direction: abierta ? "reverse" : "normal" });
           anim.onfinish = () => {
             abierta = !abierta;
+            document.dispatchEvent(new CustomEvent("carta-girada", { detail: { art, abierta } }));
             // 3) se fija el resultado en el estilo y se libera la animacion: el mouse vuelve a mandar
             anim.commitStyles(); anim.cancel(); anim = null;
             carta.style.transform = base();
@@ -280,7 +281,7 @@
     // En telefono todas las cartas se ven iguales (formato de a dos): la carta grande sola es solo de PC.
     const telefono = matchMedia("(max-width: 860px)").matches;
     // Cada fila entra distinto (lados, zoom, giro, subida, barrido); la carta grande sola entra como terminal.
-    const ENTRADAS = ["lados", "zoom", "giro", "subida", "barrido"];
+    const ENTRADAS = ["lados", "zoom", "caida", "subida", "reparto"];
     let k = 0, lados = 0, r = 0;
     $("#proyectos").innerHTML = filas.map((f) => {
       const dos = f.items.length > 1, p = f.items[0];
@@ -661,9 +662,9 @@
     terminal.nodos = [];
     if (terminal.cursor) { terminal.cursor.remove(); terminal.cursor = null; }
   }
-  function terminalEscribir(art) {
+  function terminalEscribir(art, cara = "frente", espera = 380) {
     terminalCancelar();
-    const raiz = art.querySelector(".cara.frente");
+    const raiz = art.querySelector(".cara." + cara);
     if (!raiz) return;
     const vistos = new Set(), nodos = [];
     raiz.querySelectorAll(".cab-d .nombre-c, .texto h3, .meta, .linea2, .desc, .tec, .rol, .pista").forEach((el) => {
@@ -676,7 +677,7 @@
     terminal.nodos = nodos;
     nodos.forEach((o) => (o.n.textContent = ""));
     const cursor = document.createElement("span"); cursor.className = "cursor-term"; terminal.cursor = cursor;
-    const VEL = 7, t0 = performance.now() + 380;
+    const VEL = 7, t0 = performance.now() + espera;
     let i = 0, hechos = 0;
     const paso = (t) => {
       const objetivo = Math.floor((t - t0) / VEL);
@@ -696,6 +697,12 @@
     const art = document.querySelector(".proyecto.carta-p.dorado");
     if (!art) return;
     if (e.detail === art.closest(".diapo")) terminalEscribir(art); else terminalCancelar();
+  });
+  // en el telefono la carta de Monito gira: al mostrar el dorso, el detalle tambien se escribe como terminal
+  document.addEventListener("carta-girada", (e) => {
+    const { art, abierta } = e.detail;
+    if (!art.classList.contains("dorado")) return;
+    if (abierta) terminalEscribir(art, "dorso", 120); else terminalCancelar();
   });
 
   // ---------- la portada: en PC se inclina (poco) con el mouse y el brillo lo sigue, como las cartas ----------
