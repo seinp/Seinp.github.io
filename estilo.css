@@ -494,6 +494,33 @@ html.paginado .sec-titulo{ margin-bottom:18px; }
 html.paginado .diapo > .diapo-in > *, html.reel .diapo > .diapo-in > *{ opacity:0; transform:translateY(18px); transition: opacity .6s ease var(--d,0s), transform .6s cubic-bezier(.2,.8,.2,1) var(--d,0s); }
 html.paginado .diapo.animar > .diapo-in > *, html.reel .diapo.animar > .diapo-in > *{ opacity:1; transform:none; }
 .capa-bucle .diapo > .diapo-in > *{ opacity:1 !important; transform:none !important; transition:none !important; }
+/* ENTRADAS de las cartas del desfile: cada fila con la suya (lados, zoom, giro, subida, barrido). Se disparan con
+   .animar en la diapositiva (PC: la fila; telefono: la carta). fill backwards: al terminar, la carta vuelve a
+   obedecer al mouse (inclinacion) y al giro. */
+.fila-cartas .carta-p .carta{ animation-fill-mode: backwards; animation-timing-function: cubic-bezier(.2,.8,.2,1); animation-duration:.85s; animation-delay: calc(var(--d,0s) + .05s); }
+.fila-cartas.animar [data-entrada="lados"]:nth-child(1) .carta, .proyecto.animar[data-entrada="lados"] .carta{ animation-name: entra-izq; }
+.fila-cartas.animar [data-entrada="lados"]:nth-child(2) .carta{ animation-name: entra-der; }
+.fila-cartas.animar [data-entrada="zoom"] .carta, .proyecto.animar[data-entrada="zoom"] .carta{ animation-name: entra-zoom; }
+.fila-cartas.animar [data-entrada="giro"] .carta, .proyecto.animar[data-entrada="giro"] .carta{ animation-name: entra-giro; }
+.fila-cartas.animar [data-entrada="subida"] .carta, .proyecto.animar[data-entrada="subida"] .carta{ animation-name: entra-subida; }
+.fila-cartas.animar [data-entrada="barrido"] .carta, .proyecto.animar[data-entrada="barrido"] .carta{ animation-name: entra-barrido; }
+@keyframes entra-izq{ from{ opacity:0; transform: translateX(-90px) rotateY(24deg); } }
+@keyframes entra-der{ from{ opacity:0; transform: translateX(90px) rotateY(-24deg); } }
+@keyframes entra-zoom{ 0%{ opacity:0; transform: scale(.72); } 70%{ transform: scale(1.03); } 100%{ transform: scale(1); } }
+@keyframes entra-giro{ from{ opacity:0; transform: rotateY(-80deg) translateX(-40px); } }
+@keyframes entra-subida{ from{ opacity:0; transform: translateY(80px); filter: blur(8px); } to{ filter: blur(0); } }
+@keyframes entra-barrido{ from{ clip-path: inset(0 100% 0 0); transform: translateX(-24px); } to{ clip-path: inset(0 0 0 0); } }
+/* Monito: la tele se enciende (como en monitoamarillo.com) y los textos se escriben con cursor (app.js) */
+.proyecto.carta-p.dorado .imagen img{ opacity:0; }
+.animar .proyecto.carta-p.dorado .imagen img, .proyecto.carta-p.dorado.animar .imagen img{ animation: tele-enciende 1s cubic-bezier(.2,.8,.2,1) .25s both; }
+@keyframes tele-enciende{ 0%{ opacity:1; transform: scale(1.4, .004); filter: brightness(6); } 45%{ transform: scale(1.06, .06); filter: brightness(3); } 70%{ transform: scale(1, 1); filter: brightness(1.8); } 100%{ opacity:1; transform:none; filter:none; } }
+.cursor-term{ display:inline-block; width:.55em; height:1em; background:#F5C408; margin-left:3px; vertical-align:-.12em; animation: parpadea .8s steps(1) infinite; }
+@keyframes parpadea{ 50%{ opacity:0; } }
+/* galeria: las piezas aparecen una por una */
+.galeria figure{ opacity:0; }
+#arte.animar .galeria figure{ opacity:1; animation: pop-pieza .55s cubic-bezier(.2,.8,.2,1) backwards; animation-delay: calc(var(--i,0) * 40ms + .15s); }
+@keyframes pop-pieza{ from{ opacity:0; transform: scale(.6) translateY(12px); } }
+@media (prefers-reduced-motion: reduce){ .fila-cartas .carta-p .carta, .proyecto.carta-p.dorado .imagen img, #arte.animar .galeria figure{ animation:none !important; opacity:1; } }
 /* la portada tambien vive: flota despacio y se inclina (poco) con el mouse */
 html.paginado .hero{ perspective:1500px; }
 html.paginado .hero > .diapo-in{ animation: flota-carta 5s ease-in-out infinite; will-change:transform; }
@@ -503,20 +530,17 @@ html.paginado .carta-p .cara{ gap:12px; padding:22px 24px 22px; }
 html.paginado .carta-p .cab-d{ height:104px; }
 html.paginado .carta-p .cab-d .logo{ height:76px; }
 html.paginado .carta-p .cab-d .logo.pixel{ height:104px; }
-html.paginado .carta-p .imagen img, html.paginado .carta-p .imagen video, html.paginado .carta-p .carrusel .slide img{ max-height:32vh; }
-html.paginado .carta-p .frente .imagen:not(.carrusel) img{ max-height:40vh; }
-/* la carta sola llena el alto de la diapositiva y su imagen crece con ella */
-html.paginado .fila-cartas.una{ padding-top:92px; padding-bottom:34px; }
-html.paginado .fila-cartas.una > .diapo-in{ height:100%; display:flex; }
-html.paginado .fila-cartas.una .proyecto.carta-p{ flex:1; display:flex; }
-html.paginado .fila-cartas.una .flotante, html.paginado .fila-cartas.una .carta{ flex:1; height:100%; }
-html.paginado .fila-cartas.una .carta{ display:grid; }
-html.paginado .carta-p.sola .imagen img, html.paginado .carta-p.sola .imagen video{ max-height: calc(100vh - 230px); }
+/* todos los medios de las cartas de a dos al mismo alto: asi ninguna fila (Momi + Tyr) sobresale de las demas */
+html.paginado .carta-p .imagen img, html.paginado .carta-p .imagen video, html.paginado .carta-p .carrusel .slide img, html.paginado .carta-p .frente .imagen:not(.carrusel) img{ max-height:30vh; }
+/* la carta sola (Monito) mide lo que su contenido y queda centrada en la diapositiva, sin aire vacio arriba y abajo */
+html.paginado .carta-p.sola .imagen img{ max-height: 50vh; }
+html.paginado .proyecto.carta-p.sola .frente{ padding: clamp(24px,3.2vw,44px) clamp(24px,4vw,56px); }
 html.paginado .proyecto.carta-p .link{ padding:13px 16px 13px 22px; font-size:19px; }
 html.paginado .proyecto.carta-p .link i{ width:34px; height:34px; }
 /* el resto de imagenes tampoco puede pasarse del alto */
 html.paginado .proyecto .imagen img, html.paginado .carrusel .slide img{ max-height:62vh; }
 html.paginado .carrusel.vertical .slide img{ max-height:60vh; }
+html.paginado .carta-p .carrusel.vertical .slide img{ max-height:30vh; }   /* dentro de una carta manda el alto de la fila */
 
 /* ================= TELEFONO EN MODO REEL: cada apartado llena la pantalla bajo el perfil y se desliza con enganche ================= */
 /* Sin scroll nativo ni snap: el dedo manda (app.js). scroll-padding-top sigue siendo la referencia del alto de ficha + barra. */

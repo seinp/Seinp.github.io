@@ -196,7 +196,7 @@
       if (p.fila && ultima && ultima.fila === p.fila) ultima.items.push(p);
       else filas.push({ fila: p.fila, items: [p] });
     });
-    const tarjeta = (p, i, sola, lado, forzarCarta) => {
+    const tarjeta = (p, i, sola, lado, forzarCarta, entrada) => {
       const n = String(i + 1).padStart(2, "0");
       const img = media(p);
       // El boton muestra el link tal cual (sin https:// ni barra final), por pedido de Esteban.
@@ -211,7 +211,7 @@
       const rol = `<p class="rol"><span>${esc(t("Rol"))}</span> ${esc(t(p.rol))}</p>`;
       const clases = "proyecto carta-p aparece" + (sola ? " sola" : "") + (lado ? " der" : "") + (p.borde ? " " + p.borde : "");
       const estilo = [p.color && `--borde:${p.color}`, p.boton && `--boton:${p.boton}`].filter(Boolean).join(";");
-      const color = estilo ? ` style="${esc(estilo)}"` : "";
+      const color = (estilo ? ` style="${esc(estilo)}"` : "") + (entrada ? ` data-entrada="${entrada}"` : "");
 
       // Completo, sin carta: como era el desfile original.
       if (!sola && !p.fila && !forzarCarta) {
@@ -279,12 +279,14 @@
     };
     // En telefono todas las cartas se ven iguales (formato de a dos): la carta grande sola es solo de PC.
     const telefono = matchMedia("(max-width: 860px)").matches;
-    let k = 0, lados = 0;
+    // Cada fila entra distinto (lados, zoom, giro, subida, barrido); la carta grande sola entra como terminal.
+    const ENTRADAS = ["lados", "zoom", "giro", "subida", "barrido"];
+    let k = 0, lados = 0, r = 0;
     $("#proyectos").innerHTML = filas.map((f) => {
       const dos = f.items.length > 1, p = f.items[0];
-      if (dos) return `<div class="fila-cartas ${f.items.length > 2 ? "tres" : "dos"}">${f.items.map((x) => tarjeta(x, k++, false, false)).join("")}</div>`;
+      if (dos) { const ent = ENTRADAS[r++ % ENTRADAS.length]; return `<div class="fila-cartas ${f.items.length > 2 ? "tres" : "dos"}">${f.items.map((x) => tarjeta(x, k++, false, false, false, ent)).join("")}</div>`; }
       const lado = lados++ % 2 === 1;
-      if (p.carta) return `<div class="fila-cartas una">${telefono ? tarjeta(p, k++, false, false, true) : tarjeta(p, k++, true, lado)}</div>`;
+      if (p.carta) return `<div class="fila-cartas una">${telefono ? tarjeta(p, k++, false, false, true, "terminal") : tarjeta(p, k++, true, lado, false, "terminal")}</div>`;
       return tarjeta(p, k++, false, lado);
     }).join("");
   }
@@ -309,7 +311,7 @@
 
   // ---------- arte ----------
   function pintarArte() {
-    $("#galeria").innerHTML = D.arte.map((src, i) => `<figure role="button" tabindex="0" aria-label="${esc(t("Ver pieza"))} ${i + 1}"><img src="${esc(src)}" alt="${esc(t("Pieza de arte"))} ${i + 1}" loading="lazy"></figure>`).join("");
+    $("#galeria").innerHTML = D.arte.map((src, i) => `<figure role="button" tabindex="0" style="--i:${i}" aria-label="${esc(t("Ver pieza"))} ${i + 1}"><img src="${esc(src)}" alt="${esc(t("Pieza de arte"))} ${i + 1}" loading="lazy"></figure>`).join("");
   }
   // el visor: se toca una pieza y se ve grande; se cierra tocando, con la X o con Escape
   const visor = $("#visor");
@@ -648,6 +650,52 @@
     try { await navigator.clipboard.writeText(correo); b.textContent = t("Copiado"); }
     catch { const r = document.createRange(); r.selectNodeContents($("#correo-texto")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
     setTimeout(() => { b.textContent = t("Copiar"); }, 1600);
+  });
+
+  // ---------- Monito Amarillo: la carta arranca como su web. La tele se enciende (CSS) y los textos del frente
+  // se escriben caracter a caracter con un cursor, como en una terminal. Se repite cada vez que llega la carta. ----------
+  const terminal = { nodos: [], cuadro: 0, cursor: null };
+  function terminalCancelar() {
+    cancelAnimationFrame(terminal.cuadro);
+    terminal.nodos.forEach((o) => { o.n.textContent = o.texto; });
+    terminal.nodos = [];
+    if (terminal.cursor) { terminal.cursor.remove(); terminal.cursor = null; }
+  }
+  function terminalEscribir(art) {
+    terminalCancelar();
+    const raiz = art.querySelector(".cara.frente");
+    if (!raiz) return;
+    const vistos = new Set(), nodos = [];
+    raiz.querySelectorAll(".cab-d .nombre-c, .texto h3, .meta, .linea2, .desc, .tec, .rol, .pista").forEach((el) => {
+      if (el.closest(".link")) return;
+      const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      let n;
+      while ((n = w.nextNode())) { if (n.textContent.trim() && !vistos.has(n)) { vistos.add(n); nodos.push({ n, texto: n.textContent }); } }
+    });
+    if (!nodos.length) return;
+    terminal.nodos = nodos;
+    nodos.forEach((o) => (o.n.textContent = ""));
+    const cursor = document.createElement("span"); cursor.className = "cursor-term"; terminal.cursor = cursor;
+    const VEL = 7, t0 = performance.now() + 380;
+    let i = 0, hechos = 0;
+    const paso = (t) => {
+      const objetivo = Math.floor((t - t0) / VEL);
+      while (hechos < objetivo && i < nodos.length) {
+        const o = nodos[i];
+        if (o.n.textContent.length < o.texto.length) { o.n.textContent = o.texto.slice(0, o.n.textContent.length + 1); hechos++; }
+        else i++;
+      }
+      const act = nodos[Math.min(i, nodos.length - 1)];
+      if (act.n.parentNode && cursor.previousSibling !== act.n) act.n.parentNode.insertBefore(cursor, act.n.nextSibling);
+      if (i < nodos.length) terminal.cuadro = requestAnimationFrame(paso);
+      else setTimeout(() => { if (terminal.cursor === cursor) { cursor.remove(); terminal.cursor = null; } }, 1600);
+    };
+    terminal.cuadro = requestAnimationFrame(paso);
+  }
+  document.addEventListener("diapo-al-frente", (e) => {
+    const art = document.querySelector(".proyecto.carta-p.dorado");
+    if (!art) return;
+    if (e.detail === art.closest(".diapo")) terminalEscribir(art); else terminalCancelar();
   });
 
   // ---------- la portada: en PC se inclina (poco) con el mouse y el brillo lo sigue, como las cartas ----------
