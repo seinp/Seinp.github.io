@@ -98,11 +98,29 @@
 
   // La caja de la imagen guarda su propia imagen en --fondo: en telefono se pinta desenfocada detras
   // (la imagen entera, sin recortar, y el hueco que sobra se llena con su propio color).
+  // El "desenfoque" no usa filter (en telefono hacia laguear el giro): se dibuja una miniatura de 24 px de la
+  // imagen y el navegador la agranda suave, que es lo mismo que un blur pero gratis.
+  const MINIS = new Map();
+  function miniatura(src, cb) {
+    if (MINIS.has(src)) return cb(MINIS.get(src));
+    const im = new Image();
+    im.onload = () => {
+      try {
+        const c = document.createElement("canvas"); c.width = 24; c.height = 24;
+        c.getContext("2d").drawImage(im, 0, 0, 24, 24);
+        const u = c.toDataURL("image/png"); MINIS.set(src, u); cb(u);
+      } catch { cb(null); }
+    };
+    im.onerror = () => cb(null);
+    im.src = src;
+  }
   function armarAmbiente() {
     document.querySelectorAll(".carta-p .frente .imagen:not(.logo)").forEach((caja) => {
       const img = caja.querySelector("img"), video = caja.querySelector("video");
       const src = img ? img.getAttribute("src") : video && video.getAttribute("poster");
-      if (src) caja.style.setProperty("--fondo", `url("${src}")`);
+      if (!src) return;
+      caja.style.setProperty("--fondo", `url("${src}")`);
+      miniatura(src, (u) => { if (u) { caja.style.setProperty("--fondo", `url("${u}")`); caja.classList.add("ambiente-mini"); } });
     });
   }
 
@@ -142,6 +160,8 @@
         if (girando) return;
         girando = true;
         art.classList.add("girando");
+        art.querySelectorAll("video").forEach((v) => v.pause());
+        document.dispatchEvent(new CustomEvent("carta-girada", { detail: { art, abierta: !abierta } }));
         // 1) la carta vuelve suave a su posicion neutra (la inclinacion del mouse se apaga)
         carta.style.transition = "transform .15s ease-out";
         carta.style.transform = base();
@@ -152,13 +172,13 @@
           anim = carta.animate(GIRO_A3, { duration: 1000, fill: "forwards", direction: abierta ? "reverse" : "normal" });
           anim.onfinish = () => {
             abierta = !abierta;
-            document.dispatchEvent(new CustomEvent("carta-girada", { detail: { art, abierta } }));
             // 3) se fija el resultado en el estilo y se libera la animacion: el mouse vuelve a mandar
             anim.commitStyles(); anim.cancel(); anim = null;
             carta.style.transform = base();
             carta.setAttribute("aria-pressed", String(abierta));
             girando = false;
             art.classList.remove("girando");
+            art.querySelectorAll("video").forEach((v) => v.play().catch(() => {}));
           };
         }, 160);
       }
@@ -658,6 +678,7 @@
   const terminal = { nodos: [], cuadro: 0, cursor: null };
   function terminalCancelar() {
     cancelAnimationFrame(terminal.cuadro);
+    document.querySelectorAll(".escribiendo").forEach((el) => el.classList.remove("escribiendo"));
     terminal.nodos.forEach((o) => { o.n.textContent = o.texto; });
     terminal.nodos = [];
     if (terminal.cursor) { terminal.cursor.remove(); terminal.cursor = null; }
@@ -678,8 +699,11 @@
     nodos.forEach((o) => (o.n.textContent = ""));
     const cursor = document.createElement("span"); cursor.className = "cursor-term"; terminal.cursor = cursor;
     const VEL = 7, t0 = performance.now() + espera;
-    let i = 0, hechos = 0;
+    let i = 0, hechos = 0, ultimo = 0;
+    art.classList.add("escribiendo");
     const paso = (t) => {
+      if (t - ultimo < 28) { terminal.cuadro = requestAnimationFrame(paso); return; }
+      ultimo = t;
       const objetivo = Math.floor((t - t0) / VEL);
       while (hechos < objetivo && i < nodos.length) {
         const o = nodos[i];
@@ -689,7 +713,7 @@
       const act = nodos[Math.min(i, nodos.length - 1)];
       if (act.n.parentNode && cursor.previousSibling !== act.n) act.n.parentNode.insertBefore(cursor, act.n.nextSibling);
       if (i < nodos.length) terminal.cuadro = requestAnimationFrame(paso);
-      else setTimeout(() => { if (terminal.cursor === cursor) { cursor.remove(); terminal.cursor = null; } }, 1600);
+      else { art.classList.remove("escribiendo"); setTimeout(() => { if (terminal.cursor === cursor) { cursor.remove(); terminal.cursor = null; } }, 1600); }
     };
     terminal.cuadro = requestAnimationFrame(paso);
   }
@@ -702,7 +726,7 @@
   document.addEventListener("carta-girada", (e) => {
     const { art, abierta } = e.detail;
     if (!art.classList.contains("dorado")) return;
-    if (abierta) terminalEscribir(art, "dorso", 120); else terminalCancelar();
+    if (abierta) terminalEscribir(art, "dorso", 700); else terminalCancelar();
   });
 
   // ---------- la portada: en PC se inclina (poco) con el mouse y el brillo lo sigue, como las cartas ----------

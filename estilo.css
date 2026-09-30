@@ -518,7 +518,13 @@ html.paginado .diapo.animar > .diapo-in > *, html.reel .diapo.animar > .diapo-in
 /* Monito: la tele se enciende (como en monitoamarillo.com) y los textos se escriben con cursor (app.js) */
 .proyecto.carta-p.dorado .imagen img{ opacity:0; }
 .animar .proyecto.carta-p.dorado .imagen img, .proyecto.carta-p.dorado.animar .imagen img{ animation: tele-enciende 1s cubic-bezier(.2,.8,.2,1) .25s both; }
-@keyframes tele-enciende{ 0%{ opacity:1; transform: scale(1.4, .004); filter: brightness(6); } 45%{ transform: scale(1.06, .06); filter: brightness(3); } 70%{ transform: scale(1, 1); filter: brightness(1.8); } 100%{ opacity:1; transform:none; filter:none; } }
+@keyframes tele-enciende{ 0%{ opacity:1; transform: scale(1.4, .004); } 45%{ transform: scale(1.06, .06); } 70%{ transform: scale(1, 1); } 100%{ opacity:1; transform:none; } }
+.proyecto.carta-p.dorado .imagen{ position:relative; }
+.proyecto.carta-p.dorado .imagen::after{ content:""; position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; z-index:2; }
+.animar .proyecto.carta-p.dorado .imagen::after, .proyecto.carta-p.dorado.animar .imagen::after{ animation: tele-flash 1s ease-out .25s both; }
+@keyframes tele-flash{ 0%{ opacity:.85; } 50%{ opacity:.35; } 100%{ opacity:0; } }
+/* mientras la carta escribe, su borde corriente se queda quieto (menos repintado) */
+.proyecto.carta-p.escribiendo .cara{ animation-play-state: paused; }
 .cursor-term{ display:inline-block; width:.55em; height:1em; background:#F5C408; margin-left:3px; vertical-align:-.12em; animation: parpadea .8s steps(1) infinite; }
 @keyframes parpadea{ 50%{ opacity:0; } }
 /* galeria: las piezas aparecen una por una */
@@ -567,6 +573,7 @@ html.reel .proyecto .imagen img, html.reel .carrusel .slide img, html.reel .proy
 html.reel .carrusel.vertical .slide img{ max-height:32dvh; }
 html.reel .fila-cartas{ display:block; padding:0; border:0; }
 html.reel .proyecto.carta-p{ padding:20px; }
+html.reel .proyecto.carta-p.arcoiris .cara, html.reel .proyecto.carta-p.dorado .cara, html.reel .proyecto.carta-p.arcoiris .link, html.reel .proyecto.carta-p.arcoiris .link span{ animation-timing-function: steps(60); }
 html.reel .carta-p .cara{ gap:10px; padding:16px 16px 16px; }
 html.reel .carta-p .cab-d{ height:auto; min-height:64px; }
 html.reel .carta-p .imagen img, html.reel .carta-p .imagen video, html.reel .carta-p .carrusel .slide img{ max-height:26dvh; }
@@ -675,6 +682,10 @@ html.reel .carta-p .dorso h3{ font-size: clamp(26px, 7.5vw, 34px); }
 html.reel .carta-p .frente .imagen:not(.logo){ position:relative; isolation:isolate; overflow:hidden; }
 html.reel .carta-p .frente .imagen:not(.logo)::before{ content:""; position:absolute; inset:-8%; z-index:0; pointer-events:none;
   background: var(--fondo) center / cover no-repeat; filter: blur(22px) saturate(1.15) brightness(.5); opacity:.75; }
+/* con la miniatura de 24 px no hace falta el filter (lo que lagueaba el giro): se agranda suave y se oscurece con la opacidad */
+html.reel .carta-p .frente .imagen.ambiente-mini::before{ filter:none; opacity:.42; inset:0; }
+/* mientras la carta gira, todo lo que repinta se queda quieto: borde corriente, boton arcoiris, flotar */
+.proyecto.carta-p.girando .cara, .proyecto.carta-p.girando .link, .proyecto.carta-p.girando .link span, .proyecto.carta-p.girando .flotante{ animation-play-state: paused; }
 html.reel .carta-p .frente .imagen > *{ position:relative; z-index:1; }
 /* dorso: el texto centrado y el boton abajo */
 html.reel .carta-p .dorso .k{ margin-top:auto; }
