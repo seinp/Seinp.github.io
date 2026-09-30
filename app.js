@@ -358,10 +358,12 @@
     });
     ajustarDiapos();
   }
-  // Si el contenido no cabe en el alto, se escala. En telefono no se achica mas del 80%:
-  // si aun asi no cabe, esa diapositiva se puede desplazar por dentro.
+  // PC: si el contenido no cabe en el alto, se achica (hasta 55%; si aun asi no cabe, se desplaza por dentro).
+  // Telefono: cada apartado CALZA EXACTO en la pantalla, crezca o se achique (cartas y portada entre 50% y
+  // 145%; las secciones largas hasta 80% y despues se desplazan por dentro). Como el ancho se queda en 100%
+  // y el texto se reacomoda al cambiar la escala, se itera unas veces hasta que el alto coincide.
   function ajustarDiapos() {
-    const minimo = reel() ? .8 : .55;
+    const enReel = reel();
     diapos().forEach((d) => {
       const dentro = d.querySelector(":scope > .diapo-in");
       if (!dentro) return;
@@ -369,12 +371,33 @@
       d.classList.remove("desplaza");
       const cs = getComputedStyle(d);
       const disponible = d.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-      const necesita = dentro.scrollHeight;
-      if (necesita <= disponible) return;
-      const k = disponible / necesita;
-      dentro.style.zoom = Math.max(minimo, k).toFixed(3);
-      if (k < minimo) d.classList.add("desplaza");
+      if (!enReel) {
+        const necesita = dentro.scrollHeight;
+        if (necesita <= disponible) return;
+        const k = disponible / necesita;
+        dentro.style.zoom = Math.max(.55, k).toFixed(3);
+        if (k < .55) d.classList.add("desplaza");
+        return;
+      }
+      // Busqueda binaria de la escala mas grande que entra (el alto visual crece con la escala, porque el
+      // ancho se queda en 100% y el texto se reacomoda; iterar "a ojo" oscilaba y no convergia).
+      const carta = d.classList.contains("proyecto") || d.classList.contains("hero");
+      const minimo = carta ? .5 : .8, maximo = carta ? 1.45 : 1;
+      const cabe = (z) => { dentro.style.zoom = z.toFixed(3); return dentro.getBoundingClientRect().height <= disponible + .5; };
+      let z;
+      if (cabe(maximo)) z = maximo;
+      else if (!cabe(minimo)) { z = minimo; d.classList.add("desplaza"); }
+      else { let lo = minimo, hi = maximo; for (let i = 0; i < 7; i++) { const m = (lo + hi) / 2; if (cabe(m)) lo = m; else hi = m; } z = lo; }
+      dentro.style.zoom = z.toFixed(3);
     });
+    marcarFrente();
+  }
+  // Solo el apartado que se ve anima (bordes corrientes, flotar, latido): los demas quedan quietos.
+  function marcarFrente() {
+    const ds = diapos();
+    if (!ds.length) return;
+    const i = indiceActual();
+    ds.forEach((d, k) => d.classList.toggle("al-frente", k === i));
   }
   // El desplazamiento entre diapositivas lo anima la pagina (curva suave propia), no el navegador:
   // asi no lo pelea el snap y siempre dura lo mismo.
@@ -398,7 +421,7 @@
       const p = Math.min(1, (t - t0) / duracion);
       scrollTo({ top: desde + delta * seca(p), behavior: "instant" });
       if (p < 1) cuadro = requestAnimationFrame(paso);
-      else { animando = false; objetivo = -1; acumulado = 0; setTimeout(() => raiz.classList.remove("viajando", "arriba"), 260); }
+      else { animando = false; objetivo = -1; acumulado = 0; marcarFrente(); setTimeout(() => raiz.classList.remove("viajando", "arriba"), 260); }
     };
     cuadro = requestAnimationFrame(paso);
   }
@@ -464,22 +487,55 @@
     }));
     setTimeout(() => {
       capa.remove();
-      animando = false; acumulado = 0; objetivo = -1;
+      animando = false; acumulado = 0; objetivo = -1; marcarFrente();
       setTimeout(() => raiz.classList.remove("viajando", "arriba"), 260);
     }, DURACION + 60);
   }
-  // telefono: el bucle se dispara deslizando con el dedo mas alla del primero o del ultimo
-  let toqueY = null;
-  addEventListener("touchstart", (e) => { toqueY = e.touches[0].clientY; }, { passive: true });
-  addEventListener("touchend", (e) => {
-    if (!reel() || toqueY === null || animando) return;
-    const dy = e.changedTouches[0].clientY - toqueY;
-    toqueY = null;
-    const ds = diapos();
-    const enElPrimero = scrollY <= 2, enElUltimo = scrollY >= document.documentElement.scrollHeight - innerHeight - 4;
-    if (dy > 70 && enElPrimero) bucle(ds[ds.length - 1], -1);
-    else if (dy < -70 && enElUltimo) bucle(ds[0], 1);
+  // ---------- telefono: paginado con el dedo, estilo TikTok / Reels ----------
+  // No hay scroll nativo (touch-action en el CSS): el contenido sigue al dedo y, al soltar, pasa UN
+  // apartado en la direccion del gesto, o vuelve al suyo si el gesto fue corto. En los extremos da la
+  // vuelta (bucle). Un gesto horizontal (carrusel) o el scroll interno de una seccion larga que no
+  // este en su borde se dejan en paz.
+  let toqueY = null, toqueX = null, base = 0, arrastrando = false, ajeno = false, conScroll = null;
+  const UMBRAL = 45;
+  addEventListener("touchstart", (e) => {
+    if (!reel()) return;
+    const t = e.touches[0];
+    toqueY = t.clientY; toqueX = t.clientX; base = scrollY; arrastrando = false; ajeno = false;
+    conScroll = e.target.closest(".diapo.desplaza");
   }, { passive: true });
+  addEventListener("touchmove", (e) => {
+    if (!reel() || toqueY === null || ajeno) return;
+    if (animando) { if (e.cancelable) e.preventDefault(); return; }
+    const t = e.touches[0], dy = t.clientY - toqueY, dx = t.clientX - toqueX;
+    if (!arrastrando) {
+      if (Math.abs(dy) < 6 && Math.abs(dx) < 6) return;
+      if (Math.abs(dx) > Math.abs(dy)) { ajeno = true; return; }
+      if (conScroll) {
+        const arriba = conScroll.scrollTop <= 0, abajo = conScroll.scrollTop + conScroll.clientHeight >= conScroll.scrollHeight - 1;
+        if (!((dy > 0 && arriba) || (dy < 0 && abajo))) { ajeno = true; return; }
+      }
+      arrastrando = true;
+    }
+    if (e.cancelable) e.preventDefault();
+    scrollTo({ top: base - dy, behavior: "instant" });
+  }, { passive: false });
+  addEventListener("touchend", (e) => {
+    if (!reel() || toqueY === null) return;
+    const dy = e.changedTouches[0].clientY - toqueY, era = arrastrando;
+    toqueY = toqueX = null; arrastrando = false; conScroll = null;
+    if (!era || animando) return;
+    const ds = diapos();
+    if (!ds.length) return;
+    const margen = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+    const topDe = (d) => scrollY + d.getBoundingClientRect().top - margen;
+    const i = ds.reduce((m, d, k) => (Math.abs(topDe(d) - base) < Math.abs(topDe(ds[m]) - base) ? k : m), 0);
+    if (Math.abs(dy) < UMBRAL) return animarScroll(topDe(ds[i]));
+    const dir = dy < 0 ? 1 : -1, j = i + dir;
+    if (j < 0 || j >= ds.length) return bucle(ds[(j + ds.length) % ds.length], dir);
+    animarScroll(topDe(ds[j]));
+  }, { passive: true });
+  addEventListener("touchcancel", () => { toqueY = toqueX = null; arrastrando = false; conScroll = null; }, { passive: true });
   addEventListener("wheel", (e) => {
     if (!paginado()) return;
     e.preventDefault();
@@ -492,12 +548,13 @@
   // si se arrastra la barra de scroll, al soltar se acomoda a la diapositiva mas cercana
   addEventListener("scrollend", () => { if (paginado() && !animando) { const d = diapos()[indiceActual()]; if (d && Math.abs(d.getBoundingClientRect().top) > 2) animarScroll(scrollY + d.getBoundingClientRect().top); } });
   // los enlaces del menu tambien viajan con la animacion propia
-  document.querySelectorAll('.menu a[href^="#"]').forEach((a) => a.addEventListener("click", (e) => {
-    if (!paginado()) return;
+  document.querySelectorAll('.menu a[href^="#"], .hero-cta[href^="#"]').forEach((a) => a.addEventListener("click", (e) => {
+    if (!paginado() && !reel()) return;
     const sec = document.querySelector(a.getAttribute("href"));
     if (!sec) return;
     e.preventDefault();
-    animarScroll(scrollY + sec.getBoundingClientRect().top);
+    const margen = reel() ? parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0 : 0;
+    animarScroll(scrollY + sec.getBoundingClientRect().top - margen);
   }));
   addEventListener("keydown", (e) => {
     if (!paginado() || e.target.closest("input, textarea")) return;

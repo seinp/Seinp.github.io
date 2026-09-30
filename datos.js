@@ -24,11 +24,11 @@ window.DATOS = {
 
   // Los seis atributos de la ficha. La rareza sale del valor: 90+ legendario, 80+ épico, 70+ raro.
   atributos: [
-    { nombre: "Backend",  valor: 90, prueba: "Firestore + endpoints PHP propios · servidor VPS de STAB" },
-    { nombre: "Frontend", valor: 84, prueba: "Webapp Vue de FaenApp · 4 webs en vivo" },
+    { nombre: "Backend",  valor: 80, prueba: "Firestore + endpoints PHP propios · servidor VPS de STAB" },
+    { nombre: "Frontend", valor: 95, prueba: "Webapp Vue de FaenApp · 4 webs en vivo" },
     { nombre: "Móvil",    valor: 80, prueba: "Dos apps Flutter firmadas y distribuidas" },
-    { nombre: "Juegos",   valor: 88, prueba: "5 juegos publicados · C# + raylib sin motor" },
-    { nombre: "Arte",     valor: 82, prueba: "Pixel art y marca · Spine 2D, Blender, ZBrush, Inkscape" },
+    { nombre: "Juegos",   valor: 90, prueba: "5 juegos publicados · C# + raylib sin motor" },
+    { nombre: "Arte",     valor: 70, prueba: "Pixel art y marca · Spine 2D, Blender, ZBrush, Inkscape" },
     { nombre: "IA",       valor: 78, prueba: "Servidor MCP propio · agentes que ejecutan · núcleo IA de FaenApp" }
   ],
 

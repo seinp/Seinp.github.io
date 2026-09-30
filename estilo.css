@@ -422,19 +422,25 @@ html.paginado .proyecto .imagen img, html.paginado .carrusel .slide img{ max-hei
 html.paginado .carrusel.vertical .slide img{ max-height:60vh; }
 
 /* ================= TELEFONO EN MODO REEL: cada apartado llena la pantalla bajo el perfil y se desliza con enganche ================= */
-html.reel{ scroll-snap-type: y mandatory; scroll-padding-top: calc(var(--ficha-alto, 124px) + var(--menu-alto, 50px)); scroll-behavior:auto; }
+/* Sin scroll nativo ni snap: el dedo manda (app.js). scroll-padding-top sigue siendo la referencia del alto de ficha + barra. */
+html.reel{ scroll-snap-type: none; overflow:hidden; scroll-padding-top: calc(var(--ficha-alto, 124px) + var(--menu-alto, 50px)); scroll-behavior:auto; }
+html.reel .contenido{ touch-action: pinch-zoom; }
+html.reel .riel{ touch-action: pan-x pinch-zoom; }
+html.reel .diapo.desplaza{ touch-action: pan-y pinch-zoom; }
+/* solo anima el apartado que se ve: el resto queda quieto (60 fps en el telefono) */
+html.reel .diapo:not(.al-frente) *, html.reel .diapo:not(.al-frente) *::before, html.reel .diapo:not(.al-frente) *::after{ animation-play-state: paused !important; }
 html.reel .aparece, html.reel .aparece.lejos{ transform:none; opacity:1; transition:none; }
 html.reel .contenido{ position:relative; }
-/* snap-stop always: cada deslizamiento pasa UN apartado y engancha, como TikTok / Reels (pedido de Esteban) */
-html.reel .diapo{ box-sizing:border-box; height: calc(100dvh - var(--ficha-alto, 124px) - var(--menu-alto, 50px)); scroll-snap-align:start; scroll-snap-stop:always; overflow:hidden;
-  display:flex; flex-direction:column; justify-content:center; padding:14px 16px; border-bottom:0; }
-html.reel .diapo.desplaza{ overflow-y:auto; justify-content:flex-start; }
+/* cada apartado mide justo la pantalla bajo la ficha, con 20px de margen en todas las direcciones */
+html.reel .diapo{ box-sizing:border-box; height: calc(100dvh - var(--ficha-alto, 124px) - var(--menu-alto, 50px)); overflow:hidden; contain: layout paint;
+  display:flex; flex-direction:column; justify-content:center; padding:20px; border-bottom:0; }
+html.reel .diapo.desplaza{ overflow-y:auto; justify-content:flex-start; overscroll-behavior:contain; }
 html.reel .diapo-in{ width:100%; }
 html.reel .proyecto > .diapo-in{ display:flex; flex-direction:column; gap:12px; }
 html.reel .proyecto .imagen img, html.reel .carrusel .slide img, html.reel .proyecto .imagen video{ max-height:34dvh; }
 html.reel .carrusel.vertical .slide img{ max-height:32dvh; }
 html.reel .fila-cartas{ display:block; padding:0; border:0; }
-html.reel .proyecto.carta-p{ padding:0 10px; }   /* margen chico a los lados, pedido de Esteban */
+html.reel .proyecto.carta-p{ padding:20px; }
 html.reel .carta-p .cara{ gap:10px; padding:16px 16px 16px; }
 html.reel .carta-p .cab-d{ height:auto; min-height:64px; }
 html.reel .carta-p .imagen img, html.reel .carta-p .imagen video, html.reel .carta-p .carrusel .slide img{ max-height:26dvh; }
@@ -445,7 +451,7 @@ html.reel .proyecto.carta-p .link{ font-size:17px; padding:14px 14px 14px 18px; 
 html.reel .proyecto.carta-p .link i{ width:32px; height:32px; font-size:17px; }
 html.reel .proyecto h3{ font-size: clamp(28px, 8vw, 40px); }
 html.reel .sec-titulo{ font-size: clamp(30px, 8.5vw, 44px); margin-bottom:14px; }
-html.reel .seccion{ padding:14px 16px; }
+html.reel .seccion{ padding:20px; }
 html.reel .pie{ position:absolute; left:0; right:0; bottom:0; padding:10px 16px; }
 
 /* ================= PANTALLA BAJA (laptops de 768/720 de alto): la ficha se aprieta ================= */
