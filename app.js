@@ -3,7 +3,46 @@
 (function () {
   "use strict";
   const D = window.DATOS, T = window.TEXTOS || {};
+
+  // Al recargar, la pagina arranca SIEMPRE en la portada: sin restaurar el scroll ni el hash.
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+  scrollTo(0, 0);
   const $ = (s, r) => (r || document).querySelector(s);
+
+  // ---------- INTRO: la hoja de personaje se carga ----------
+  // Cortina a pantalla completa: el SEINP en trazo se rellena de cobalto de izquierda a derecha, una barra
+  // segmentada (la de los atributos) carga con contador, el sello NV 8 se estampa y la cortina se va hacia
+  // arriba con la linea de barrido de las diapositivas. Dura ~2 s; con "reducir movimiento" no se muestra.
+  let introLista = false;
+  const esperarIntro = () => new Promise((res) => (introLista ? res() : document.addEventListener("intro-lista", () => res(), { once: true })));
+  (function armarIntro() {
+    const fin = () => { introLista = true; document.documentElement.classList.remove("con-intro"); document.dispatchEvent(new CustomEvent("intro-lista")); };
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return fin();
+    const el = document.createElement("div");
+    el.id = "intro"; el.setAttribute("aria-hidden", "true");
+    el.innerHTML = '<div class="intro-in"><div class="intro-marca">SEINP<span class="intro-nv">NV 8</span></div><div class="intro-barra"><i></i></div><div class="intro-texto"><span></span> · <b>0</b>%</div></div>';
+    document.body.prepend(el);
+    document.documentElement.classList.add("con-intro");
+    const barra = el.querySelector(".intro-barra i"), num = el.querySelector(".intro-texto b");
+    const DUR = 1350, t0 = performance.now();
+    let listo = false;
+    const terminar = () => {
+      if (listo) return; listo = true;
+      barra.style.width = "100%"; num.textContent = "100";
+      el.classList.add("completa");
+      setTimeout(() => { el.classList.add("fuera"); setTimeout(() => { el.remove(); fin(); }, 650); }, 420);
+    };
+    const paso = (t) => {
+      const p = Math.min(1, (t - t0) / DUR), e = 1 - Math.pow(1 - p, 3);
+      barra.style.width = (e * 100).toFixed(1) + "%"; num.textContent = Math.round(e * 100);
+      if (p < 1) requestAnimationFrame(paso); else (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(terminar);
+    };
+    requestAnimationFrame(paso);
+    setTimeout(terminar, 3200);   // red de seguridad: si el navegador frena los cuadros, la cortina se va igual
+    // el texto se traduce cuando el diccionario ya esta cargado (t() se define mas abajo)
+    setTimeout(() => { const s = el.querySelector(".intro-texto span"); if (s) s.textContent = t("Cargando hoja de personaje"); }, 0);
+  })();
 
   // ---------- idioma ----------
   let idioma = "es";
@@ -142,6 +181,15 @@
       const sola = art.classList.contains("sola"), inclina = sola ? INCLINA_SOLA : INCLINA;
       let abierta = false, girando = false, anim = null;
       const base = () => (abierta ? "rotateY(180deg) " : "");
+      // cierre en seco (sin animacion): al cambiar de apartado todas las cartas vuelven al frente
+      art._cerrarCarta = () => {
+        if (anim) { anim.cancel(); anim = null; }
+        abierta = false; girando = false;
+        art.classList.remove("girando");
+        carta.style.transition = ""; carta.style.transform = "";
+        carta.setAttribute("aria-pressed", "false");
+        art.querySelectorAll("video").forEach((v) => v.play().catch(() => {}));
+      };
       const conMouse = () => matchMedia("(hover: hover) and (min-width: 861px)").matches;
 
       art.addEventListener("mousemove", (e) => {
@@ -221,7 +269,10 @@
       const n = String(i + 1).padStart(2, "0");
       const img = media(p);
       // El boton muestra el link tal cual (sin https:// ni barra final), por pedido de Esteban.
-      const link = p.link ? `<a class="link" href="${esc(p.link)}" target="_blank" rel="noopener"><span>${esc(p.link.replace(/^https?:\/\//, "").replace(/\/$/, ""))}</span><i aria-hidden="true">↗</i></a>` : "";
+      // Sin enlace publico (Ready, La Castañuela): una placa apagada del mismo tamaño, asi la carta se distribuye igual que las demas.
+      const link = p.link
+        ? `<a class="link" href="${esc(p.link)}" target="_blank" rel="noopener"><span>${esc(p.link.replace(/^https?:\/\//, "").replace(/\/$/, ""))}</span><i aria-hidden="true">↗</i></a>`
+        : `<span class="link sin-enlace"><span>${esc(t("Proyecto privado · sin enlace"))}</span><i aria-hidden="true">–</i></span>`;
       const etiquetas = `
             <span class="anio">${esc(t(p.anio))}</span>
             <span class="tipo">${esc(t(p.tipo))}</span>
@@ -284,7 +335,7 @@
             </div>
             <div class="linea2">${etiquetas}<span class="sep" aria-hidden="true"></span>${tec}${rol}</div>
             ${img}
-            <span class="pista" aria-hidden="true">${esc(t("Tocá la carta para ver más"))}</span>
+            <span class="pista" aria-hidden="true">${esc(t("Toca la carta para ver más"))}</span>
             ${link}
           </div>
           <div class="cara dorso">
@@ -473,9 +524,18 @@
     // los demas vuelven a cero para que la entrada se repita la proxima vez. La primera vez se marca tras el
     // primer cuadro (asi la portada tambien entra animada) y se recalcula el indice por si la pagina ya salto.
     const animar = () => { const j = indiceActual(); ds.forEach((d, k) => d.classList.toggle("animar", k === j)); document.dispatchEvent(new CustomEvent("diapo-al-frente", { detail: ds[j] })); };
-    if (primeraMarca) { primeraMarca = false; requestAnimationFrame(() => requestAnimationFrame(animar)); } else animar();
+    // Mientras la intro tapa la pagina, nada se anima (se animaria detras de la cortina y no se veria):
+    // la primera entrada sale recien cuando la cortina se va, un cuadro despues.
+    if (!introLista) {
+      if (!esperandoIntro) {
+        esperandoIntro = true;
+        esperarIntro().then(() => { let hecho = false; const unaVez = () => { if (!hecho) { hecho = true; animar(); } }; requestAnimationFrame(() => requestAnimationFrame(unaVez)); setTimeout(unaVez, 120); });
+      }
+      return;
+    }
+    animar();
   }
-  let primeraMarca = true;
+  let esperandoIntro = false;
   // El desplazamiento entre diapositivas lo anima la pagina (curva suave propia), no el navegador:
   // asi no lo pelea el snap y siempre dura lo mismo.
   let animando = false, acumulado = 0, ultimoGiro = 0, objetivo = -1, cuadro = 0, ticks = [];
@@ -671,6 +731,11 @@
     try { await navigator.clipboard.writeText(correo); b.textContent = t("Copiado"); }
     catch { const r = document.createRange(); r.selectNodeContents($("#correo-texto")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
     setTimeout(() => { b.textContent = t("Copiar"); }, 1600);
+  });
+
+  // Al llegar a un apartado, TODAS las cartas se cierran en seco: ninguna entra mostrando el detalle ni en espejo.
+  document.addEventListener("diapo-al-frente", () => {
+    document.querySelectorAll(".proyecto.carta-p").forEach((art) => art._cerrarCarta && art._cerrarCarta());
   });
 
   // ---------- Monito Amarillo: la carta arranca como su web. La tele se enciende (CSS) y los textos del frente

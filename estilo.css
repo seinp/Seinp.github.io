@@ -85,6 +85,35 @@ button{ font-family:inherit; }
 .menu a:hover, .menu a.activo{ color:var(--luz); border-bottom-color:var(--cobalto); }
 .menu a b{ color:var(--cobalto-claro); font-weight:700; }
 
+/* ---------- INTRO: la hoja de personaje se carga (cortina a pantalla completa, ~2 s) ---------- */
+html.con-intro{ overflow:hidden; }
+#intro{ position:fixed; inset:0; z-index:400; background: radial-gradient(900px circle at 50% 120%, rgba(59,111,234,.32), rgba(59,111,234,0) 60%), var(--sala); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+#intro::before{ content:""; position:absolute; inset:0; pointer-events:none; opacity:.35;
+  background-image: linear-gradient(rgba(59,111,234,.22) 1px, transparent 1px), linear-gradient(90deg, rgba(59,111,234,.22) 1px, transparent 1px); background-size: 48px 48px;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 20%, transparent 75%); mask-image: radial-gradient(circle at 50% 50%, #000 20%, transparent 75%); }
+#intro::after{ content:""; position:absolute; left:0; right:0; top:-10%; height:10%; pointer-events:none; background: linear-gradient(180deg, rgba(125,163,255,0), rgba(125,163,255,.35), rgba(125,163,255,0)); animation: intro-escaneo 1.6s linear infinite; }
+@keyframes intro-escaneo{ to{ top:110%; } }
+.intro-in{ position:relative; display:flex; flex-direction:column; align-items:center; gap:18px; padding:0 24px; animation: intro-entra .6s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes intro-entra{ from{ opacity:0; transform:translateY(16px) scale(.98); } }
+.intro-marca{ position:relative; font-family:var(--display); font-weight:900; font-size: clamp(96px, 18vw, 240px); line-height:.9; letter-spacing:-.02em; color:transparent;
+  -webkit-text-stroke:1.5px rgba(125,163,255,.45); background: linear-gradient(90deg, var(--cobalto-claro) 0 50%, transparent 50% 100%); background-size: 200% 100%; background-position: 100% 0;
+  -webkit-background-clip:text; background-clip:text; animation: intro-relleno 1.35s cubic-bezier(.2,.8,.2,1) .15s both; }
+@keyframes intro-relleno{ to{ background-position: 0 0; } }
+.intro-nv{ position:absolute; right:-.1em; top:-.12em; font-size: clamp(14px, 2vw, 22px); line-height:1; letter-spacing:.04em; -webkit-text-stroke:0; color:var(--cobalto-tinta); -webkit-text-fill-color:var(--cobalto-tinta); background:var(--cobalto); -webkit-background-clip:border-box; background-clip:border-box; padding:.35em .55em .3em; transform:scale(0) rotate(-8deg); }
+#intro.completa .intro-nv{ animation: intro-sello .45s cubic-bezier(.3,1.6,.5,1) forwards; }
+@keyframes intro-sello{ to{ transform:scale(1) rotate(-8deg); } }
+.intro-barra{ width: min(420px, 70vw); height:10px; background:var(--muro); border:1px solid var(--linea-2); position:relative; overflow:hidden; }
+.intro-barra i{ position:absolute; inset:0 auto 0 0; width:0; background: repeating-linear-gradient(90deg, var(--cobalto) 0 7px, transparent 7px 9px); box-shadow:0 0 14px rgba(59,111,234,.7); }
+.intro-texto{ display:flex; align-items:center; gap:8px; font-family:var(--datos); font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:var(--tenue); }
+.intro-texto::before{ content:""; width:9px; height:9px; background:var(--cobalto-claro); box-shadow:0 0 12px var(--cobalto); animation: late-ojo 1.2s ease-in-out infinite; }
+.intro-texto b{ color:var(--cobalto-claro); font-weight:700; font-variant-numeric:tabular-nums; min-width:3ch; text-align:right; }
+/* salida: la cortina sube con la linea de barrido de las diapositivas */
+#intro.fuera{ animation: intro-sale .6s cubic-bezier(.7,0,.3,1) forwards; }
+#intro.fuera .intro-in{ animation: intro-in-sale .35s ease-in forwards; }
+@keyframes intro-sale{ to{ transform:translateY(-100%); } }
+@keyframes intro-in-sale{ to{ opacity:0; transform:translateY(-24px); } }
+#intro.fuera::after{ animation:none; top:auto; bottom:-2px; height:3px; background:var(--cobalto-claro); box-shadow:0 0 24px 6px rgba(59,111,234,.8); }
+
 /* ---------- la portada: una carta cobalto como las del desfile, con brillo, marca de agua y boton ---------- */
 .hero{ padding: clamp(24px,4vw,44px) var(--gut) clamp(24px,4vw,44px); }
 .hero-carta{ position:relative; overflow:hidden; padding: clamp(28px,4.4vw,64px) clamp(24px,4vw,60px); border:1px solid var(--cobalto);
@@ -239,6 +268,10 @@ button{ font-family:inherit; }
 @keyframes barrer{ 0%{ transform:translateX(-140%) skewX(-12deg); } 60%,100%{ transform:translateX(260%) skewX(-12deg); } }
 @keyframes palpitar{ 0%,100%{ transform:scale(1); box-shadow:0 10px 28px rgba(59,111,234,.38); } 50%{ transform:scale(1.03); box-shadow:0 14px 36px rgba(59,111,234,.55); } }
 .proyecto.carta-p .link:hover{ transform:none; }
+/* placa "sin enlace": mismo tamaño que el boton, pero apagada (sin brillo, sin latido) */
+.proyecto.carta-p .link.sin-enlace, .proyecto.carta-p .link.sin-enlace:hover{ background:transparent; color:var(--tenue); border:1px dashed var(--linea-2); box-shadow:none; cursor:default; animation:none !important; }
+.proyecto.carta-p .link.sin-enlace::before{ display:none; }
+.proyecto.carta-p .link.sin-enlace i{ background:transparent; border:1px solid var(--linea-2); color:var(--tenue); }
 /* STAB: boton de fondo transparente (deja ver la carta), con borde y letras del mismo arcoiris corriente del marco */
 .proyecto.carta-p.arcoiris .link{ color:var(--luz); border:2px solid transparent;
   background: linear-gradient(var(--muro), var(--muro)) padding-box, linear-gradient(90deg, #FF4D4D, #FFA23A, #FFE94D, #5CE07A, #4DA6FF, #B36BFF, #FF5CB8, #FF4D4D) border-box;

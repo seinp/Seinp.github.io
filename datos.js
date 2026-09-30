@@ -10,7 +10,7 @@ window.DATOS = {
     cargo: "Programador Full Stack / Arquitecto de software",
     lugar: "Venezuela → Colombia · remoto",
     frase: "Construyo el producto completo y lo pongo en producción.",
-    bajada: "Del arte y el concepto hasta el backend, el servidor y el cliente que paga. Dueño de FaenApp y cofundador de Monito Amarillo.",
+    bajada: "Del arte y el concepto hasta el backend, el servidor y el cliente que paga. Fundador de FaenApp y cofundador de Monito Amarillo.",
     correo: "SeinpStudio@gmail.com",
     foto: "assets/img/fotoPerfil.jpg",
     cv: "cv.html",
@@ -28,7 +28,7 @@ window.DATOS = {
     { nombre: "Juegos",   valor: 90, prueba: "5 juegos publicados · C# + raylib sin motor" },
     { nombre: "Backend",  valor: 80, prueba: "Firestore + endpoints PHP propios · servidor VPS de STAB" },
     { nombre: "Móvil",    valor: 80, prueba: "Dos apps Flutter firmadas y distribuidas" },
-    { nombre: "IA",       valor: 78, prueba: "Servidor MCP propio · agentes que ejecutan · núcleo IA de FaenApp" },
+    { nombre: "IA",       valor: 78, prueba: "Servidor MCP propio · agentes que ejecutan tareas · núcleo IA de FaenApp" },
     { nombre: "Arte",     valor: 70, prueba: "Pixel art y marca · Spine 2D, Blender, ZBrush, Inkscape" }
   ],
 
@@ -42,8 +42,8 @@ window.DATOS = {
 
   formacion: [
     { titulo: "Estudios",  texto: "Ingeniería en Sistemas (carrera completa, tesis pendiente)." },
-    { titulo: "Docencia",  texto: "Clases privadas de programación, estructura de datos y análisis de datos durante una carrera entera." },
-    { titulo: "Equipo",    texto: "Dirige a un desarrollador de interfaz en FaenApp, con procedimiento de aprobación." }
+    { titulo: "Docencia",  texto: "Clases particulares de programación, estructuras de datos y análisis de datos durante toda la carrera." },
+    { titulo: "Equipo",    texto: "Dirijo a un desarrollador de interfaz en FaenApp, con revisión y aprobación de cada cambio." }
   ],
 
   // El desfile: los proyectos, en este orden. rareza: legendario | epico | raro | comun
@@ -58,13 +58,13 @@ window.DATOS = {
       link: "https://faenapp.com/", linkTexto: "Ver FaenApp" },
 
     { nombre: "Stab Your Friends", anio: "2026", rareza: "legendario", fila: "destacados", destacado: true, etiqueta: "Web y videojuego", logo: "assets/logos/stab.png", logoPixel: true, borde: "arcoiris",
-      desc: "Multijugador comercial escrito en **C# sobre raylib, sin motor**. **Servidor dedicado propio**, cola de emparejamiento real, **ranking** y seis modos. En **beta abierta**.",
+      desc: "Juego multijugador comercial escrito en **C# sobre raylib, sin motor**. **Servidor dedicado propio**, cola de emparejamiento real, **ranking** y seis modos. En **beta abierta**.",
       tipo: "Videojuego", tecnica: "C# · .NET 9 · raylib · PHP · VPS", rol: "Programación, arte y servidor",
       video: "assets/video/stab-1.mp4", poster: "assets/video/stab-1.jpg", img: "assets/img/capturas/stab.png", alt: "Partida de Stab Your Friends",
       link: "https://monitoamarillo.com/stab", linkTexto: "Ver la web del juego" },
 
     { nombre: "Monito Amarillo", anio: "2026", rareza: "legendario", etiqueta: "Estudio", carta: true, boton: "#ECBA07", borde: "dorado",
-      desc: "Estudio de videojuegos que fundé con un amigo de **más de 17 años**, separados por la frontera entre Colombia y Venezuela. Hacemos juegos **divertidos** para jugar **con amigos**, en local u online, **sin motor y sin plantillas**. Yo llevo **todo lo técnico**: web, marca, cuentas, pagos y servidor.",
+      desc: "Estudio de videojuegos que fundé con un amigo de hace **más de 17 años**, cada uno a un lado de la frontera entre Colombia y Venezuela. Hacemos juegos **divertidos** para jugar **con amigos**, en local u online, **sin motor y sin plantillas**. Yo llevo **todo lo técnico**: web, marca, cuentas, pagos y servidor.",
       tipo: "Estudio de videojuegos", tecnica: "HTML · JS · PHP · Wompi · VPS", rol: "Cofundador y todo lo técnico",
       img: "assets/img/capturas/monito.png", imgLogo: true, alt: "Logo de Monito Amarillo",
       link: "https://monitoamarillo.com/", linkTexto: "Visitar el estudio" },
@@ -76,7 +76,7 @@ window.DATOS = {
       link: "https://seinp.itch.io/", linkTexto: "Ver en itch.io" },
 
     { nombre: "Space G", anio: "2021", rareza: "comun", fila: "juegos", color: "#6A5CE8", etiqueta: "Videojuego",
-      desc: "Arcade shoot'em up: sobrevivir a oleadas de enemigos y acumular puntos mientras mejorás tu nave.",
+      desc: "Arcade shoot 'em up: sobrevive a oleadas de enemigos y acumula puntos mientras mejoras tu nave.",
       tipo: "Videojuego", tecnica: "Unity · C#", rol: "Programación y arte",
       img: "assets/img/juegos/space G.png", pixel: true, alt: "Portada de Space G",
       link: "https://seinp.itch.io/", linkTexto: "Ver en itch.io" },
@@ -87,13 +87,13 @@ window.DATOS = {
       imgs: ["assets/img/MOMI/MOMI1.jpeg", "assets/img/MOMI/MOMI 2.jpeg", "assets/img/MOMI/MOMI 3.jpeg", "assets/img/MOMI/MOMI 4.jpeg", "assets/img/MOMI/MOMI 5.jpeg", "assets/img/MOMI/MOMI 6.jpeg"], vertical: true, sinIA: true, alt: "Pantalla de Momi Medic" },
 
     { nombre: "Idle of Tyr", anio: "2021", rareza: "comun", fila: "apps", color: "#3B6FEA", etiqueta: "Videojuego",
-      desc: "AFK farming infinito con misiones, ambientado en los nórdicos vikingos.",
+      desc: "Juego idle de farmeo infinito con misiones, ambientado en el mundo vikingo.",
       tipo: "Videojuego", tecnica: "Unity · C#", rol: "Programación y arte",
       img: "assets/img/juegos/tyr.png", pixel: true, alt: "Portada de Idle of Tyr",
       link: "https://seinp.itch.io/", linkTexto: "Ver en itch.io" },
 
     { nombre: "Mad King", anio: "2020", rareza: "comun", fila: "mad", color: "#3B6FEA", etiqueta: "Videojuego",
-      desc: "El primer juego publicado: plataformas con oleadas infinitas donde sobrevivir el mayor tiempo posible es la clave.",
+      desc: "Mi primer juego publicado: plataformas con oleadas infinitas donde la meta es sobrevivir el mayor tiempo posible.",
       tipo: "Videojuego · PC", tecnica: "Unity · C#", rol: "Programación y arte",
       img: "assets/img/juegos/mad king.png", pixel: true, alt: "Portada de Mad King",
       link: "https://seinp.itch.io/", linkTexto: "Ver en itch.io" },
@@ -110,18 +110,18 @@ window.DATOS = {
       link: "https://katerineramirez1305.github.io/", linkTexto: "Ver la web" },
 
     { nombre: "La Castañuela", anio: "2018", rareza: "raro", fila: "webs", color: "#3B6FEA", etiqueta: "Sistema de restaurante",
-      desc: "Administración de un restaurante y bar con pedidos por código QR en cada mesa, para depender menos de los meseros. El primer sistema en producción.",
+      desc: "Administración de un restaurante y bar con pedidos por código QR en cada mesa, para depender menos de los meseros. Mi primer sistema en producción.",
       tipo: "Sistema web", tecnica: "PHP · MySQL · JS · wireframes propios", rol: "Desarrollador del proyecto completo",
       imgs: ["assets/img/la_castanuela_6.png", "assets/img/la_castanuela_7.png", "assets/img/la_castanuela_8.png", "assets/img/la_castanuela_9.png", "assets/img/la_castanuela_1.jpg", "assets/img/la_castanuela_2.jpg", "assets/img/la_castanuela_3.jpg", "assets/img/la_castanuela_4.jpg", "assets/img/la_castanuela_5.jpg", "assets/img/casta wireframes.jpg"], alt: "Pantalla de La Castañuela" }
   ],
 
   cronica: [
     { anio: "2018", items: [ { t: "La Castañuela App", d: "Restaurante con pedidos por QR en cada mesa" } ] },
-    { anio: "2020", items: [ { t: "Ready", d: "Comida a domicilio para Valera, Trujillo" }, { t: "Mad King", d: "El primer juego publicado" } ] },
-    { anio: "2021", items: [ { t: "Space G", d: "Arcade shoot'em up" }, { t: "Idle of Tyr", d: "RPG idle vikingo" } ] },
+    { anio: "2020", items: [ { t: "Ready", d: "Comida a domicilio para Valera, Trujillo" }, { t: "Mad King", d: "Mi primer juego publicado" } ] },
+    { anio: "2021", items: [ { t: "Space G", d: "Arcade shoot 'em up" }, { t: "Idle of Tyr", d: "RPG idle vikingo" } ] },
     { anio: "2022", items: [ { t: "Momi Medic", d: "Consultas médicas a domicilio" } ] },
     { anio: "2024", items: [ { t: "Earth Survivor", d: "Demo publicada" } ] },
-    { anio: "2025", items: [ { t: "FaenApp", d: "Nace el SaaS propio" } ] },
+    { anio: "2025", items: [ { t: "FaenApp", d: "Nace mi propio SaaS" } ] },
     { anio: "2026", items: [ { t: "Monito Amarillo", d: "Estudio en vivo desde el 8 de septiembre" }, { t: "Stab Your Friends", d: "Beta abierta" }, { t: "FaenApp", d: "En producción, con clientes pagando" } ] }
   ],
 
@@ -129,13 +129,13 @@ window.DATOS = {
   servicios: [
     { nombre: "Identidad visual / logos",     desc: "Logotipos, mascotas y propuestas de marca",                         prueba: "Fritas, Frigomax, Hoguera, Ninja Store, ULA FC",          precio: "$200 – $1.200" },
     { nombre: "Documentación de producto",    desc: "Manuales, capturas y mapas de pantallas",                            prueba: "faenapp.com/docs, mapa de 369 pantallas",                   precio: "$400 – $2.000" },
-    { nombre: "Página web a medida",          desc: "Diseño, desarrollo y publicación. Bilingüe si se pide",             prueba: "monitoamarillo.com, la web de STAB, faenapp.com, MARSICARE", precio: "$600 – $4.000" },
+    { nombre: "Página web a medida",          desc: "Diseño, desarrollo y publicación. Bilingüe si lo necesitas",             prueba: "monitoamarillo.com, la web de STAB, faenapp.com, MARSICARE", precio: "$600 – $4.000" },
     { nombre: "Backend e infraestructura",    desc: "Base de datos, endpoints propios, VPS, almacenamiento de archivos", prueba: "Backend de FaenApp, servidor de STAB",                       precio: "$1.000 – $6.000" },
     { nombre: "Catálogo y pedidos en línea",  desc: "Catálogo público, pedidos, reservas, QR por mesa",                  prueba: "Catálogo de FaenApp, La Castañuela",                         precio: "$1.200 – $5.000" },
     { nombre: "Automatización con IA",        desc: "Agentes que ejecutan tareas, servidores MCP, orquestación de modelos", prueba: "Núcleo IA de FaenApp, servidores MCP propios",                              precio: "$1.200 – $7.000" },
-    { nombre: "App móvil Android",            desc: "Flutter, firmada, distribuida y con actualizaciones",               prueba: "FaenApp Admins y Empleado, Momi Medic",                      precio: "$3.000 – $15.000" },
+    { nombre: "App móvil Android",            desc: "Flutter, firmada, distribuida y con actualizaciones integradas",               prueba: "FaenApp Admins y Empleado, Momi Medic",                      precio: "$3.000 – $15.000" },
     { nombre: "Desarrollo de videojuegos",    desc: "Unity o motor propio; gameplay y multijugador con servidor",        prueba: "5 juegos publicados, Stab Your Friends",                     precio: "desde $5.000", nota: "según alcance" },
-    { nombre: "Por hora, para trabajo suelto", desc: "",                                                                 prueba: "",                                                           precio: "$35 – $60 / h" }
+    { nombre: "Por hora, para tareas puntuales", desc: "",                                                                 prueba: "",                                                           precio: "$35 – $60 / h" }
   ],
 
   // La galeria: solo las piezas, sin texto (decision de Esteban).
