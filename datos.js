@@ -140,11 +140,13 @@ window.DATOS = {
 
   // La galeria: solo las piezas, sin texto (decision de Esteban).
   arte: [
-    "BERSERKER1.png", "berserker.png", "Cocole1.png", "Cocole2.png", "FRITAS8.png",
-    "fritas definitivo fondo blanco.png", "fritas definitivo fondo negro.png", "frigomax.png",
-    "hoguera logo blanco desenfoque.png", "hoguera logo negro desenfoque.png",
-    "NINJASTORE VERSIONES 1.png", "ninja store propuesta 3.png", "Nave.png", "promo21 clas.png",
-    "seinp space3.png", "seinp viking.png", "ula fc con fondo.png", "ula fc mascota.png",
-    "mi logo.png", "Dj9fuHNXsAAUNgj.jpg", "DmwbjHpWwAE7QHA.jpg", "kbRYYHXL_400x400.jpg"
+    // Orden pensado para la rejilla de PC (8x5 sin huecos): grandes en las posiciones 1, 6, 13 y 14; las dos
+    // ultimas van anchas en la fila final. En telefono (4 columnas) las dos ultimas quedan centradas.
+    "BERSERKER1.png", "Cocole1.png", "Cocole2.png", "FRITAS8.png", "fritas definitivo fondo blanco.png",
+    "seinp viking.png", "fritas definitivo fondo negro.png", "hoguera logo blanco desenfoque.png",
+    "hoguera logo negro desenfoque.png", "ninja store propuesta 3.png", "Nave.png", "promo21 clas.png",
+    "ula fc mascota.png", "berserker.png", "seinp space3.png", "ula fc con fondo.png",
+    "mi logo.png", "Dj9fuHNXsAAUNgj.jpg", "DmwbjHpWwAE7QHA.jpg", "kbRYYHXL_400x400.jpg",
+    "NINJASTORE VERSIONES 1.png", "frigomax.png"
   ].map((a) => "assets/img/ArteDigital/" + a)
 };

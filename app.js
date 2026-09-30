@@ -291,8 +291,8 @@
 
   // ---------- cronica ----------
   function pintarCronica() {
-    $("#cronica-lista").innerHTML = D.cronica.map((c) => `
-      <li><span class="anio">${esc(c.anio)}</span><i class="punto" aria-hidden="true"></i>
+    $("#cronica-lista").innerHTML = D.cronica.map((c, k) => `
+      <li style="--d:${(k * .12).toFixed(2)}s"><span class="anio">${esc(c.anio)}</span><i class="punto" aria-hidden="true"></i>
         <div class="items">${c.items.map((it) => `<div><b>${esc(it.t)}</b><span>${esc(t(it.d))}</span></div>`).join("")}</div>
       </li>`).join("");
   }
@@ -333,8 +333,9 @@
         cuadros.push(requestAnimationFrame(paso));
       });
     };
-    const entrar = () => { if (sec.classList.contains("animar")) return; sec.classList.add("animar"); contar(); };
-    const salir = () => { if (!sec.classList.contains("animar")) return; sec.classList.remove("animar"); cuadros.forEach(cancelAnimationFrame); sec.querySelectorAll(".atr-card .val").forEach((v) => (v.textContent = "0")); };
+    let activo = false;
+    const entrar = () => { if (activo) return; activo = true; sec.classList.add("animar"); contar(); };
+    const salir = () => { if (!activo) return; activo = false; sec.classList.remove("animar"); cuadros.forEach(cancelAnimationFrame); sec.querySelectorAll(".atr-card .val").forEach((v) => (v.textContent = "0")); };
     // dos disparadores: el IntersectionObserver (scroll libre) y el aviso de la pagina al cambiar de apartado (diapositivas / reel)
     new IntersectionObserver((es) => es.forEach((e) => (e.isIntersecting ? entrar() : salir())), { threshold: .35 }).observe(sec);
     document.addEventListener("diapo-al-frente", (e) => (e.detail === sec ? entrar() : salir()));
@@ -394,6 +395,7 @@
       dentro.className = "diapo-in";
       while (d.firstChild) dentro.appendChild(d.firstChild);
       d.appendChild(dentro);
+      [...dentro.children].forEach((c, k) => c.style.setProperty("--d", (k * .09).toFixed(2) + "s"));
     });
     ajustarDiapos();
   }
@@ -444,9 +446,13 @@
     if (!ds.length) return;
     const i = indiceActual();
     ds.forEach((d, k) => d.classList.toggle("al-frente", k === i));
-    // aviso para lo que se anima al llegar a un apartado (los atributos), sin depender del IntersectionObserver
-    document.dispatchEvent(new CustomEvent("diapo-al-frente", { detail: ds[i] }));
+    // El apartado al frente se anima (.animar: entrada de sus piezas, barras de atributos, linea de la cronica);
+    // los demas vuelven a cero para que la entrada se repita la proxima vez. La primera vez se marca tras el
+    // primer cuadro (asi la portada tambien entra animada) y se recalcula el indice por si la pagina ya salto.
+    const animar = () => { const j = indiceActual(); ds.forEach((d, k) => d.classList.toggle("animar", k === j)); document.dispatchEvent(new CustomEvent("diapo-al-frente", { detail: ds[j] })); };
+    if (primeraMarca) { primeraMarca = false; requestAnimationFrame(() => requestAnimationFrame(animar)); } else animar();
   }
+  let primeraMarca = true;
   // El desplazamiento entre diapositivas lo anima la pagina (curva suave propia), no el navegador:
   // asi no lo pelea el snap y siempre dura lo mismo.
   let animando = false, acumulado = 0, ultimoGiro = 0, objetivo = -1, cuadro = 0, ticks = [];

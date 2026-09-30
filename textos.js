@@ -21,7 +21,8 @@ window.TEXTOS = {
   // ---- portada ----
   "HOJA DE PERSONAJE": "CHARACTER SHEET",
   "Hoja de personaje": "Character sheet", "máx": "max", "Disponible para nuevos proyectos": "Available for new projects",
-  "¿Tenés un proyecto?": "Got a project?", "Contame y te digo si puedo con eso.": "Tell me about it and I'll say whether I can take it.",
+  "¿Arrancamos tu proyecto?": "Shall we start your project?", "Contame la idea y te digo cómo lo hacemos.": "Tell me the idea and I'll tell you how we build it.",
+  "Hablemos de": "Let's talk about", "tu proyecto": "your project",
   "respondo el mismo día": "I reply the same day", "o copiá el correo": "or copy the email", "Cerrar": "Close", "Ver pieza": "View piece",
   "Contame qué necesitás y te digo si puedo con eso. Web, app, backend, videojuego o automatización con IA: si está en el desfile, lo hago.": "Tell me what you need and I'll say whether I can take it. Website, app, backend, game or AI automation: if it's in the parade, I do it.",
   "Ecosistema de apps": "App ecosystem", "Web y videojuego": "Website and game",
