@@ -586,7 +586,7 @@ html.reel .galeria figure::after{ display:none; }
 html.reel .galeria figure{ padding:6px; }
 /* contacto en telefono */
 html.reel .contacto-titulo{ font-size: clamp(40px, 11.5vw, 52px); }
-html.reel .cta-anillo{ display:block; width:100%; }
+html.reel .cta-anillo{ display:block; width:75%; margin:0 auto; }   /* un 25% mas angosto, pedido de Esteban */
 html.reel .contacto-cta{ display:flex; width:100%; justify-content:center; gap:14px; font-size:21px; padding:16px 18px 14px; }
 html.reel .contacto-texto{ font-size:14.5px; margin:12px 0 18px; }
 html.reel .correo{ margin-top:16px; }
