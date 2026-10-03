@@ -792,3 +792,82 @@ html.reel .pie{ position:absolute; left:0; right:0; bottom:0; padding:10px 16px;
   .hero-cta{ margin-top:22px; font-size:15px; padding:13px 16px 13px 20px; }
   .galeria{ grid-template-columns: repeat(3, minmax(0,1fr)); }
 }
+
+/* ================= TABLET EN VERTICAL (html.tableta = reel + tableta): los proyectos en una rejilla y el elegido al frente ================= */
+/* El desfile es UN apartado: cabecera chica + rejilla de 4 columnas que llena el alto (filas en --filas, sin huecos) */
+html.tableta #desfile > .diapo-in{ height:100%; display:flex; flex-direction:column; }
+html.tableta #proyectos{ flex:1; min-height:0; display:flex; flex-direction:column; gap:12px; }
+.rejilla-cab{ display:flex; justify-content:space-between; align-items:center; gap:12px; font-family:var(--datos); font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--tenue); }
+.rejilla-cab b{ color:var(--cobalto-claro); font-weight:700; }
+.rejilla-cab span:last-child{ display:inline-flex; align-items:center; gap:8px; color:var(--cobalto-claro); }
+.rejilla-cab span:last-child::before{ content:""; width:8px; height:8px; background:var(--cobalto-claro); box-shadow:0 0 10px var(--cobalto); animation: late-ojo 1.6s ease-in-out infinite; }
+.rejilla-p{ flex:1; min-height:0; display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); grid-template-rows: repeat(var(--filas, 4), minmax(0,1fr)); grid-auto-flow: row dense; gap:10px; transition: transform .35s cubic-bezier(.2,.8,.2,1), opacity .35s ease; }
+html.con-detalle .rejilla-p{ transform:scale(.94); opacity:.25; }
+/* la tesela: borde de identidad, logo o titulo del color de la carta, sello con el tipo, imagen entera con su ambiente detras */
+.tesela{ --borde: var(--cobalto); position:relative; min-width:0; min-height:0; display:flex; flex-direction:column; gap:7px; padding:10px 10px 9px; margin:0; text-align:left; font:inherit; color:var(--luz); cursor:pointer; overflow:hidden; -webkit-tap-highlight-color:transparent;
+  border:1px solid var(--borde); background: linear-gradient(180deg, color-mix(in srgb, var(--borde) 14%, transparent), transparent 45%), var(--muro);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--borde) 20%, transparent), 0 14px 30px color-mix(in srgb, var(--borde) 12%, transparent); transition: transform .15s ease-out; }
+.tesela.ancha{ grid-column: span 2; }
+.tesela:active{ transform: scale(.97); }
+.tesela:focus-visible{ outline:2px solid var(--luz); outline-offset:3px; }
+.tes-cab{ display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:30px; }
+.tes-logo{ height:28px; width:auto; max-width:62%; object-fit:contain; object-position:left center; }
+.tes-logo.pixel{ image-rendering:auto; height:40px; }
+.tes-nombre{ min-width:0; font-family:var(--display); font-weight:900; font-size: clamp(16px, 2.7vw, 22px); line-height:.95; text-transform:uppercase; color: color-mix(in srgb, var(--borde) 70%, #fff); }
+.tesela.dorado .tes-nombre{ color:#F5C408; }
+.tes-sello{ flex:0 0 auto; max-width:55%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--datos); font-size:8.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--cobalto-claro); border:1px solid var(--cobalto); padding:3px 6px 3px 7px; }
+.tes-img{ position:relative; flex:1; min-height:0; display:flex; align-items:center; justify-content:center; overflow:hidden; isolation:isolate; background:var(--sala); }
+.tes-img.ambiente-mini::before{ content:""; position:absolute; inset:0; z-index:0; pointer-events:none; background: var(--fondo) center / cover no-repeat; opacity:.42; }
+.tes-img img{ position:relative; z-index:1; max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; }
+.tes-img.pixel img{ width:100%; height:100%; image-rendering:auto; }
+.tes-img.logo{ background:transparent; }
+.tes-pie{ display:flex; align-items:center; justify-content:space-between; gap:6px; font-family:var(--datos); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--tenue); white-space:nowrap; }
+.tes-pie span{ min-width:0; overflow:hidden; text-overflow:ellipsis; }
+.tes-pie i{ flex:0 0 auto; font-style:normal; width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--borde); color:var(--luz); font-size:14px; line-height:1; }
+.tesela.arcoiris, .tesela.dorado{ border:2px solid transparent; background-size:100% 100%, 100% 100%, 300% 100%; background-position:0 0, 0 0, var(--pos) 0; animation: fluye-borde 4s steps(60) infinite; }
+.tesela.arcoiris{ background-image: linear-gradient(180deg, rgba(59,111,234,.12), transparent 45%), linear-gradient(var(--muro), var(--muro)), linear-gradient(90deg, #FF4D4D, #FFA23A, #FFE94D, #5CE07A, #4DA6FF, #B36BFF, #FF5CB8, #FF4D4D); background-origin: padding-box, padding-box, border-box; background-clip: padding-box, padding-box, border-box; }
+.tesela.dorado{ background-image: linear-gradient(180deg, rgba(245,196,8,.10), transparent 45%), linear-gradient(var(--muro), var(--muro)), linear-gradient(90deg, #794100, #B87F00, #F5C408, #FFEBA3, #F5C408, #B87F00, #794100); background-origin: padding-box, padding-box, border-box; background-clip: padding-box, padding-box, border-box; }
+.tesela.dorado .tes-sello, .tesela.dorado .tes-pie i{ border-color:#B87F00; }
+/* en las teselas angostas el sello va debajo del titulo: asi nunca se corta */
+.tesela:not(.ancha) .tes-cab{ flex-direction:column; align-items:flex-start; justify-content:flex-start; gap:5px; }
+.tesela:not(.ancha) .tes-sello{ max-width:100%; }
+.tes-pie em{ font-style:normal; }
+.tesela:not(.ancha) .tes-pie em{ display:none; }   /* angosta: el tipo ya va en el sello, abajo solo el año */
+@media (max-width: 700px){ .rejilla-p{ gap:8px; } .tesela{ padding:8px 8px 7px; gap:6px; } .tesela .tes-cab{ flex-direction:column; align-items:flex-start; justify-content:flex-start; gap:5px; } .tesela .tes-sello{ max-width:100%; } }
+/* entrada: las teselas aparecen una por una cada vez que se llega al apartado */
+html.tableta #desfile .tesela{ opacity:0; }
+/* cada fila entra distinto, como el desfile de PC: lados, zoom con rebote, caida con rebote, reparto de cartas */
+html.tableta #desfile .rejilla-p{ perspective:1400px; }
+html.tableta #desfile.animar .tesela{ opacity:1; --ent: pop-pieza; animation: var(--ent) .8s cubic-bezier(.2,.8,.2,1) backwards; animation-delay: calc(var(--i, 0) * 50ms + .1s); }
+html.tableta #desfile.animar .tesela[data-entrada="lados"]{ --ent: entra-izq; }
+html.tableta #desfile.animar .tesela[data-entrada="lados"] + .tesela[data-entrada="lados"]{ --ent: entra-der; }
+html.tableta #desfile.animar .tesela[data-entrada="zoom"]{ --ent: entra-zoom; }
+html.tableta #desfile.animar .tesela[data-entrada="caida"]{ --ent: entra-caida; animation-timing-function: cubic-bezier(.34,1.5,.64,1); }
+html.tableta #desfile.animar .tesela[data-entrada="reparto"]{ --ent: entra-reparto-a; }
+html.tableta #desfile.animar .tesela[data-entrada="reparto"] + .tesela[data-entrada="reparto"]{ --ent: entra-reparto-b; }
+html.tableta #desfile.animar .tesela.arcoiris, html.tableta #desfile.animar .tesela.dorado{ animation: var(--ent) .8s cubic-bezier(.2,.8,.2,1) backwards, fluye-borde 4s steps(60) infinite; animation-delay: calc(var(--i, 0) * 50ms + .1s), 0s; }
+/* el "+" de cada tesela late, escalonado (solo transform) */
+html.tableta #desfile.animar .tes-pie i{ animation: late-mas 2.4s ease-in-out infinite; animation-delay: calc(var(--i, 0) * 180ms + 1.2s); }
+@keyframes late-mas{ 0%, 70%, 100%{ transform:scale(1); } 82%{ transform:scale(1.22); } }
+.capa-bucle .tesela{ opacity:1 !important; }
+@media (prefers-reduced-motion: reduce){ html.tableta #desfile .tesela, html.tableta #desfile .tes-pie i, .rejilla-cab span:last-child::before{ opacity:1; animation:none !important; } .rejilla-p{ transition:none; } }
+html.con-detalle .rejilla-p, html.con-detalle .rejilla-p *, html.con-detalle .rejilla-cab span::before{ animation-play-state: paused !important; }
+
+/* el proyecto al frente: cubre el area de contenido (debajo de la ficha y la barra), tapa la rejilla y muestra UNA carta */
+.detalle-p{ position:fixed; left:0; right:0; bottom:0; top: calc(var(--ficha-alto, 124px) + var(--menu-alto, 50px)); z-index:30; touch-action:pinch-zoom; overscroll-behavior:contain; }
+.detalle-p[hidden]{ display:none; }
+.det-fondo{ position:absolute; inset:0; background: rgba(8,9,10,.92); opacity:0; transition: opacity .3s ease; }
+.detalle-p.abierto .det-fondo{ opacity:1; }
+.det-caja{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; gap:12px; padding:20px 20px 16px; }
+.det-escena{ position:relative; flex:1; min-height:0; width:min(680px, 100%); }
+.det-slot{ position:absolute; inset:0; display:none; }
+.det-slot.visible{ display:block; }
+html.tableta .det-slot > .proyecto.carta-p{ height:100%; display:flex; align-items:stretch; padding:0; }
+.detalle-p .riel{ touch-action: pan-x pinch-zoom; }
+.det-barra{ flex:0 0 auto; display:flex; align-items:center; gap:10px; }
+.det-barra button{ width:46px; height:46px; margin:0; border:1px solid var(--cobalto); background:var(--muro); color:var(--cobalto-claro); font-family:var(--cuerpo); font-size:24px; line-height:1; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition: background .15s, color .15s; -webkit-tap-highlight-color:transparent; }
+.det-barra button:active{ background:var(--cobalto); color:var(--cobalto-tinta); }
+.det-barra .det-cerrar{ margin-left:16px; font-size:20px; color:var(--luz); border-color:var(--linea-2); }
+.det-cuenta{ min-width:86px; text-align:center; font-family:var(--datos); font-size:13px; letter-spacing:.16em; color:var(--tenue); }
+.det-cuenta b{ color:var(--cobalto-claro); font-weight:700; }
+.det-cuenta i{ font-style:normal; margin:0 6px; }

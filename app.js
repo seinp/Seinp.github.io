@@ -6,7 +6,7 @@
 
   // Al recargar, la pagina arranca SIEMPRE en la portada: sin restaurar el scroll ni el hash.
   if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-  if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+  if (location.hash || (history.state && history.state.detalleP)) history.replaceState(null, "", location.pathname + location.search);
   scrollTo(0, 0);
   const $ = (s, r) => (r || document).querySelector(s);
 
@@ -154,7 +154,7 @@
     im.src = src;
   }
   function armarAmbiente() {
-    document.querySelectorAll(".carta-p .frente .imagen:not(.logo)").forEach((caja) => {
+    document.querySelectorAll(".carta-p .frente .imagen:not(.logo), .tesela .tes-img:not(.logo)").forEach((caja) => {
       const img = caja.querySelector("img"), video = caja.querySelector("video");
       const src = img ? img.getAttribute("src") : video && video.getAttribute("poster");
       if (!src) return;
@@ -214,6 +214,7 @@
         carta.style.transition = "transform .15s ease-out";
         carta.style.transform = base();
         setTimeout(() => {
+          if (!girando) return;   // se cerro en seco mientras tanto (cambio de proyecto o de apartado)
           // 2) el salto con rebote (A3), hacia adelante o en reversa segun el lado
           carta.style.transition = "";
           if (anim) anim.cancel();
@@ -349,6 +350,45 @@
         </div></div>
       </article>`;
     };
+    // TABLET (vertical): los 11 proyectos en una rejilla de 4 columnas, todos a la vista; al tocar uno, su carta
+    // completa (la misma del telefono) se abre al frente en #detalle-p. Las anchas: destacadas + carta sola, y se
+    // ensanchan las ultimas hasta cerrar la fila (11 → 16 celdas, 4 x 4, sin huecos).
+    if (modoActual() === "tableta") {
+      const reabrir = estadoDet.abierto ? estadoDet.i : -1;
+      if (reabrir >= 0) { cerrarDetalle(true, true); estadoDet.empujado = true; } else cerrarDetalle(true);
+      const lista = D.proyectos;
+      const ancha = lista.map((p) => !!(p.destacado || p.carta));
+      let celdas = lista.length + ancha.filter(Boolean).length;
+      for (let i = lista.length - 1; celdas % 4 && i >= 0; i--) if (!ancha[i]) { ancha[i] = true; celdas++; }
+      const fila = []; let ocupadas = 0;
+      lista.forEach((_, i) => { fila[i] = Math.floor(ocupadas / 4); ocupadas += ancha[i] ? 2 : 1; });
+      const ENTRADA_FILA = ["lados", "zoom", "caida", "reparto"];
+      const tesela = (p, i) => {
+        const src = p.poster || (p.imgs && p.imgs[0]) || p.img || "";
+        const estilo = [p.color && `--borde:${p.color}`, `--i:${i}`].filter(Boolean).join(";");
+        const cabeza = p.logo
+          ? `<img class="tes-logo${p.logoPixel ? " pixel" : ""}" src="${esc(p.logo)}" alt="">`
+          : `<b class="tes-nombre">${esc(p.nombre)}</b>`;
+        return `
+        <button type="button" class="tesela${ancha[i] ? " ancha" : ""}${p.borde ? " " + p.borde : ""}" data-i="${i}" data-entrada="${ENTRADA_FILA[fila[i] % ENTRADA_FILA.length]}" style="${esc(estilo)}" aria-label="${esc(t("Ver proyecto") + ": " + p.nombre)}">
+          <span class="tes-cab">${cabeza}<span class="tes-sello">${esc(t(p.etiqueta))}</span></span>
+          <span class="tes-img${p.pixel ? " pixel" : ""}${p.imgLogo ? " logo" : ""}"><img src="${esc(src)}" alt="" loading="lazy"></span>
+          <span class="tes-pie"><span>${esc(t(p.anio))}<em> · ${esc(t(p.tipo))}</em></span><i aria-hidden="true">+</i></span>
+        </button>`;
+      };
+      $("#proyectos").innerHTML = `
+      <div class="rejilla-cab"><span>${esc(t("PROYECTOS"))} · <b>${total}</b></span><span>${esc(t("Toca uno para verlo"))}</span></div>
+      <div class="rejilla-p" style="--filas:${celdas / 4}">${lista.map(tesela).join("")}</div>`;
+      armarDetalle(lista.map((p, i) => `<div class="det-slot" data-i="${i}">${tarjeta(p, i, false, false, true, null)}</div>`).join(""), total);
+      // pixel art: nitido solo cuando la tesela lo agranda; al achicarlo, suave (regla de la casa)
+      $("#proyectos").querySelectorAll(".tes-img.pixel img").forEach((im) => {
+        const nitidez = () => { im.style.imageRendering = im.clientWidth > im.naturalWidth ? "pixelated" : "auto"; };
+        if (im.complete && im.naturalWidth) nitidez(); else im.addEventListener("load", nitidez, { once: true });
+      });
+      if (reabrir >= 0) setTimeout(() => abrirDetalle(reabrir, null, true), 0);   // tras armar cartas y carruseles
+      return;
+    }
+    vaciarDetalle();
     // En telefono todas las cartas se ven iguales (formato de a dos): la carta grande sola es solo de PC.
     const telefono = matchMedia("(max-width: 860px)").matches;
     // Cada fila entra distinto (lados, zoom, giro, subida, barrido); la carta grande sola entra como terminal.
@@ -445,6 +485,11 @@
   // telefono ("reel", estilo TikTok: se desliza con el dedo y engancha) cada proyecto es una diapositiva.
   const DIAPOS_PC  = [".hero", ".fila-cartas", ".proyecto:not(.carta-p)", "#atributos-sec", "#cronica", "#servicios", "#arte", "#contacto"];
   const DIAPOS_TEL = [".hero", ".proyecto", "#atributos-sec", "#cronica", "#servicios", "#arte", "#contacto"];
+  // Tablet en vertical: el layout del telefono (ficha arriba, reel con el dedo) pero el desfile es UN apartado con la
+  // rejilla. Telefonos (≤ 430 de ancho) y telefonos acostados (alto ≈ 390) quedan fuera: el telefono no cambia.
+  const TABLETA = "(min-width: 600px) and (max-width: 860px) and (min-height: 860px)";
+  const DIAPOS_TAB = [".hero", "#desfile", "#atributos-sec", "#cronica", "#servicios", "#arte", "#contacto"];
+  const modoActual = () => (matchMedia("(min-width: 861px)").matches ? "paginado" : matchMedia(TABLETA).matches ? "tableta" : "reel");
   const paginado = () => document.documentElement.classList.contains("paginado");
   const reel = () => document.documentElement.classList.contains("reel");
   const diapos = () => [...document.querySelectorAll(".diapo")];
@@ -457,12 +502,17 @@
     });
   }
   function armarPaginado() {
-    const modo = matchMedia("(min-width: 861px)").matches ? "paginado" : "reel";
-    if (modoArmado && modoArmado !== modo) { desarmarPaginado(); pintarProyectos(); armarCarruseles(); armarCartas(); }
+    const modo = modoActual();
+    if (modoArmado && modoArmado !== modo) {
+      cerrarDetalle(true); desarmarPaginado(); pintarProyectos(); armarCarruseles(); armarAmbiente(); armarCartas();
+      if (modo !== "tableta") document.getElementById("desfile").classList.remove("al-frente", "animar");
+    }
     modoArmado = modo;
-    document.documentElement.classList.toggle("paginado", modo === "paginado");
-    document.documentElement.classList.toggle("reel", modo === "reel");
-    document.querySelectorAll((modo === "paginado" ? DIAPOS_PC : DIAPOS_TEL).join(",")).forEach((d) => {
+    const raiz = document.documentElement;
+    raiz.classList.toggle("paginado", modo === "paginado");
+    raiz.classList.toggle("reel", modo !== "paginado");
+    raiz.classList.toggle("tableta", modo === "tableta");
+    document.querySelectorAll((modo === "paginado" ? DIAPOS_PC : modo === "tableta" ? DIAPOS_TAB : DIAPOS_TEL).join(",")).forEach((d) => {
       if (d.classList.contains("diapo")) return;
       d.classList.add("diapo");
       const dentro = document.createElement("div");
@@ -501,18 +551,25 @@
       const carta = d.classList.contains("proyecto"), portada = d.classList.contains("hero");
       const minimo = carta || portada ? .5 : .8, maximo = portada ? 1.45 : 1;
       const caras = carta ? [...d.querySelectorAll(".cara")] : [];
-      const cabe = (z) => {
-        dentro.style.zoom = z.toFixed(3);
-        if (dentro.getBoundingClientRect().height > disponible + .5) return false;
-        return caras.every((c) => c.scrollHeight <= c.clientHeight + 1);
-      };
-      let z;
-      if (cabe(maximo)) z = maximo;
-      else if (!cabe(minimo)) { z = minimo; d.classList.add("desplaza"); }
-      else { let lo = minimo, hi = maximo; for (let i = 0; i < 7; i++) { const m = (lo + hi) / 2; if (cabe(m)) lo = m; else hi = m; } z = lo; }
-      dentro.style.zoom = z.toFixed(3);
+      if (escalaQueCabe(dentro, disponible, minimo, maximo, caras)) d.classList.add("desplaza");
     });
     marcarFrente();
+    calzarDetalle();
+  }
+  // La escala mas grande (entre minimo y maximo) a la que "dentro" entra en "disponible" y ninguna cara desborda.
+  // Devuelve true si ni con el minimo entra (el apartado se desplaza por dentro).
+  function escalaQueCabe(dentro, disponible, minimo, maximo, caras) {
+    const cabe = (z) => {
+      dentro.style.zoom = z.toFixed(3);
+      if (dentro.getBoundingClientRect().height > disponible + .5) return false;
+      return caras.every((c) => c.scrollHeight <= c.clientHeight + 1);
+    };
+    let z, sobra = false;
+    if (cabe(maximo)) z = maximo;
+    else if (!cabe(minimo)) { z = minimo; sobra = true; }
+    else { let lo = minimo, hi = maximo; for (let i = 0; i < 7; i++) { const m = (lo + hi) / 2; if (cabe(m)) lo = m; else hi = m; } z = lo; }
+    dentro.style.zoom = z.toFixed(3);
+    return sobra;
   }
   // Solo el apartado que se ve anima (bordes corrientes, flotar, latido): los demas quedan quietos.
   function marcarFrente() {
@@ -636,13 +693,13 @@
   let toqueY = null, toqueX = null, base = 0, arrastrando = false, ajeno = false, conScroll = null;
   const UMBRAL = 45;
   addEventListener("touchstart", (e) => {
-    if (!reel()) return;
+    if (!reel() || estadoDet.abierto) return;
     const t = e.touches[0];
     toqueY = t.clientY; toqueX = t.clientX; base = scrollY; arrastrando = false; ajeno = false;
     conScroll = e.target.closest(".diapo.desplaza");
   }, { passive: true });
   addEventListener("touchmove", (e) => {
-    if (!reel() || toqueY === null || ajeno) return;
+    if (!reel() || toqueY === null || ajeno || estadoDet.abierto) return;
     if (animando) { if (e.cancelable) e.preventDefault(); return; }
     const t = e.touches[0], dy = t.clientY - toqueY, dx = t.clientX - toqueX;
     if (!arrastrando) {
@@ -694,6 +751,7 @@
     const sec = document.querySelector(a.getAttribute("href"));
     if (!sec) return;
     e.preventDefault();
+    if (estadoDet.abierto && sec.id === "desfile") return cerrarDetalle();
     const margen = reel() ? parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0 : 0;
     animarScroll(scrollY + sec.getBoundingClientRect().top - margen);
   }));
@@ -704,6 +762,7 @@
   });
   addEventListener("resize", () => { armarPaginado(); ajustarDiapos(); });
   matchMedia("(min-width: 861px)").addEventListener("change", () => { armarPaginado(); ajustarDiapos(); });
+  matchMedia(TABLETA).addEventListener("change", () => { armarPaginado(); ajustarDiapos(); });
   addEventListener("load", () => setTimeout(ajustarDiapos, 300));
 
   // ---------- telefono: la ficha resumida se abre y se cierra al tocarla ----------
@@ -739,7 +798,7 @@
 
   // Al llegar a un apartado, TODAS las cartas se cierran en seco: ninguna entra mostrando el detalle ni en espejo.
   document.addEventListener("diapo-al-frente", () => {
-    document.querySelectorAll(".proyecto.carta-p").forEach((art) => art._cerrarCarta && art._cerrarCarta());
+    document.querySelectorAll(".proyecto.carta-p").forEach((art) => { if (!art.closest("#detalle-p") && art._cerrarCarta) art._cerrarCarta(); });
   });
 
   // ---------- Monito Amarillo: la carta arranca como su web. La tele se enciende (CSS) y los textos del frente
@@ -788,7 +847,7 @@
   }
   document.addEventListener("diapo-al-frente", (e) => {
     const art = document.querySelector(".proyecto.carta-p.dorado");
-    if (!art) return;
+    if (!art || art.closest("#detalle-p")) return;
     if (e.detail === art.closest(".diapo")) terminalEscribir(art); else terminalCancelar();
   });
   // en el telefono la carta de Monito gira: al mostrar el dorso, el detalle tambien se escribe como terminal
@@ -797,6 +856,137 @@
     if (!art.classList.contains("dorado")) return;
     if (abierta) terminalEscribir(art, "dorso", 700); else terminalCancelar();
   });
+
+  // ---------- TABLET: el proyecto al frente ----------
+  // #detalle-p vive en <body> (los apartados tienen contain:paint y encerrarian un fixed). Cubre el area de contenido
+  // (debajo de la ficha y la barra), tapa la rejilla y muestra UNA carta completa. Se abre desde su tesela (FLIP de
+  // 420 ms, solo transform + opacity), las flechas ‹ › recorren las 11 con bucle, y se cierra con la X, tocando el
+  // fondo, con Atras de Android (history) o yendo a otra seccion.
+  const estadoDet = { abierto: false, i: -1, empujado: false, tesela: null };
+  const $det = () => document.getElementById("detalle-p");
+  function armarDetalle(html, total) {
+    let el = $det();
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "detalle-p"; el.className = "detalle-p"; el.hidden = true;
+      el.setAttribute("role", "dialog");
+      el.innerHTML = '<div class="det-fondo"></div><div class="det-caja"><div class="det-escena"></div><div class="det-barra"><button type="button" class="det-ant">‹</button><span class="det-cuenta"><b>01</b><i>/</i><span>11</span></span><button type="button" class="det-sig">›</button><button type="button" class="det-cerrar">✕</button></div></div>';
+      document.body.appendChild(el);
+      const caja = el.querySelector(".det-caja");
+      el.querySelector(".det-ant").addEventListener("click", () => moverDetalle(-1));
+      el.querySelector(".det-sig").addEventListener("click", () => moverDetalle(1));
+      el.querySelector(".det-cerrar").addEventListener("click", () => cerrarDetalle());
+      // tocar fuera de la carta (el margen o la barra vacia) cierra
+      caja.addEventListener("click", (e) => { if (e.target === caja || e.target.classList.contains("det-barra")) cerrarDetalle(); });
+      // deslizar en horizontal fuera de un carrusel pasa de proyecto
+      let x0 = null, y0 = 0, enRiel = false;
+      caja.addEventListener("touchstart", (e) => { const tt = e.touches[0]; x0 = tt.clientX; y0 = tt.clientY; enRiel = !!e.target.closest(".riel"); }, { passive: true });
+      caja.addEventListener("touchend", (e) => {
+        if (x0 === null) return;
+        const tt = e.changedTouches[0], dx = tt.clientX - x0, dy = tt.clientY - y0; x0 = null;
+        if (!enRiel && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) moverDetalle(dx < 0 ? 1 : -1);
+      }, { passive: true });
+    }
+    el.querySelector(".det-ant").setAttribute("aria-label", t("Anterior"));
+    el.querySelector(".det-sig").setAttribute("aria-label", t("Siguiente"));
+    el.querySelector(".det-cerrar").setAttribute("aria-label", t("Cerrar"));
+    el.querySelector(".det-cuenta span").textContent = String(total).padStart(2, "0");
+    el.querySelector(".det-escena").innerHTML = html;
+    el.querySelectorAll("video").forEach((v) => v.pause());
+  }
+  function vaciarDetalle() {
+    const el = $det();
+    if (!el) return;
+    cerrarDetalle(true);
+    el.querySelector(".det-escena").innerHTML = "";
+  }
+  function calzarDetalle() {
+    const el = $det();
+    if (!el || el.hidden) return;
+    const slot = el.querySelector(".det-slot.visible"), art = slot && slot.querySelector(".proyecto");
+    if (art) escalaQueCabe(art, slot.clientHeight, .5, 1, [...art.querySelectorAll(".cara")]);
+  }
+  function mostrarSlot(i, dir = 0) {
+    const el = $det(), slots = [...el.querySelectorAll(".det-slot")];
+    i = (i + slots.length) % slots.length;
+    terminalCancelar();
+    slots.forEach((s, k) => {
+      if (k === i) return;
+      const otra = s.querySelector(".proyecto");
+      s.classList.remove("visible");
+      if (otra) { if (otra._cerrarCarta) otra._cerrarCarta(); otra.classList.remove("animar"); }
+      s.querySelectorAll("video").forEach((v) => v.pause());
+    });
+    const slot = slots[i], art = slot.querySelector(".proyecto");
+    slot.classList.add("visible");
+    art.classList.remove("animar"); void art.offsetWidth; art.classList.add("animar");   // re-dispara la tele de Monito
+    slot.querySelectorAll("video").forEach((v) => v.play().catch(() => {}));
+    estadoDet.i = i;
+    el.querySelector(".det-cuenta b").textContent = String(i + 1).padStart(2, "0");
+    el.setAttribute("aria-label", D.proyectos[i].nombre);
+    calzarDetalle();
+    if (dir && !matchMedia("(prefers-reduced-motion: reduce)").matches) slot.animate([{ transform: `translateX(${dir * 28}%)`, opacity: 0 }, { transform: "none", opacity: 1 }], { duration: 280, easing: "cubic-bezier(.2,.8,.2,1)" });
+    if (art.classList.contains("dorado")) terminalEscribir(art);
+    return slot;
+  }
+  const rectFlip = (desde, hasta) => `translate(${desde.left - hasta.left}px, ${desde.top - hasta.top}px) scale(${desde.width / hasta.width}, ${desde.height / hasta.height})`;
+  function abrirDetalle(i, tesela, restaurar = false) {
+    const el = $det();
+    if (!el || estadoDet.abierto) return;
+    estadoDet.tesela = tesela || document.querySelector(`.tesela[data-i="${i}"]`);
+    estadoDet.abierto = true;
+    el.hidden = false;
+    document.documentElement.classList.add("con-detalle");
+    $("#proyectos").inert = true;
+    const slot = mostrarSlot(i);
+    if (!restaurar && estadoDet.tesela && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const de = estadoDet.tesela.getBoundingClientRect(), a = slot.getBoundingClientRect();
+      slot.style.transformOrigin = "0 0";
+      slot.animate([{ transform: rectFlip(de, a), opacity: .35 }, { transform: "none", opacity: 1 }], { duration: 420, easing: "cubic-bezier(.2,.8,.2,1)" });
+    }
+    void el.offsetWidth; el.classList.add("abierto");
+    if (!restaurar) { history.pushState({ detalleP: true }, ""); estadoDet.empujado = true; }
+    el.querySelector(".det-cerrar").focus({ preventScroll: true });
+  }
+  function moverDetalle(dir) { if (estadoDet.abierto) mostrarSlot(estadoDet.i + dir, dir); }
+  function cerrarDetalle(instantaneo = false, desdeHistorial = false) {
+    const el = $det();
+    if (!el || el.hidden) return;
+    const slot = el.querySelector(".det-slot.visible"), art = slot && slot.querySelector(".proyecto");
+    const tesela = (estadoDet.i >= 0 && document.querySelector(`.tesela[data-i="${estadoDet.i}"]`)) || estadoDet.tesela;
+    estadoDet.abierto = false;
+    terminalCancelar();
+    if (estadoDet.empujado) { estadoDet.empujado = false; if (!desdeHistorial) history.back(); }
+    $("#proyectos").inert = false;
+    const fin = () => {
+      if (estadoDet.abierto) return;   // se volvio a abrir mientras se cerraba: no esconder el nuevo
+      el.hidden = true;
+      el.classList.remove("abierto");
+      el.querySelectorAll(".det-slot").forEach((s) => s.classList.remove("visible"));
+      if (art) { if (art._cerrarCarta) art._cerrarCarta(); art.classList.remove("animar"); }
+      el.querySelectorAll("video").forEach((v) => v.pause());
+      document.documentElement.classList.remove("con-detalle");
+      if (tesela && !instantaneo) tesela.focus({ preventScroll: true });
+    };
+    if (instantaneo || !slot || !tesela || matchMedia("(prefers-reduced-motion: reduce)").matches) return fin();
+    el.classList.remove("abierto");
+    const a = slot.getBoundingClientRect(), hacia = tesela.getBoundingClientRect();
+    slot.style.transformOrigin = "0 0";
+    const an = slot.animate([{ transform: "none", opacity: 1 }, { transform: rectFlip(hacia, a), opacity: .15 }], { duration: 320, easing: "cubic-bezier(.4,0,.2,1)" });
+    let hecho = false; const unaVez = () => { if (!hecho) { hecho = true; fin(); } };
+    an.onfinish = unaVez; setTimeout(unaVez, 420);   // red de seguridad si el navegador frena los cuadros
+  }
+  // tocar una tesela abre su proyecto (delegado: la rejilla se re-dibuja al cambiar idioma o modo)
+  $("#proyectos").addEventListener("click", (e) => { const ts = e.target.closest(".tesela"); if (ts) abrirDetalle(+ts.dataset.i, ts); });
+  addEventListener("popstate", () => { if (estadoDet.abierto) cerrarDetalle(false, true); });
+  addEventListener("keydown", (e) => {
+    if (!estadoDet.abierto) return;
+    if (e.key === "Escape") { e.preventDefault(); cerrarDetalle(); }
+    if (e.key === "ArrowRight") { e.preventDefault(); moverDetalle(1); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); moverDetalle(-1); }
+  });
+  // irse a otra seccion (la barra de arriba) cierra el proyecto abierto
+  document.addEventListener("diapo-al-frente", (e) => { if (estadoDet.abierto && e.detail && e.detail.id !== "desfile") cerrarDetalle(true); });
 
   // ---------- la portada: en PC se inclina (poco) con el mouse y el brillo lo sigue, como las cartas ----------
   (function armarPortada() {
